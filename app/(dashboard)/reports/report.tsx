@@ -10,31 +10,26 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { SelectProduct } from '@/lib/db-old';
-import { deleteProduct } from './actions';
+import { SelectReport } from '@/lib/schema';
 
-export function Product({ product }: { product: SelectProduct }) {
+export function Report({ report }: { report: SelectReport }) {
   return (
     <TableRow>
-      <TableCell className="hidden sm:table-cell">
-        <Image
-          alt="Product image"
-          className="aspect-square rounded-md object-cover"
-          height="64"
-          src={product.imageUrl}
-          width="64"
-        />
-      </TableCell>
-      <TableCell className="font-medium">{product.name}</TableCell>
+      <TableCell className="hidden sm:table-cell"></TableCell>
+      <TableCell className="font-medium">{report.id}</TableCell>
       <TableCell>
         <Badge variant="outline" className="capitalize">
-          {product.status}
+          {report.isSubmitted}
         </Badge>
       </TableCell>
-      <TableCell className="hidden md:table-cell">{`$${product.price}`}</TableCell>
-      <TableCell className="hidden md:table-cell">{product.stock}</TableCell>
       <TableCell className="hidden md:table-cell">
-        {product.availableAt.toLocaleDateString('en-US')}
+        {report.reportMonth}
+      </TableCell>
+      <TableCell className="hidden md:table-cell">
+        {report.reportYear}
+      </TableCell>
+      <TableCell className="hidden md:table-cell">
+        {report.createdAt.toLocaleDateString('en-US')}
       </TableCell>
       <TableCell>
         <DropdownMenu>
@@ -48,8 +43,8 @@ export function Product({ product }: { product: SelectProduct }) {
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>Edit</DropdownMenuItem>
             <DropdownMenuItem>
-              <form action={deleteProduct}>
-                <input type="hidden" name="id" value={product.id} />
+              <form action={() => {}}>
+                <input type="hidden" name="id" value={report.id} />
                 <button type="submit">Delete</button>
               </form>
             </DropdownMenuItem>
