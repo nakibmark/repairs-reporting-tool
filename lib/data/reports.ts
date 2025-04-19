@@ -13,11 +13,10 @@ export async function getReports(
   // Always search the full table, not per page
   if (search) {
     return {
-      reports: await db
-        .select()
-        .from(reports)
-        .where(ilike(reports.id, `%${search}%`))
-        .limit(1000),
+      reports: await db.query.reports.findMany({
+        where: ilike(reports.id, `%${search}%`),
+        limit: 1000
+      }),
       newOffset: null,
       totalReports: 0
     };

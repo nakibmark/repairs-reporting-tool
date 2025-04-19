@@ -24,11 +24,13 @@ import { Button } from '@/components/ui/button';
 export function ReportsTable({
   reports,
   offset,
-  totalReports: totalReports
+  totalReports,
+  submitted = null
 }: {
   reports: SelectReport[];
   offset: number;
   totalReports: number;
+  submitted: boolean | null;
 }) {
   let router = useRouter();
   let reportsPerPage = 5;
@@ -65,9 +67,13 @@ export function ReportsTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {reports.map((report) => (
-              <Report key={report.id} report={report} />
-            ))}
+            {reports
+              .filter((report) =>
+                submitted === null ? true : report.isSubmitted === submitted
+              )
+              .map((report) => (
+                <Report key={report.id} report={report} />
+              ))}
           </TableBody>
         </Table>
       </CardContent>
