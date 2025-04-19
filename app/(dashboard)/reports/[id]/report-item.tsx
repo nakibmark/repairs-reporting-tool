@@ -13,13 +13,21 @@ import { ReportItemWithNames } from '@/lib/data/reportItems';
 export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
   return (
     <TableRow>
-      <TableCell>{item.dateIn.toLocaleDateString('en-US')}</TableCell>
-      <TableCell>{item.brand.name}</TableCell>
-      <TableCell>{item.repairNo}</TableCell>
-      <TableCell>{item.article}</TableCell>
-      <TableCell>{item.serialNo}</TableCell>
-      <TableCell>{item.warrantyType.name}</TableCell>
-      <TableCell>{item.serviceLevelType.name}</TableCell>
+      <TableCell className="hidden md:table-cell">
+        {item.dateIn.toLocaleDateString('en-US')}
+      </TableCell>
+      <TableCell className="hidden md:table-cell">{item.brand.name}</TableCell>
+      <TableCell className="hidden md:table-cell">{item.repairNo}</TableCell>
+      <TableCell className="hidden md:table-cell">{item.article}</TableCell>
+      <TableCell className="hidden max-w-64 md:table-cell truncate">
+        {item.serialNo}
+      </TableCell>
+      <TableCell className="hidden md:table-cell">
+        {item.warrantyType.name}
+      </TableCell>
+      <TableCell className="hidden md:table-cell">
+        {item.serviceLevelType.name}
+      </TableCell>
       <TableCell>
         {item.dateOut ? item.dateOut.toLocaleDateString('en-US') : ''}
       </TableCell>

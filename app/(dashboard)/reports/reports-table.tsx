@@ -38,7 +38,7 @@ export function ReportsTable({
   }
 
   function nextPage() {
-    router.push(`/?offset=${offset}`, { scroll: false });
+    router.push(`/reports/?offset=${offset}`, { scroll: false });
   }
 
   return (
@@ -51,7 +51,7 @@ export function ReportsTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="hidden w-[100px] sm:table-cell">
+              <TableHead className="hidden sm:table-cell">
                 <span className="sr-only">Image</span>
               </TableHead>
               <TableHead>ID</TableHead>

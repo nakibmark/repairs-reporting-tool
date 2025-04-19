@@ -31,15 +31,25 @@ export const ReportItemsTable = ({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Date Intervention In</TableHead>
-            <TableHead>Maison</TableHead>
-            <TableHead>Repair Number</TableHead>
-            <TableHead>Article</TableHead>
-            <TableHead>Serial Number</TableHead>
-            <TableHead>Warranty Type</TableHead>
-            <TableHead>Service Type</TableHead>
-            <TableHead>Date Intervention Out</TableHead>
-            <TableHead>Comments</TableHead>
+            <TableHead className="hidden md:table-cell">
+              Date Intervention In
+            </TableHead>
+            <TableHead className="hidden md:table-cell">Maison</TableHead>
+            <TableHead className="hidden md:table-cell">
+              Repair Number
+            </TableHead>
+            <TableHead className="hidden md:table-cell">Article</TableHead>
+            <TableHead className="hidden md:table-cell">
+              Serial Number
+            </TableHead>
+            <TableHead className="hidden md:table-cell">
+              Warranty Type
+            </TableHead>
+            <TableHead className="hidden md:table-cell">Service Type</TableHead>
+            <TableHead className="hidden md:table-cell">
+              Date Intervention Out
+            </TableHead>
+            <TableHead className="hidden md:table-cell">Comments</TableHead>
             <TableHead>
               <span className="sr-only">Actions</span>
             </TableHead>

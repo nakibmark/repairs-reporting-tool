@@ -50,9 +50,7 @@ export async function GET() {
         reportItems: 20
       },
       columns: {
-        isSubmitted: f.default({
-          defaultValue: false
-        }),
+        isSubmitted: f.boolean(),
         reportYear: f.int({
           minValue: 2023,
           maxValue: 2050

@@ -19,7 +19,7 @@ export function Report({ report }: { report: SelectReport }) {
       <TableCell className="font-medium">{report.id}</TableCell>
       <TableCell>
         <Badge variant="outline" className="capitalize">
-          {report.isSubmitted}
+          {report.isSubmitted ? 'Submitted' : 'Draft'}
         </Badge>
       </TableCell>
       <TableCell className="hidden md:table-cell">
