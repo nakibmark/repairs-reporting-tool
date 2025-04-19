@@ -15,6 +15,13 @@
       "when": 1745011141437,
       "tag": "0001_thin_sugar_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1745026692839,
+      "tag": "0002_demonic_mother_askani",
+      "breakpoints": true
     }
   ]
 }

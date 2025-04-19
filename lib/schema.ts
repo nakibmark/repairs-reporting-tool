@@ -59,10 +59,14 @@ export const users = table(
 );
 
 // Brands Table: Lookup table for watch brands
-export const brands = table('brands', {
-  id: t.smallserial().primaryKey(),
-  name: t.varchar('name', { length: 100 }).notNull().unique()
-});
+export const brands = table(
+  'brands',
+  {
+    id: t.smallserial().primaryKey(),
+    name: t.varchar('name', { length: 100 }).notNull().unique()
+  },
+  (table) => [t.index('idx_brands_name').on(table.name)]
+);
 
 // PartnerBrands Join Table: Manages the Many-to-Many relationship
 export const partnerBrands = table(
@@ -172,7 +176,10 @@ export const reportItems = table(
       .references(() => reports.id, { onDelete: 'cascade' }),
     dateIn: t.date({ mode: 'date' }).notNull(),
     dateOut: t.date({ mode: 'date' }),
-    brandId: t.integer().references(() => brands.id),
+    brandId: t
+      .integer()
+      .notNull()
+      .references(() => brands.id, { onDelete: 'restrict' }),
     repairNo: t.varchar({ length: 100 }).notNull(),
     article: t.varchar({ length: 100 }),
     warrantyTypeId: t
