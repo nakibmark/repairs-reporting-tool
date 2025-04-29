@@ -14,24 +14,26 @@ export const partners = table(
   'partners',
   {
     id: t.serial().primaryKey(),
-    partnerNo: t.varchar({ length: 50 }).notNull().unique(), // Business identifier
-    partnerName: t.varchar({ length: 255 }).notNull(),
-    city: t.varchar({ length: 100 }),
-    state: t.varchar({ length: 100 }),
-    country: t.varchar({ length: 100 }),
-    market: t.varchar({ length: 100 }),
-    region: t.varchar({ length: 100 }),
-    inclusionGroup: t.varchar({ length: 100 }),
-    partnerType: t.varchar({ length: 100 }),
-    numberWatchmakers: t.smallint(),
+    partnerNo: t.text().notNull().unique(), // Business identifier
+    partnerName: t.text().notNull(),
+    emailAddress: t.text().notNull().unique(),
+    phoneNumber: t.text(),
+    city: t.text(),
+    state: t.text(),
+    country: t.text(),
+    market: t.text(),
+    region: t.text(),
+    inclusionGroup: t.text(),
+    partnerType: t.text(),
+    isActive: t.boolean().notNull().default(true), // Can the partner log in / be used?
+    // Fields for magic link (passwordless) login
+    magicLinkToken: t.text().unique(), // Store the unique token for passwordless login
+    magicLinkTokenExpiresAt: t.timestamp({ withTimezone: true, mode: 'date' }), // Expiry for the token
     ...timestamps
   },
   (table) => [
     t.index('idx_partners_partner_no').on(table.partnerNo),
-    t.check(
-      'partners_num_watchmakers_positive',
-      sql`${table.numberWatchmakers} >= 0`
-    )
+    t.index('idx_partners_magic_link_token').on(table.magicLinkToken)
   ]
 );
 
@@ -40,21 +42,19 @@ export const users = table(
   'users',
   {
     id: t.serial().primaryKey(),
-    emailAddress: t.varchar({ length: 255 }).notNull().unique(),
-    passwordHash: t.varchar({ length: 255 }).notNull(), // Store hashed passwords only!
-    name: t.varchar({ length: 255 }),
-    phone: t.varchar({ length: 50 }),
+    emailAddress: t.text().notNull().unique(), // Primary identifier, often from SSO
+    name: t.text(),
     role: userRoleEnum().notNull(), // Use the ENUM type
     locked: t.boolean().notNull().default(false),
-    partnerId: t
-      .integer()
-      .notNull()
-      .references(() => partners.id, { onDelete: 'restrict' }),
+    ssoProvider: t.text(), // e.g., 'google', 'okta', 'azuread'
+    ssoId: t.text(), // Unique ID from the SSO provider
     ...timestamps
   },
   (table) => [
-    t.index('idx_users_email_address').on(table.emailAddress),
-    t.index('idx_users_partner_id').on(table.partnerId)
+    // Ensure email is indexed for lookups
+    t.index('idx_users_email').on(table.emailAddress),
+    // Ensure combination of provider and ID is unique if supporting multiple SSO providers
+    t.unique('users_sso_provider_id_unq').on(table.ssoProvider, table.ssoId)
   ]
 );
 
@@ -63,7 +63,7 @@ export const brands = table(
   'brands',
   {
     id: t.smallserial().primaryKey(),
-    name: t.varchar('name', { length: 100 }).notNull().unique()
+    name: t.text('name').notNull().unique()
   },
   (table) => [t.index('idx_brands_name').on(table.name)]
 );
@@ -76,15 +76,15 @@ export const partnerBrands = table(
       .integer()
       .notNull()
       .references(() => partners.id, { onDelete: 'cascade' }),
-    brandName: t
-      .varchar()
+    brandId: t
+      .smallint()
       .notNull()
-      .references(() => brands.name, { onDelete: 'cascade' })
+      .references(() => brands.id, { onDelete: 'cascade' })
   },
   (table) => [
-    t.primaryKey({ columns: [table.partnerId, table.brandName] }),
+    t.primaryKey({ columns: [table.partnerId, table.brandId] }),
     t.index('idx_partnerbrands_partner_id').on(table.partnerId),
-    t.index('idx_partnerbrands_brand_id').on(table.brandName)
+    t.index('idx_partnerbrands_brand_id').on(table.brandId)
   ]
 );
 
@@ -110,26 +110,15 @@ export const reports = table(
         mode: 'date'
       })
       .notNull(),
-    createdByUserId: t
-      .integer()
-      .notNull()
-      .references(() => users.id, { onDelete: 'restrict' }),
-    contactName: t.varchar({ length: 255 }),
-    contactEmail: t.varchar({ length: 255 }),
-    contactPhone: t.varchar({ length: 50 }),
     ...timestamps
   },
   (table) => [
     t
       .unique('reports_partner_period_unq')
-      .on(table.partnerId, table.reportYear, table.reportMonth), // Explicit unique constraint name
-    t
-      .index('idx_reports_partner_period')
       .on(table.partnerId, table.reportYear, table.reportMonth),
     t
       .index('idx_reports_submission_status')
       .on(table.isSubmitted, table.submittedAt),
-    t.index('idx_reports_created_by').on(table.createdByUserId),
     t.check(
       'report_month_valid',
       sql`${table.reportMonth} >= 1 AND ${table.reportMonth} <= 12`
@@ -146,7 +135,7 @@ export const warrantyTypes = table(
   'warranty_types',
   {
     id: t.smallserial().primaryKey(),
-    name: t.varchar({ length: 100 }).notNull().unique(),
+    name: t.text().notNull().unique(),
     description: t.text(),
     isActive: t.boolean().notNull().default(true)
   },
@@ -158,7 +147,7 @@ export const serviceLevelTypes = table(
   'service_level_types',
   {
     id: t.smallserial().primaryKey(),
-    name: t.varchar({ length: 100 }).notNull().unique(),
+    name: t.text().notNull().unique(),
     description: t.text(),
     isActive: t.boolean().notNull().default(true)
   },
@@ -180,29 +169,24 @@ export const reportItems = table(
       .integer()
       .notNull()
       .references(() => brands.id, { onDelete: 'restrict' }),
-    repairNo: t.varchar({ length: 100 }).notNull(),
-    article: t.varchar({ length: 100 }),
+    repairNo: t.text().notNull(),
+    article: t.text(),
     warrantyTypeId: t
       .integer()
       .notNull()
       .references(() => warrantyTypes.id, { onDelete: 'restrict' }),
-    serialNo: t.varchar({ length: 100 }),
+    serialNo: t.text(),
     serviceLevelTypeId: t
       .integer()
       .notNull()
       .references(() => serviceLevelTypes.id, { onDelete: 'restrict' }),
     comments: t.text(),
-    createdByUserId: t
-      .integer()
-      .notNull()
-      .references(() => users.id, { onDelete: 'restrict' }),
     ...timestamps
   },
   (table) => [
     t.index('idx_reportitems_report_id').on(table.reportId),
     t.index('idx_reportitems_serial_no').on(table.serialNo),
     t.index('idx_reportitems_brand_id').on(table.brandId),
-    t.index('idx_reportitems_created_by').on(table.createdByUserId),
     t.index('idx_reportitems_warranty_type_id').on(table.warrantyTypeId),
     t
       .index('idx_reportitems_service_level_type_id')
@@ -212,21 +196,9 @@ export const reportItems = table(
 
 // --- Relations ---
 
-export const partnersRelations = relations(partners, ({ one, many }) => ({
-  users: many(users),
+export const partnersRelations = relations(partners, ({ many }) => ({
   partnerBrands: many(partnerBrands),
   reports: many(reports)
-}));
-
-export const usersRelations = relations(users, ({ one, many }) => ({
-  partner: one(partners, {
-    fields: [users.partnerId],
-    references: [partners.id]
-  }),
-  createdReports: many(reports, { relationName: 'CreatedByReports' }), // Explicit relation name needed if multiple relations point to the same table
-  createdReportItems: many(reportItems, {
-    relationName: 'CreatedByReportItems'
-  })
 }));
 
 export const brandsRelations = relations(brands, ({ many }) => ({
@@ -240,7 +212,7 @@ export const partnerBrandsRelations = relations(partnerBrands, ({ one }) => ({
     references: [partners.id]
   }),
   brand: one(brands, {
-    fields: [partnerBrands.brandName],
+    fields: [partnerBrands.brandId],
     references: [brands.id]
   })
 }));
@@ -249,11 +221,6 @@ export const reportsRelations = relations(reports, ({ one, many }) => ({
   partner: one(partners, {
     fields: [reports.partnerId],
     references: [partners.id]
-  }),
-  createdByUser: one(users, {
-    fields: [reports.createdByUserId],
-    references: [users.id],
-    relationName: 'CreatedByReports' // Match the relation name in usersRelations
   }),
   reportItems: many(reportItems)
 }));
@@ -277,11 +244,6 @@ export const reportItemsRelations = relations(reportItems, ({ one }) => ({
   brand: one(brands, {
     fields: [reportItems.brandId],
     references: [brands.id]
-  }),
-  createdByUser: one(users, {
-    fields: [reportItems.createdByUserId],
-    references: [users.id],
-    relationName: 'CreatedByReportItems' // Match the relation name in usersRelations
   }),
   warrantyType: one(warrantyTypes, {
     fields: [reportItems.warrantyTypeId],
