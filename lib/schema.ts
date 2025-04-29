@@ -13,7 +13,7 @@ export const userRoleEnum = pgEnum('user_role', ['admin', 'dealer']);
 export const partners = table(
   'partners',
   {
-    id: t.serial().primaryKey(),
+    id: t.integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1000 }),
     partnerNo: t.text().notNull().unique(), // Business identifier
     partnerName: t.text().notNull(),
     emailAddress: t.text().notNull().unique(),
@@ -41,7 +41,7 @@ export const partners = table(
 export const users = table(
   'users',
   {
-    id: t.serial().primaryKey(),
+    id: t.integer().primaryKey().generatedAlwaysAsIdentity({ startWith: 1000 }),
     emailAddress: t.text().notNull().unique(), // Primary identifier, often from SSO
     name: t.text(),
     role: userRoleEnum().notNull(), // Use the ENUM type
@@ -62,7 +62,7 @@ export const users = table(
 export const brands = table(
   'brands',
   {
-    id: t.smallserial().primaryKey(),
+    id: t.integer().primaryKey().generatedAlwaysAsIdentity(),
     name: t.text('name').notNull().unique()
   },
   (table) => [t.index('idx_brands_name').on(table.name)]
@@ -77,7 +77,7 @@ export const partnerBrands = table(
       .notNull()
       .references(() => partners.id, { onDelete: 'cascade' }),
     brandId: t
-      .smallint()
+      .integer()
       .notNull()
       .references(() => brands.id, { onDelete: 'cascade' })
   },
@@ -92,7 +92,7 @@ export const partnerBrands = table(
 export const reports = table(
   'reports',
   {
-    id: t.serial().primaryKey(),
+    id: t.integer().primaryKey().generatedAlwaysAsIdentity(),
     partnerId: t
       .integer()
       .notNull()
@@ -134,7 +134,7 @@ export const reports = table(
 export const warrantyTypes = table(
   'warranty_types',
   {
-    id: t.smallserial().primaryKey(),
+    id: t.integer().primaryKey().generatedAlwaysAsIdentity(),
     name: t.text().notNull().unique(),
     description: t.text(),
     isActive: t.boolean().notNull().default(true)
@@ -146,7 +146,7 @@ export const warrantyTypes = table(
 export const serviceLevelTypes = table(
   'service_level_types',
   {
-    id: t.smallserial().primaryKey(),
+    id: t.integer().primaryKey().generatedAlwaysAsIdentity(),
     name: t.text().notNull().unique(),
     description: t.text(),
     isActive: t.boolean().notNull().default(true)

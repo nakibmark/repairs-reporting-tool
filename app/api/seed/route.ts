@@ -9,21 +9,13 @@ export async function GET() {
   await seed(db, schema).refine((f) => ({
     partners: {
       count: 200,
-      with: {
-        users: 3
-      },
       columns: {
-        partnerNo: f.int({
-          minValue: 100000,
-          maxValue: 999999
-        }),
+        partnerNo: f.string(),
         partnerName: f.companyName({
           isUnique: true
         }),
-        numberWatchmakers: f.int({
-          minValue: 0,
-          maxValue: 100
-        }),
+        emailAddress: f.email(),
+        phoneNumber: f.phoneNumber(),
         city: f.city(),
         state: f.state(),
         country: f.country(),
@@ -36,11 +28,12 @@ export async function GET() {
       }
     },
     users: {
+      count: 5,
       columns: {
+        emailAddress: f.email(),
         name: f.fullName(),
-        phone: f.phoneNumber(),
         role: f.default({
-          defaultValue: 'dealer'
+          defaultValue: 'admin'
         })
       }
     },
