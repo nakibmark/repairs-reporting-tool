@@ -42,7 +42,13 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>
+              <form action={() => {editItem(item)}}>
+                <input type="hidden" name="id" value={item.id} />
+                <button type="submit">Edit</button>
+              </form>
+
+            </DropdownMenuItem>
             <DropdownMenuItem>
               <form action={() => {}}>
                 <input type="hidden" name="id" value={item.id} />
@@ -54,4 +60,7 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
       </TableCell>
     </TableRow>
   );
+};
+function editItem({ item }: { item: ReportItemWithNames }){
+  item.warrantyType.name = "hi"
 };
