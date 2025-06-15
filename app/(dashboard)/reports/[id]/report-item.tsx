@@ -43,7 +43,7 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>
-              <form action={() => {editItem(item)}}>
+              <form type="edit">
                 <input type="hidden" name="id" value={item.id} />
                 <button type="submit">Edit</button>
               </form>
@@ -62,5 +62,5 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
   );
 };
 function editItem({ item }: { item: ReportItemWithNames }){
-  item.warrantyType.name = "hi"
+  console.log("Button was clicked!");
 };
