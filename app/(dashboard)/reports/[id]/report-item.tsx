@@ -43,11 +43,17 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>
-              <form type="edit">
-                <input type="hidden" name="id" value={item.id} />
+              <form
+                onSubmit={(event) => {
+                event.preventDefault(); 
+                const formData = new FormData(event.target);
+                const item = formData.get("item");
+                editItem(item);
+                }}
+              >
+                <input type="hidden" name="item" value={item} />
                 <button type="submit">Edit</button>
               </form>
-
             </DropdownMenuItem>
             <DropdownMenuItem>
               <form action={() => {}}>
