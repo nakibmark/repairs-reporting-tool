@@ -13,3 +13,13 @@ export default async function ReportDetailsPage({
   const { items } = await getReportItemsWithNames(id);
   return <ReportItemsTable items={items} />;
 }
+
+export async function editItem({
+  params
+}: {
+  params: Promise<{ id: number }>;
+}) {
+  const { id } = await params;
+  const { items } = await getReportItemsWithNames(id);
+  return <ReportItemsTable items={items} />;
+}

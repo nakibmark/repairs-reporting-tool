@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { ReportItemWithNames } from '@/lib/data/reportItems';
+import { ReportItemWithNames} from '@/lib/data/reportItems';
 
 export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
   return (
@@ -47,11 +47,11 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
                 onSubmit={(event) => {
                 event.preventDefault(); 
                 const formData = new FormData(event.target);
-                const item = formData.get("item");
-                editItem(item);
+                const id = formData.get("id");
+                editItem(id);
                 }}
               >
-                <input type="hidden" name="item" value={item} />
+                <input type="hidden" name="id" value={item.id} />
                 <button type="submit">Edit</button>
               </form>
             </DropdownMenuItem>
@@ -66,7 +66,4 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
       </TableCell>
     </TableRow>
   );
-};
-function editItem({ item }: { item: ReportItemWithNames }){
-  console.log("Button was clicked!");
 };
