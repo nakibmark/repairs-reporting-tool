@@ -8,8 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { ReportItemWithNames} from '@/lib/data/reportItems';
-import { editItem } from './page';
+import { ReportItemWithNames, editReportItem} from '@/lib/data/reportItems';
 
 export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
   return (
@@ -49,7 +48,7 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
                 event.preventDefault(); 
                 const formData = new FormData(event.target);
                 const id = formData.get("id");
-                editItem(id);
+                editReportItem(id);
                 }}
               >
                 <input type="hidden" name="id" value={item.id} />
