@@ -8,7 +8,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { ReportItemWithNames, editReportItem} from '@/lib/data/reportItems';
+import { ReportItemWithNames} from '@/lib/data/reportItems';
+import {deleteReportItem, editReportItem} from "./actions";
 
 export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
   return (
@@ -43,22 +44,15 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem>
-              <form
-                onSubmit={(event) => {
-                event.preventDefault(); 
-                const formData = new FormData(event.target);
-                const id = formData.get("id");
-                editReportItem(id);
-                }}
-              >
+              <form>
                 <input type="hidden" name="id" value={item.id} />
-                <button type="submit">Edit</button>
+                <button type="submit" onClick={handleEditClick}>Edit</button>
               </form>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <form action={() => {}}>
+              <form>
                 <input type="hidden" name="id" value={item.id} />
-                <button type="submit">Delete</button>
+                <button type="submit" onClick={handleDeleteClick}>Delete</button>
               </form>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -67,3 +61,11 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
     </TableRow>
   );
 };
+const handleDeleteClick = () => {
+    
+};
+const handleEditClick = () => {
+    
+};
+
+

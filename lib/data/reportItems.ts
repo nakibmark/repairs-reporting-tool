@@ -42,12 +42,10 @@ export const getReportItemsWithNames = async (id: number) => {
   return { items };
 };
 
-export async function editReportItem({
-  params
-}: {
-  params: Promise<number>;
-}) {
-  const id : number  = await params;
-  const item = await db.select(reportItems.atricle).from(reportItems).where(eq(reportItems.id, id));
-  console.log(item);
-}
+export async function editReportItemById(id: string) {
+  
+};
+
+export async function deleteReportItemById(id: string) {
+  await db.delete(reportItems).where(eq(reportItems.id, id));
+};
