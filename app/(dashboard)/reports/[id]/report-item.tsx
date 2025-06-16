@@ -9,6 +9,7 @@ import {
 import { MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { ReportItemWithNames} from '@/lib/data/reportItems';
+import { editItem } from './page';
 
 export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
   return (

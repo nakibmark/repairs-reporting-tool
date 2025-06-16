@@ -17,9 +17,10 @@ export default async function ReportDetailsPage({
 export async function editItem({
   params
 }: {
-  params: Promise<{ id: number }>;
+  params: Promise<number>;
 }) {
-  const { id } = await params;
-  const { items } = await getReportItemsWithNames(id);
-  return <ReportItemsTable items={items} />;
+  const id  = await params;
+  const item = await getReportItemsWithNames(id);
+  console.log("the button was clicked with id" + id)
+  ;
 }
