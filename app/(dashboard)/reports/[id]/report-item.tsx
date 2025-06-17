@@ -8,27 +8,21 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { getReportItemsWithNames, ReportItemWithNames} from '@/lib/data/reportItems';
-import {deleteReportItem, editReportItem, saveReportItem} from "./actions";
+import { ReportItemWithNames} from '@/lib/data/reportItems';
+import {deleteReportItem, editReportItem, saveReportItem, cancelEditReportItem} from "./actions";
+import { ReportItemCell } from './report-item-cell';
 import React from 'react';
 
-export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
-  let isEditing: boolean = true;
-  const [editedItem, setEditedItem] = React.useState(item);
 
+export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
+  let isEditing: boolean = false;  
+  const [editedItem, setEditedItem] = React.useState(item);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: keyof ReportItemWithNames) => {
     setEditedItem({ ...editedItem, [field]: e.target.value });
   };
-  if(isEditing){
     return (
       <TableRow>
-        <TableCell className="hidden md:table-cell">
-          <input
-            type="text"
-            value={editedItem.dateIn?.toLocaleDateString('en-US') || ''}
-            onChange={(e) => handleChange(e, 'dateIn')}
-          />
-        </TableCell>
+        <ReportItemCell handleChange={handleChange} editedItem={editedItem} editState={isEditing} cellName='dateIn' item={item}></ReportItemCell>
         <TableCell className="hidden md:table-cell">
           <input
             type="text"
@@ -113,7 +107,7 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
         </TableCell>
      </TableRow>
     );
-  }else{
+  /*
     return (
       <TableRow>
         <TableCell className="hidden md:table-cell">
@@ -163,18 +157,18 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
           </DropdownMenu>
         </TableCell>
      </TableRow>
-    );
-  }
+    );*/
 };
 async function handleDeleteClick(id: string){
   await deleteReportItem(id);
 }
 async function handleEditClick(id: string){
   await editReportItem(id);
+
 }
 async function handleSaveClick(item: ReportItemWithNames){
   await saveReportItem(item);
 }
 async function handleCancelClick(id: string){
-
+  await cancelEditReportItem(id);
 }

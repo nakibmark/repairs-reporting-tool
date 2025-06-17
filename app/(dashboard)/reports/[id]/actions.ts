@@ -14,4 +14,9 @@ export async function deleteReportItem(id: string) {
  
 export async function saveReportItem(item: ReportItemWithNames){
   await saveReportItemByItem(item);
+  revalidatePath('/');
 };
+
+export async function cancelEditReportItem(id: string){
+  revalidatePath('/');
+}

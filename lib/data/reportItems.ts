@@ -56,6 +56,8 @@ export async function saveReportItemByItem(item: ReportItemWithNames){
   await db.update(reportItems).set({
     serialNo: item.serialNo,
     article: item.article,
-    brandId: brandId
+    //brandId: brandId
+    //warrantyTypeId : item.warrantyType
+    repairNo: item.repairNo
   } ).where(eq(reportItems.id, item.id))
 }
