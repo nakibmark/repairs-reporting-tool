@@ -46,13 +46,12 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
             <DropdownMenuItem>
               <form>
                 <input type="hidden" name="id" value={item.id} />
-                <button type="submit" onClick={handleEditClick}>Edit</button>
+                <button type="button" onClick={() => handleEditClick(item.id)}>Edit</button>
               </form>
             </DropdownMenuItem>
             <DropdownMenuItem>
               <form>
-                <input type="hidden" name="id" value={item.id} />
-                <button type="submit" onClick={handleDeleteClick}>Delete</button>
+                <button type="button" onClick={() => handleDeleteClick(item.id)}>Delete</button>
               </form>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -61,11 +60,9 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
     </TableRow>
   );
 };
-const handleDeleteClick = () => {
-    
-};
-const handleEditClick = () => {
-    
-};
-
-
+async function handleDeleteClick(id: string){
+  await deleteReportItem(id);
+}
+async function handleEditClick(id: string){
+  await editReportItem(id);
+}

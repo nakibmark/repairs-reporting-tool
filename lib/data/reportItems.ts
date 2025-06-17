@@ -43,7 +43,7 @@ export const getReportItemsWithNames = async (id: number) => {
 };
 
 export async function editReportItemById(id: string) {
-  
+  await db.update(reportItems).set({serviceLevelTypeId: 1}).where(eq(reportItems.id, id))
 };
 
 export async function deleteReportItemById(id: string) {

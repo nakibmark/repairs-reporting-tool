@@ -1,14 +1,14 @@
 'use server';
 import { revalidatePath } from 'next/cache';
-import { editReportItemById } from '@/lib/data/reportItems';
+import { editReportItemById, deleteReportItemById } from '@/lib/data/reportItems';
+import { redirect } from 'next/navigation'
 
-export async function editReportItem(formData: FormData) {
-  let id = formData.get('id')
-  await 
+export async function editReportItem(id: string) {
+  await editReportItemById(id);
   revalidatePath('/');
 }
 
 export async function deleteReportItem(id: string) {
-  await editReportItemById(id);
-  revalidatePath("/");
+  await deleteReportItemById(id);
+  revalidatePath('/');
 }
