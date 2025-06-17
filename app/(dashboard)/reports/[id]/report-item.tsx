@@ -8,33 +8,82 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
-import { ReportItemWithNames} from '@/lib/data/reportItems';
-import {deleteReportItem, editReportItem} from "./actions";
+import { getReportItemsWithNames, ReportItemWithNames} from '@/lib/data/reportItems';
+import {deleteReportItem, editReportItem, saveReportItem} from "./actions";
+import React from 'react';
 
 export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
   let isEditing: boolean = true;
+  const [editedItem, setEditedItem] = React.useState(item);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: keyof ReportItemWithNames) => {
+    setEditedItem({ ...editedItem, [field]: e.target.value });
+  };
   if(isEditing){
     return (
       <TableRow>
         <TableCell className="hidden md:table-cell">
-          {item.dateIn.toLocaleDateString('en-US')}
+          <input
+            type="text"
+            value={editedItem.dateIn?.toLocaleDateString('en-US') || ''}
+            onChange={(e) => handleChange(e, 'dateIn')}
+          />
         </TableCell>
-        <TableCell className="hidden md:table-cell">{item.brand.name}</TableCell>
-        <TableCell className="hidden md:table-cell">{item.repairNo}</TableCell>
-        <TableCell className="hidden md:table-cell">{item.article}</TableCell>
+        <TableCell className="hidden md:table-cell">
+          <input
+            type="text"
+            value={editedItem.brand?.name || ''}
+            onChange={(e) => handleChange(e, 'brand')}
+          />
+        </TableCell>
+        <TableCell className="hidden md:table-cell">
+          <input
+            type="text"
+            value={editedItem.repairNo || ''}
+            onChange={(e) => handleChange(e, 'repairNo')}
+          />
+        </TableCell>
+        <TableCell className="hidden md:table-cell">
+          <input
+            type="text"
+            value={editedItem.article || ''}
+            onChange={(e) => handleChange(e, 'article')}
+          />
+        </TableCell>
         <TableCell className="hidden max-w-64 md:table-cell truncate">
-          {item.serialNo}
+          <input
+            type="text"
+            value={editedItem.serialNo || ''}
+            onChange={(e) => handleChange(e, 'serialNo')}
+          />
         </TableCell>
         <TableCell className="hidden md:table-cell">
-          {item.warrantyType.name}
+          <input
+            type="text"
+            value={editedItem.warrantyType?.name || ''}
+            onChange={(e) => handleChange(e, 'warrantyType')}
+          />
         </TableCell>
         <TableCell className="hidden md:table-cell">
-          {item.serviceLevelType.name}
+          <input
+            type="text"
+            value={editedItem.serviceLevelType?.name || ''}
+            onChange={(e) => handleChange(e, 'serviceLevelType')}
+          />
         </TableCell>
         <TableCell>
-          {item.dateOut ? item.dateOut.toLocaleDateString('en-US') : ''}
+          <input
+            type="text"
+            value={editedItem.dateOut?.toLocaleDateString('en-US') || ''}
+            onChange={(e) => handleChange(e, 'dateOut')}
+          />
         </TableCell>
-        <TableCell>{item.comments}</TableCell>
+        <TableCell>
+          <textarea
+            value={editedItem.comments || ''}
+            onChange={(e) => handleChange(e, 'comments')}
+          />
+        </TableCell>
         <TableCell>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -47,7 +96,7 @@ export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem>
                 <form>
-                  <button type="button" onClick={() => handleSaveClick(item)}>
+                  <button type="button" onClick={() => handleSaveClick(editedItem)}>
                     Save
                   </button>
                 </form>
@@ -123,8 +172,8 @@ async function handleDeleteClick(id: string){
 async function handleEditClick(id: string){
   await editReportItem(id);
 }
-async function handleSaveClick(Item: ReportItemWithNames){
-
+async function handleSaveClick(item: ReportItemWithNames){
+  await saveReportItem(item);
 }
 async function handleCancelClick(id: string){
 
