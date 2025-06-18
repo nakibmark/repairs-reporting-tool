@@ -1,3 +1,5 @@
+"use client"
+
 import { TableCell } from '@/components/ui/table';
 import { MoreHorizontal } from 'lucide-react';
 import {
@@ -10,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import React, { MouseEventHandler } from 'react';
 
-const ReportItemCellMenu = ({ isEditing, handleSaveClick, handleCancelClick, handleEditClick, handleDeleteClick }: { handleEditClick: MouseEventHandler, isEditing: boolean, handleSaveClick: MouseEventHandler, handleCancelClick: MouseEventHandler, handleDeleteClick: MouseEventHandler }) =>
+const ReportItemEditMenu = ({ isEditing, handleSaveClick, handleCancelClick, handleEditClick, handleDeleteClick }: { isEditing: boolean, handleEditClick: MouseEventHandler, handleSaveClick: MouseEventHandler, handleCancelClick: MouseEventHandler, handleDeleteClick: MouseEventHandler }) =>
   isEditing ?
     <TableCell>
       <DropdownMenu>
@@ -22,19 +24,11 @@ const ReportItemCellMenu = ({ isEditing, handleSaveClick, handleCancelClick, han
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem>
-            <form>
-              <button type="button" onClick={handleSaveClick}>
-                Save
-              </button>
-            </form>
+          <DropdownMenuItem onClick={handleSaveClick}>
+            Save
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <form>
-              <button type="button" onClick={handleCancelClick}>
-                Cancel
-              </button>
-            </form>
+          <DropdownMenuItem onClick={handleCancelClick}>
+            Cancel
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -50,22 +44,14 @@ const ReportItemCellMenu = ({ isEditing, handleSaveClick, handleCancelClick, han
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem>
-            <form>
-              <button type="button" onClick={handleEditClick}>
-                Edit
-              </button>
-            </form>
+          <DropdownMenuItem onClick={handleEditClick}>
+            Edit
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <form>
-              <button type="button" onClick={handleDeleteClick}>
-                Delete
-              </button>
-            </form>
+          <DropdownMenuItem onClick={handleDeleteClick}>
+            Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </TableCell>
 
-export default ReportItemCellMenu;
+export default ReportItemEditMenu;

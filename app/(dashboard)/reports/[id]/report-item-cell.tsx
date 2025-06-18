@@ -1,24 +1,20 @@
+"use client"
+
+import { Input } from '@/components/ui/input';
 import { TableCell } from '@/components/ui/table';
-import { ReportItemWithNames } from '@/lib/data/reportItems';
 import React, { ChangeEventHandler } from 'react';
 
-const ReportItemCell = ({ editState, onChange, valueEdit, valueStatic }: { editState: boolean, onChange: ChangeEventHandler<HTMLInputElement>, valueEdit: string, valueStatic: (string | null) }) => {
-  if (editState) {
-    return (
-      <TableCell className="hidden md:table-cell">
-        <input
-          value={valueEdit}
-          onChange={onChange}
-        />
-      </TableCell>
-    )
-  } else {
-    return (
-      <TableCell className="hidden md:table-cell">
-        {valueStatic}
-      </TableCell>
-    )
-  }
-}
+const ReportItemCell = ({ isEditing, onChange, value }: { isEditing: boolean, onChange: ChangeEventHandler<HTMLInputElement>, value: string }) =>
+  isEditing ?
+    <TableCell className="hidden md:table-cell">
+      <Input
+        value={value || ''}
+        onChange={onChange}
+      />
+    </TableCell>
+    :
+    <TableCell className="hidden md:table-cell">
+      {value}
+    </TableCell>
 
 export default ReportItemCell

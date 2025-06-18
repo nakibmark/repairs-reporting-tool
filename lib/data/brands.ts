@@ -10,6 +10,10 @@ export const getBrandName = async (id: number): Promise<string> => {
   return result?.name || 'Unknown';
 };
 
+export const getBrands = async (): Promise<> => {
+
+}
+
 export const getBrandId = async (brandName: string): Promise<number> => {
   const result = await db.query.brands.findFirst({
     where: eq(brands.name, brandName),
