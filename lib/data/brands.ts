@@ -1,6 +1,10 @@
 import { db } from '../db';
 import { brands } from '../schema';
 import { eq } from 'drizzle-orm';
+type Option = {
+  id: number
+  name: string
+}
 
 export const getBrandName = async (id: number): Promise<string> => {
   const result = await db.query.brands.findFirst({
@@ -10,9 +14,7 @@ export const getBrandName = async (id: number): Promise<string> => {
   return result?.name || 'Unknown';
 };
 
-export const getBrands = async (): Promise<> => {
-
-}
+export const getBrands = async (): Promise<Option[]> => await db.select().from(brands);
 
 export const getBrandId = async (brandName: string): Promise<number> => {
   const result = await db.query.brands.findFirst({

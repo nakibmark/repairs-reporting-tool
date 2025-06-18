@@ -18,7 +18,7 @@ type Option = {
   name: string
 }
 
-const ReportItemDropdown = ({ isEditing, onChange, value, options }: { isEditing: boolean, onChange: ChangeEventHandler<HTMLInputElement>, value: string, options: Option[] }) => {
+const ReportItemDropdown = ({ isEditing, onChange, currentValue, options }: { isEditing: boolean, onChange: ChangeEventHandler<HTMLInputElement>, currentValue: string, options: Option[] }) => {
   const [open, setOpen] = React.useState(false)
   const [selectedOption, setSelectedOption] = React.useState<Option | null>(null)
 
@@ -58,7 +58,7 @@ const ReportItemDropdown = ({ isEditing, onChange, value, options }: { isEditing
     </TableCell>
     :
     <TableCell className="hidden md:table-cell">
-      {value}
+      {currentValue}
     </TableCell>
 }
 
