@@ -14,7 +14,7 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { ReportItem } from './report-item';
+import ReportItem from './report-item';
 import { ReportItemWithNames } from '@/lib/data/reportItems';
 
 export const ReportItemsTable = ({
