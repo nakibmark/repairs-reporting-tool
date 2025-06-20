@@ -17,7 +17,7 @@ import {
 import ReportItem from './report-item';
 import { ReportItemWithNames } from '@/lib/data/reportItems';
 
-export const ReportItemsTable = ({
+const ReportItemsTable = ({
   items, brands, serviceLevelTypes, warrantyTypes
 }: {
   items: ReportItemWithNames[], brands: { id: number, name: string }[], serviceLevelTypes: { id: number, name: string }[], warrantyTypes: { id: number, name: string }[]
@@ -64,3 +64,5 @@ export const ReportItemsTable = ({
     </CardContent>
   </Card>
 );
+
+export default ReportItemsTable;

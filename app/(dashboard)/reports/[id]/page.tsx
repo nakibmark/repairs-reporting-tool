@@ -2,7 +2,7 @@ import {
   getReportItemsWithNames,
   ReportItemWithNames
 } from '@/lib/data/reportItems';
-import { ReportItemsTable } from './report-items-table';
+import ReportItemsTable from './report-items-table';
 import { fetchBrands, fetchServiceLevelTypes, fetchWarrantyTypes } from './actions';
 
 export default async function ReportDetailsPage({
