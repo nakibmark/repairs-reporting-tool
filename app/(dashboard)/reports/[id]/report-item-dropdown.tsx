@@ -27,7 +27,7 @@ const ReportItemDropdown = ({ isEditing, onChange, currentValue, options }: { is
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="w-[150px] justify-start">
-            {selectedOption ? <>{selectedOption.name}</> : <>Choose Option</>}
+            {selectedOption ? <>{selectedOption.name}</> : <>{currentValue}</>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
@@ -39,10 +39,10 @@ const ReportItemDropdown = ({ isEditing, onChange, currentValue, options }: { is
                 {options.map((option) => (
                   <CommandItem
                     key={option.id}
-                    value={option.id}
-                    onSelect={(selectedId: number) => {
+                    value={String(option.id)}
+                    onSelect={(selectedId: string) => {
                       setSelectedOption(
-                        options.find((option) => option.id === selectedId) || null
+                        options.find((option) => String(option.id) === selectedId) || null
                       )
                       setOpen(false)
                     }}

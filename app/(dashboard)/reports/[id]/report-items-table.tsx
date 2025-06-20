@@ -18,9 +18,9 @@ import ReportItem from './report-item';
 import { ReportItemWithNames } from '@/lib/data/reportItems';
 
 export const ReportItemsTable = ({
-  items
+  items, brands, serviceLevelTypes, warrantyTypes
 }: {
-  items: ReportItemWithNames[];
+  items: ReportItemWithNames[], brands: any, serviceLevelTypes: any, warrantyTypes: any
 }) => (
   <Card>
     <CardHeader>
@@ -57,7 +57,7 @@ export const ReportItemsTable = ({
         </TableHeader>
         <TableBody>
           {items.map((item) => (
-            <ReportItem key={item.id} item={item} />
+            <ReportItem key={item.id} item={item} brands={brands} serviceLevelTypes={serviceLevelTypes} warrantyTypes={warrantyTypes} />
           ))}
         </TableBody>
       </Table>
