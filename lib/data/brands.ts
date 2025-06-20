@@ -15,10 +15,3 @@ export const getBrandName = cache(async (id: number): Promise<string> => {
 export const getBrands = cache(async (): Promise<SelectBrand[]> => await db.select().from(brands))
 
 
-export const getBrandId = cache(async (brandName: string): Promise<number> => {
-  const result = await db.query.brands.findFirst({
-    where: eq(brands.name, brandName),
-    columns: { id: true }
-  });
-  return result?.id || -1;
-})

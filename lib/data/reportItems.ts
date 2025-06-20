@@ -1,6 +1,5 @@
 import { db } from '../db';
 import { reportItems, SelectReportItem } from '../schema';
-import { getBrandId } from './brands';
 import { eq } from 'drizzle-orm';
 
 export type ReportItemWithNames = Awaited<
@@ -51,12 +50,12 @@ export async function deleteReportItemById(id: string) {
 };
 
 export async function saveReportItemByItem(item: ReportItemWithNames) {
-  const brandId: number = await getBrandId(item.brand.name);
   await db.update(reportItems).set({
     serialNo: item.serialNo,
     article: item.article,
-    //brandId: brandId
-    //warrantyTypeId : item.warrantyType
+    brandId: item.brand.id,
+    warrantyTypeId: item.warrantyType.id,
+    serviceLevelTypeId: item.serviceLevelType.id,
     repairNo: item.repairNo
   }).where(eq(reportItems.id, item.id))
 }

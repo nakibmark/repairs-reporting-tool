@@ -20,7 +20,7 @@ import { ReportItemWithNames } from '@/lib/data/reportItems';
 export const ReportItemsTable = ({
   items, brands, serviceLevelTypes, warrantyTypes
 }: {
-  items: ReportItemWithNames[], brands: any, serviceLevelTypes: any, warrantyTypes: any
+  items: ReportItemWithNames[], brands: { id: number, name: string }[], serviceLevelTypes: { id: number, name: string }[], warrantyTypes: { id: number, name: string }[]
 }) => (
   <Card>
     <CardHeader>
