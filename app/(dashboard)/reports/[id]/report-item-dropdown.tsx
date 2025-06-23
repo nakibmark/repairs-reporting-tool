@@ -38,13 +38,14 @@ const ReportItemDropdown = ({ isEditing, onChange, currentValue, options }: { is
               <CommandGroup>
                 {options.map((option) => (
                   <CommandItem
-                    key={option.id}
-                    value={String(option.id)}
-                    onSelect={(selectedId: string) => {
+                    key={option.name}
+                    value={String(option.name)}
+                    onSelect={(selectedName: string) => {
                       setSelectedOption(
-                        options.find((option) => String(option.id) === selectedId) || null
+                        options.find((option) => String(option.name) === selectedName) || null
                       )
-                      onChange(selectedId)
+                      let currentOption: Option = options.find((option) => String(option.name) === selectedName) || { id: -1, name: "" };
+                      onChange(currentOption.id)
                       setOpen(false)
                     }}
                   >
