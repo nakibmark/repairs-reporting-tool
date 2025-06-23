@@ -50,7 +50,6 @@ export async function deleteReportItemById(id: string) {
 };
 
 export async function saveReportItemByItem(item: ReportItemWithNames) {
-  console.log(item.dateOut)
   await db.update(reportItems).set({
     serialNo: item.serialNo,
     article: item.article,
