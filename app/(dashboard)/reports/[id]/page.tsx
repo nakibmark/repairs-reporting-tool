@@ -1,6 +1,5 @@
 import {
   getReportItemsWithNames,
-  ReportItemWithNames
 } from '@/lib/data/reportItems';
 import ReportItemsTable from './report-items-table';
 import { fetchBrands, fetchServiceLevelTypes, fetchWarrantyTypes } from './actions';
