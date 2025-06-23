@@ -7,6 +7,7 @@ import ReportItemEditMenu from './report-item-edit-menu';
 import React from 'react';
 import { deleteReportItem, saveReportItem } from './actions';
 import ReportItemDropdown from './report-item-dropdown';
+import ReportItemDatePicker from './report-item-date-picker';
 
 const ReportItem = ({ item, brands, serviceLevelTypes, warrantyTypes }:
   { item: ReportItemWithNames, brands: { id: number, name: string }[], serviceLevelTypes: { id: number, name: string }[], warrantyTypes: { id: number, name: string }[] }) => {
@@ -29,10 +30,11 @@ const ReportItem = ({ item, brands, serviceLevelTypes, warrantyTypes }:
 
   return (
     <TableRow>
-      <ReportItemCell onChange={handleChange('dateIn')} isEditing={isEditing} value={editedItem.dateIn?.toLocaleDateString('en-US') || ''}></ReportItemCell>
+      <ReportItemDatePicker
+        onChange={(selectedDate: Date) => { setEditedItem({ ...editedItem, dateIn: selectedDate }) }}
+        isEditing={isEditing} value={editedItem.dateIn}></ReportItemDatePicker>
       <ReportItemDropdown isEditing={isEditing} currentValue={editedItem.brand?.name || ''} options={brands}
         onChange={(selectedId: string) => { setEditedItem({ ...editedItem, brand: { id: Number(selectedId), name: findBrandByID(Number(selectedId)) } }) }}>
-
       </ReportItemDropdown>
       <ReportItemCell onChange={handleChange('repairNo')} isEditing={isEditing} value={editedItem.repairNo || ''} ></ReportItemCell>
       <ReportItemCell onChange={handleChange('article')} isEditing={isEditing} value={editedItem.article || ''} ></ReportItemCell>
@@ -43,7 +45,9 @@ const ReportItem = ({ item, brands, serviceLevelTypes, warrantyTypes }:
       <ReportItemDropdown isEditing={isEditing} currentValue={editedItem.serviceLevelType?.name || ''} options={serviceLevelTypes}
         onChange={(selectedId: string) => { setEditedItem({ ...editedItem, serviceLevelType: { id: Number(selectedId), name: findServiceByID(Number(selectedId)) } }) }}>
       </ReportItemDropdown>
-      <ReportItemCell onChange={handleChange('dateOut')} isEditing={isEditing} value={editedItem.dateOut?.toLocaleDateString('en-US') || ''} ></ReportItemCell>
+      <ReportItemDatePicker
+        onChange={(selectedDate: Date) => { setEditedItem({ ...editedItem, dateOut: selectedDate }) }}
+        isEditing={isEditing} value={editedItem.dateOut || undefined}></ReportItemDatePicker>
       <ReportItemCell onChange={handleChange('comments')} isEditing={isEditing} value={editedItem.comments || ''} ></ReportItemCell>
       <ReportItemEditMenu
         isEditing={isEditing}
