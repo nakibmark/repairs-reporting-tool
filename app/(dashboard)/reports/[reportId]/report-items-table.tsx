@@ -12,8 +12,10 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
+  CardAction
 } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import ReportItem from './report-item';
 import { ReportItemWithNames } from '@/lib/data/reportItems';
 
@@ -26,6 +28,12 @@ const ReportItemsTable = ({
     <CardHeader>
       <CardTitle>Report Details</CardTitle>
       <CardDescription>View your report details.</CardDescription>
+      <CardAction>
+        <Button>Add Report Item</Button>
+      </CardAction>
+      <CardAction>
+        <Button>Submit Report</Button>
+      </CardAction>
     </CardHeader>
     <CardContent>
       <Table>
