@@ -12,6 +12,6 @@ export const getBrandName = cache(async (id: number): Promise<string> => {
   return result?.name || 'Unknown';
 })
 
-export const getBrands = cache(async (): Promise<SelectBrand[]> => await db.select().from(brands))
+export const getBrands = cache(async () => await db.select().from(brands))
 
 
