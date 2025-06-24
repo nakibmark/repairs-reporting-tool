@@ -23,7 +23,7 @@ const ReportItemDropdown = ({ isEditing, onChange, currentValue, options }: { is
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="w-[150px] justify-start">
-            {selectedOption ? <>{selectedOption.name}</> : <>{currentValue}</>}
+            {currentValue || 'Select option...'}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start">
