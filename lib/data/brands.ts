@@ -1,4 +1,4 @@
-import 'server-only'
+'use server'
 import { cache } from 'react';
 import { db } from '../db';
 import { brands, SelectBrand } from '../schema';
