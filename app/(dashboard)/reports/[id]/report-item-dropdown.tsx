@@ -36,12 +36,8 @@ const ReportItemDropdown = ({ isEditing, onChange, currentValue, options }: { is
                   <CommandItem
                     key={option.name}
                     value={String(option.name)}
-                    onSelect={(selectedName: string) => {
-                      setSelectedOption(
-                        options.find((option) => String(option.name) === selectedName) || null
-                      )
-                      let currentOption: Option = options.find((option) => String(option.name) === selectedName) || { id: -1, name: "" };
-                      onChange(String(currentOption.id))
+                    onSelect={() => {
+                      onChange(String(option.id))
                       setOpen(false)
                     }}
                   >
