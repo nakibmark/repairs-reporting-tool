@@ -1,57 +1,130 @@
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { MoreHorizontal } from 'lucide-react';
-import { TableCell, TableRow } from '@/components/ui/table';
-import { ReportItemWithNames } from '@/lib/data/reportItems';
+'use client';
 
-export const ReportItem = ({ item }: { item: ReportItemWithNames }) => {
+import { TableRow } from '@/components/ui/table';
+import { ReportItemWithNames } from '@/lib/data/reportItems';
+import ReportItemCell from './report-item-cell';
+import ReportItemEditMenu from './report-item-edit-menu';
+import React from 'react';
+import { deleteReportItem, saveReportItem } from './actions';
+import ReportItemDropdown from './report-item-dropdown';
+import ReportItemDatePicker from './report-item-date-picker';
+
+const ReportItem = ({
+  item,
+  brands,
+  serviceLevelTypes,
+  warrantyTypes
+}: {
+  item: ReportItemWithNames;
+  brands: { id: number; name: string }[];
+  serviceLevelTypes: { id: number; name: string }[];
+  warrantyTypes: { id: number; name: string }[];
+}) => {
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [editedItem, setEditedItem] = React.useState(item);
+
+  const handleChange =
+    (field: keyof ReportItemWithNames) =>
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setEditedItem({ ...editedItem, [field]: e.target.value });
+      };
+
+  const findNameById = (id: number, items: { id: number; name: string }[]) =>
+    items.find((item) => item.id === id)?.name || '';
+
   return (
     <TableRow>
-      <TableCell className="hidden md:table-cell">
-        {item.dateIn.toLocaleDateString('en-US')}
-      </TableCell>
-      <TableCell className="hidden md:table-cell">{item.brand.name}</TableCell>
-      <TableCell className="hidden md:table-cell">{item.repairNo}</TableCell>
-      <TableCell className="hidden md:table-cell">{item.article}</TableCell>
-      <TableCell className="hidden max-w-64 md:table-cell truncate">
-        {item.serialNo}
-      </TableCell>
-      <TableCell className="hidden md:table-cell">
-        {item.warrantyType.name}
-      </TableCell>
-      <TableCell className="hidden md:table-cell">
-        {item.serviceLevelType.name}
-      </TableCell>
-      <TableCell>
-        {item.dateOut ? item.dateOut.toLocaleDateString('en-US') : ''}
-      </TableCell>
-      <TableCell>{item.comments}</TableCell>
-      <TableCell>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button aria-haspopup="true" size="icon" variant="ghost">
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>
-              <form action={() => {}}>
-                <input type="hidden" name="id" value={item.id} />
-                <button type="submit">Delete</button>
-              </form>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </TableCell>
+      <ReportItemDatePicker
+        onChange={(selectedDate: string) => {
+          setEditedItem({ ...editedItem, dateIn: selectedDate });
+        }}
+        isEditing={isEditing}
+        value={editedItem.dateIn}
+      ></ReportItemDatePicker>
+      <ReportItemDropdown
+        isEditing={isEditing}
+        currentValue={editedItem.brand?.name || ''}
+        options={brands}
+        onChange={(selectedId: string) => {
+          setEditedItem({
+            ...editedItem,
+            brand: {
+              id: Number(selectedId),
+              name: findNameById(Number(selectedId), brands)
+            }
+          });
+        }}
+      ></ReportItemDropdown>
+      <ReportItemCell
+        onChange={handleChange('repairNo')}
+        isEditing={isEditing}
+        value={editedItem.repairNo || ''}
+      ></ReportItemCell>
+      <ReportItemCell
+        onChange={handleChange('article')}
+        isEditing={isEditing}
+        value={editedItem.article || ''}
+      ></ReportItemCell>
+      <ReportItemCell
+        onChange={handleChange('serialNo')}
+        isEditing={isEditing}
+        value={editedItem.serialNo || ''}
+      ></ReportItemCell>
+      <ReportItemDropdown
+        isEditing={isEditing}
+        currentValue={editedItem.warrantyType?.name || ''}
+        options={warrantyTypes}
+        onChange={(selectedId: string) => {
+          setEditedItem({
+            ...editedItem,
+            warrantyType: {
+              id: Number(selectedId),
+              name: findNameById(Number(selectedId), warrantyTypes)
+            }
+          });
+        }}
+      ></ReportItemDropdown>
+      <ReportItemDropdown
+        isEditing={isEditing}
+        currentValue={editedItem.serviceLevelType?.name || ''}
+        options={serviceLevelTypes}
+        onChange={(selectedId: string) => {
+          setEditedItem({
+            ...editedItem,
+            serviceLevelType: {
+              id: Number(selectedId),
+              name: findNameById(Number(selectedId), warrantyTypes)
+            }
+          });
+        }}
+      ></ReportItemDropdown>
+      <ReportItemDatePicker
+        onChange={(selectedDate: string) => {
+          setEditedItem({ ...editedItem, dateOut: selectedDate });
+        }}
+        isEditing={isEditing}
+        value={editedItem.dateOut || undefined}
+      ></ReportItemDatePicker>
+      <ReportItemCell
+        onChange={handleChange('comments')}
+        isEditing={isEditing}
+        value={editedItem.comments || ''}
+      ></ReportItemCell>
+      <ReportItemEditMenu
+        isEditing={isEditing}
+        handleEditClick={() => setIsEditing(true)}
+        handleCancelClick={() => {
+          setEditedItem(item);
+          setIsEditing(false);
+        }}
+        handleDeleteClick={async () => await deleteReportItem(item.id)}
+        handleSaveClick={async () => {
+          await saveReportItem(editedItem);
+          setIsEditing(false);
+        }}
+      ></ReportItemEditMenu>
     </TableRow>
   );
 };
+
+export default ReportItem;

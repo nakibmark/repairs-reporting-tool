@@ -163,8 +163,8 @@ export const reportItems = table(
       .integer()
       .notNull()
       .references(() => reports.id, { onDelete: 'cascade' }),
-    dateIn: t.date({ mode: 'date' }).notNull(),
-    dateOut: t.date({ mode: 'date' }),
+    dateIn: t.date({ mode: 'string' }).notNull(),
+    dateOut: t.date({ mode: 'string' }),
     brandId: t
       .integer()
       .notNull()

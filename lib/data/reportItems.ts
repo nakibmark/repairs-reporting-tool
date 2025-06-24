@@ -21,17 +21,16 @@ export const getReportItemsWithNames = async (id: number) => {
     with: {
       // Specify the relations you want to include
       brand: {
-        columns: { name: true } // Only fetch the 'name' column from brands
+        columns: { id: true, name: true } // Only fetch the 'name' column from brands
       },
       warrantyType: {
-        columns: { name: true } // Only fetch the 'name' column
+        columns: { id: true, name: true } // Only fetch the 'name' column
       },
       serviceLevelType: {
         // Fetch name and description, for example
-        columns: { name: true }
+        columns: { id: true, name: true }
       }
     },
-    // Optionally hide the original FK IDs from the result if desired
     columns: {
       brandId: false,
       warrantyTypeId: false,
@@ -41,3 +40,24 @@ export const getReportItemsWithNames = async (id: number) => {
 
   return { items };
 };
+
+export async function editReportItemById(id: string) {
+  await db.update(reportItems).set({ serviceLevelTypeId: 1 }).where(eq(reportItems.id, id))
+};
+
+export async function deleteReportItemById(id: string) {
+  await db.delete(reportItems).where(eq(reportItems.id, id));
+};
+
+export async function saveReportItemByItem(item: ReportItemWithNames) {
+  await db.update(reportItems).set({
+    serialNo: item.serialNo,
+    article: item.article,
+    brandId: item.brand.id,
+    warrantyTypeId: item.warrantyType.id,
+    serviceLevelTypeId: item.serviceLevelType.id,
+    repairNo: item.repairNo,
+    dateIn: item.dateIn,
+    dateOut: item.dateOut
+  }).where(eq(reportItems.id, item.id))
+}
