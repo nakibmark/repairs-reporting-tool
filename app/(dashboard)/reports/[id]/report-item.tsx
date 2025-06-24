@@ -25,23 +25,12 @@ const ReportItem = ({
 
   const handleChange =
     (field: keyof ReportItemWithNames) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setEditedItem({ ...editedItem, [field]: e.target.value });
-    };
-  const findBrandByID = (id: number): string => {
-    return brands.find((brand) => brand.id === id)?.name || '';
-  };
-  const findServiceByID = (id: number): string => {
-    return (
-      serviceLevelTypes.find((serviceLevelType) => serviceLevelType.id === id)
-        ?.name || ''
-    );
-  };
-  const findWarrantyByID = (id: number): string => {
-    return (
-      warrantyTypes.find((warrantyType) => warrantyType.id === id)?.name || ''
-    );
-  };
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setEditedItem({ ...editedItem, [field]: e.target.value });
+      };
+
+  const findNameById = (id: number, items: { id: number; name: string }[]) =>
+    items.find((item) => item.id === id)?.name || '';
 
   return (
     <TableRow>
@@ -61,7 +50,7 @@ const ReportItem = ({
             ...editedItem,
             brand: {
               id: Number(selectedId),
-              name: findBrandByID(Number(selectedId))
+              name: findNameById(Number(selectedId), brands)
             }
           });
         }}
@@ -90,7 +79,7 @@ const ReportItem = ({
             ...editedItem,
             warrantyType: {
               id: Number(selectedId),
-              name: findWarrantyByID(Number(selectedId))
+              name: findNameById(Number(selectedId), warrantyTypes)
             }
           });
         }}
@@ -104,7 +93,7 @@ const ReportItem = ({
             ...editedItem,
             serviceLevelType: {
               id: Number(selectedId),
-              name: findServiceByID(Number(selectedId))
+              name: findNameById(Number(selectedId), warrantyTypes)
             }
           });
         }}
