@@ -14,7 +14,7 @@ type Option = {
   name: string
 }
 
-const ReportItemDropdown = ({ isEditing, onChange, currentValue, options }: { isEditing: boolean, onChange: Function, currentValue: string, options: Option[] }) => {
+const ReportItemDropdown = ({ isEditing, onChange, currentValue, options }: { isEditing: boolean, onChange: (selectedId: string) => void, currentValue: string, options: Option[] }) => {
   const [open, setOpen] = React.useState(false)
   const [selectedOption, setSelectedOption] = React.useState<Option | null>(null)
 
@@ -41,7 +41,7 @@ const ReportItemDropdown = ({ isEditing, onChange, currentValue, options }: { is
                         options.find((option) => String(option.name) === selectedName) || null
                       )
                       let currentOption: Option = options.find((option) => String(option.name) === selectedName) || { id: -1, name: "" };
-                      onChange(currentOption.id)
+                      onChange(String(currentOption.id))
                       setOpen(false)
                     }}
                   >
