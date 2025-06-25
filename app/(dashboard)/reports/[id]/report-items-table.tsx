@@ -29,10 +29,7 @@ const ReportItemsTable = ({
       <CardTitle>Report Details</CardTitle>
       <CardDescription>View your report details.</CardDescription>
       <CardAction>
-        <Button>Add Report Item</Button>
-      </CardAction>
-      <CardAction>
-        <Button>Submit Report</Button>
+        <Button type="button" onClick={() => { console.log("Add report item clicked") }}>Add Report Item</Button>
       </CardAction>
     </CardHeader>
     <CardContent>
