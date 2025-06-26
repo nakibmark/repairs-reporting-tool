@@ -17,7 +17,7 @@ export default async function ReportDetailsPage({
   const { reportId } = await params;
   const { items } = await getReportItemsWithNames(reportId);
 
-  return <ReportItemsTable items={items} brands={brands} serviceLevelTypes={serviceLevelTypes} warrantyTypes={warrantyTypes} />;
+  return <ReportItemsTable tableProps={{ items, brands, serviceLevelTypes, warrantyTypes }} />;
 }
 
 

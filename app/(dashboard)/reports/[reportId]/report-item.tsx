@@ -8,108 +8,102 @@ import React from 'react';
 import { deleteReportItem, saveReportItem } from './actions';
 import ReportItemDropdown from './report-item-dropdown';
 import ReportItemDatePicker from './report-item-date-picker';
+import { DropdownOption } from './report-items-table';
 
-const ReportItem = ({
-  item,
-  brands,
-  serviceLevelTypes,
-  warrantyTypes
-}: {
-  item: ReportItemWithNames;
-  brands: { id: number; name: string }[];
-  serviceLevelTypes: { id: number; name: string }[];
-  warrantyTypes: { id: number; name: string }[];
+const ReportItem = (props: {
+  item?: ReportItemWithNames;
+  brands: DropdownOption[];
+  serviceLevelTypes: DropdownOption[];
+  warrantyTypes: DropdownOption[];
 }) => {
-  const [isEditing, setIsEditing] = React.useState(false);
-  const [editedItem, setEditedItem] = React.useState(item);
+  const {
+    item,
+    brands,
+    serviceLevelTypes,
+    warrantyTypes
+  } = props;
 
-  const handleChange =
+  const [isEditing, setIsEditing] = React.useState(!item);
+  const [editedItem, setEditedItem] = React.useState<Partial<ReportItemWithNames> | undefined>(item);
+
+  const handleSaveClick = () => {
+    saveReportItem(editedItem as Required<ReportItemWithNames>);
+    setIsEditing(false);
+  }
+
+  const findNameById = (id: number, items: DropdownOption[]) =>
+    items.find((item) => item.id === id)?.name || '';
+
+  const onInputChange =
     (field: keyof ReportItemWithNames) =>
       (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setEditedItem({ ...editedItem, [field]: e.target.value });
       };
 
-  const findNameById = (id: number, items: { id: number; name: string }[]) =>
-    items.find((item) => item.id === id)?.name || '';
+  const onDropdownChange = (field: ('brand' | 'serviceLevelType' | 'warrantyType')) =>
+    (selectedId: string) =>
+      setEditedItem({
+        ...editedItem,
+        [field]: {
+          id: Number(selectedId),
+          name: findNameById(Number(selectedId), props[`${field}s`])
+        }
+      });
+
+  const onDateChange = (field: ('dateOut' | 'dateIn')) => (selectedDate: string) => {
+    setEditedItem({ ...editedItem, [field]: selectedDate });
+  }
 
   return (
     <TableRow>
       <ReportItemDatePicker
-        onChange={(selectedDate: string) => {
-          setEditedItem({ ...editedItem, dateIn: selectedDate });
-        }}
+        onChange={onDateChange('dateIn')}
         isEditing={isEditing}
-        value={editedItem.dateIn}
-      ></ReportItemDatePicker>
+        value={editedItem?.dateIn}
+      />
       <ReportItemDropdown
         isEditing={isEditing}
-        currentValue={editedItem.brand?.name || ''}
+        currentValue={editedItem?.brand?.name}
         options={brands}
-        onChange={(selectedId: string) => {
-          setEditedItem({
-            ...editedItem,
-            brand: {
-              id: Number(selectedId),
-              name: findNameById(Number(selectedId), brands)
-            }
-          });
-        }}
-      ></ReportItemDropdown>
+        onChange={onDropdownChange('brand')}
+      />
       <ReportItemCell
-        onChange={handleChange('repairNo')}
+        onChange={onInputChange('repairNo')}
         isEditing={isEditing}
-        value={editedItem.repairNo || ''}
-      ></ReportItemCell>
+        value={editedItem?.repairNo}
+      />
       <ReportItemCell
-        onChange={handleChange('article')}
+        onChange={onInputChange('article')}
         isEditing={isEditing}
-        value={editedItem.article || ''}
-      ></ReportItemCell>
+        value={editedItem?.article}
+      />
       <ReportItemCell
-        onChange={handleChange('serialNo')}
+        onChange={onInputChange('serialNo')}
         isEditing={isEditing}
-        value={editedItem.serialNo || ''}
-      ></ReportItemCell>
+        value={editedItem?.serialNo}
+      />
       <ReportItemDropdown
         isEditing={isEditing}
-        currentValue={editedItem.warrantyType?.name || ''}
+        currentValue={editedItem?.warrantyType?.name}
         options={warrantyTypes}
-        onChange={(selectedId: string) => {
-          setEditedItem({
-            ...editedItem,
-            warrantyType: {
-              id: Number(selectedId),
-              name: findNameById(Number(selectedId), warrantyTypes)
-            }
-          });
-        }}
-      ></ReportItemDropdown>
+        onChange={onDropdownChange('warrantyType')}
+      />
       <ReportItemDropdown
         isEditing={isEditing}
-        currentValue={editedItem.serviceLevelType?.name || ''}
+        currentValue={editedItem?.serviceLevelType?.name}
         options={serviceLevelTypes}
-        onChange={(selectedId: string) => {
-          setEditedItem({
-            ...editedItem,
-            serviceLevelType: {
-              id: Number(selectedId),
-              name: findNameById(Number(selectedId), warrantyTypes)
-            }
-          });
-        }}
-      ></ReportItemDropdown>
+        onChange={onDropdownChange('serviceLevelType')}
+      />
       <ReportItemDatePicker
-        onChange={(selectedDate: string) => {
-          setEditedItem({ ...editedItem, dateOut: selectedDate });
-        }}
+        onChange={onDateChange('dateOut')}
         isEditing={isEditing}
-        value={editedItem.dateOut || undefined}
-      ></ReportItemDatePicker>
+        value={editedItem?.dateOut}
+      />
       <ReportItemCell
-        onChange={handleChange('comments')}
+        onChange={onInputChange('comments')}
         isEditing={isEditing}
-        value={editedItem.comments || ''}
-      ></ReportItemCell>
+        value={editedItem?.comments}
+      />
       <ReportItemEditMenu
         isEditing={isEditing}
         handleEditClick={() => setIsEditing(true)}
@@ -117,12 +111,9 @@ const ReportItem = ({
           setEditedItem(item);
           setIsEditing(false);
         }}
-        handleDeleteClick={async () => await deleteReportItem(item.id)}
-        handleSaveClick={async () => {
-          await saveReportItem(editedItem);
-          setIsEditing(false);
-        }}
-      ></ReportItemEditMenu>
+        handleDeleteClick={() => deleteReportItem(item?.id)}
+        handleSaveClick={handleSaveClick}
+      />
     </TableRow>
   );
 };
