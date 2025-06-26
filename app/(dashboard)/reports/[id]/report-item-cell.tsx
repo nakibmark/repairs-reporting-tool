@@ -4,17 +4,17 @@ import { Input } from '@/components/ui/input';
 import { TableCell } from '@/components/ui/table';
 import React, { ChangeEventHandler } from 'react';
 
-const ReportItemCell = ({ isEditing, onChange, value }: { isEditing: boolean, onChange: ChangeEventHandler<HTMLInputElement>, value: string }) =>
+const ReportItemCell = ({ isEditing, onChange, value }: { isEditing: boolean, onChange: ChangeEventHandler<HTMLInputElement>, value: string | null | undefined }) =>
   isEditing ?
     <TableCell className="hidden md:table-cell">
       <Input
-        value={value || ''}
+        value={value || ""}
         onChange={onChange}
       />
     </TableCell>
     :
     <TableCell className="hidden md:table-cell">
-      {value}
+      {value || '-'}
     </TableCell>
 
 export default ReportItemCell
