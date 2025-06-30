@@ -92,7 +92,7 @@ export const partnerBrands = table(
 export const reports = table(
   'reports',
   {
-    id: t.integer().primaryKey().generatedAlwaysAsIdentity(),
+    reportId: t.integer().primaryKey().generatedAlwaysAsIdentity(),
     partnerId: t
       .integer()
       .notNull()
@@ -162,7 +162,7 @@ export const reportItems = table(
     reportId: t
       .integer()
       .notNull()
-      .references(() => reports.id, { onDelete: 'cascade' }),
+      .references(() => reports.reportId, { onDelete: 'cascade' }),
     dateIn: t.date({ mode: 'string' }).notNull(),
     dateOut: t.date({ mode: 'string' }),
     brandId: t
@@ -239,7 +239,7 @@ export const serviceLevelTypesRelations = relations(
 export const reportItemsRelations = relations(reportItems, ({ one }) => ({
   report: one(reports, {
     fields: [reportItems.reportId],
-    references: [reports.id]
+    references: [reports.reportId]
   }),
   brand: one(brands, {
     fields: [reportItems.brandId],
