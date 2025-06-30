@@ -1,6 +1,6 @@
 'use server';
 import { revalidatePath } from 'next/cache';
-import { deleteReportItemById, ReportItemWithNames, saveReportItemByItem } from '@/lib/data/reportItems';
+import { deleteReportItemById, ReportItemWithNames, updateReportItem, createReportItem } from '@/lib/data/reportItems';
 
 export async function deleteReportItem(itemId?: string) {
   if (itemId) {
@@ -9,7 +9,10 @@ export async function deleteReportItem(itemId?: string) {
   revalidatePath('/reports/[reportId]/page', 'page');
 };
 
-export async function saveReportItem(item: Required<ReportItemWithNames>) {
-  await saveReportItemByItem(item);
+export async function saveReportItem(item: ReportItemWithNames) {
+  item.id ? 
+  await updateReportItem(item)
+  :
+  await createReportItem(item);
   revalidatePath('/reports/[reportId]/page', 'page');
 };

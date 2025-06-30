@@ -1,6 +1,7 @@
 import { db } from '../db';
-import { reportItems, SelectReportItem } from '../schema';
+import { reportItems, SelectReportItem, InsertReportItem} from '../schema';
 import { eq } from 'drizzle-orm';
+
 
 export type ReportItemWithNames = Awaited<
   ReturnType<typeof getReportItemsWithNames>
@@ -39,15 +40,11 @@ export const getReportItemsWithNames = async (reportId: number) => {
   return { items };
 };
 
-export async function editReportItemById(id: string) {
-  await db.update(reportItems).set({ serviceLevelTypeId: 1 }).where(eq(reportItems.id, id))
-};
-
 export async function deleteReportItemById(id: string) {
   await db.delete(reportItems).where(eq(reportItems.id, id));
 };
 
-export async function saveReportItemByItem(item: ReportItemWithNames) {
+export async function updateReportItem(item: ReportItemWithNames) {
   await db.update(reportItems).set({
     serialNo: item.serialNo,
     article: item.article,
@@ -58,4 +55,19 @@ export async function saveReportItemByItem(item: ReportItemWithNames) {
     dateIn: item.dateIn,
     dateOut: item.dateOut
   }).where(eq(reportItems.id, item.id))
+}
+
+export async function createReportItem(item: ReportItemWithNames){
+  await db.insert(reportItems).values({
+    serialNo: item.serialNo,
+    article: item.article,
+    brandId: item.brand.id,
+    warrantyTypeId: item.warrantyType.id,
+    serviceLevelTypeId: item.serviceLevelType.id,
+    repairNo: item.repairNo,
+    dateIn: item.dateIn,
+    dateOut: item.dateOut,
+    reportId: item.reportId
+  }
+  );
 }
