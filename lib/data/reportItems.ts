@@ -14,20 +14,18 @@ export const getReportItems = async (
   items: await db.select().from(reportItems).where(eq(reportItems.reportId, id))
 });
 
-export const getReportItemsWithNames = async (id: number) => {
+export const getReportItemsWithNames = async (reportId: number) => {
   const items = await db.query.reportItems.findMany({
-    where: eq(reportItems.reportId, id), // Example filter
-    orderBy: (items, { asc }) => [asc(items.createdAt)], // Example ordering
+    where: eq(reportItems.reportId, reportId),
+    orderBy: (items, { asc }) => [asc(items.createdAt)],
     with: {
-      // Specify the relations you want to include
       brand: {
-        columns: { id: true, name: true } // Only fetch the 'name' column from brands
+        columns: { id: true, name: true }
       },
       warrantyType: {
-        columns: { id: true, name: true } // Only fetch the 'name' column
+        columns: { id: true, name: true }
       },
       serviceLevelType: {
-        // Fetch name and description, for example
         columns: { id: true, name: true }
       }
     },

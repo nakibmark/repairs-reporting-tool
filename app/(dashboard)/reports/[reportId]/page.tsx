@@ -9,13 +9,13 @@ import { getWarrantyTypes } from '@/lib/data/warrantyTypes';
 export default async function ReportDetailsPage({
   params
 }: {
-  params: Promise<{ id: number }>;
+  params: Promise<{ reportId: number }>;
 }) {
   const brands = await getBrands();
   const serviceLevelTypes = await getServiceLevelTypes();
   const warrantyTypes = await getWarrantyTypes();
-  const { id } = await params;
-  const { items } = await getReportItemsWithNames(id);
+  const { reportId } = await params;
+  const { items } = await getReportItemsWithNames(reportId);
 
   return <ReportItemsTable items={items} brands={brands} serviceLevelTypes={serviceLevelTypes} warrantyTypes={warrantyTypes} />;
 }
