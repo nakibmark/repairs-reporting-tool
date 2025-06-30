@@ -5,14 +5,15 @@ import { deleteReportItemById, ReportItemWithNames, updateReportItem, createRepo
 export async function deleteReportItem(itemId?: string) {
   if (itemId) {
     await deleteReportItemById(itemId);
+    revalidatePath('/reports/[reportId]/page', 'page');
   }
-  revalidatePath('/reports/[reportId]/page', 'page');
 };
 
 export async function saveReportItem(item: ReportItemWithNames) {
-  item.id ? 
-  await updateReportItem(item)
-  :
-  await createReportItem(item);
+  if (item.id){
+    await updateReportItem(item)
+  }else {
+    await createReportItem(item);
+  }
   revalidatePath('/reports/[reportId]/page', 'page');
 };
