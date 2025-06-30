@@ -18,7 +18,7 @@ const ReportItemDatePicker = ({
 }: {
   isEditing: boolean;
   onChange: (date: string) => void;
-  value: string | undefined;
+  value: string | null | undefined;
 }) => {
   const [open, setOpen] = React.useState(false);
 
