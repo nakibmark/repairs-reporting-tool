@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import ReportItem from './report-item';
 import { ReportItemWithNames } from '@/lib/data/reportItems';
 import React, { useState } from 'react';
+import { PlusCircle } from 'lucide-react';
 
 export type DropdownOption = { id: number, name: string }
 
@@ -37,7 +38,13 @@ const ReportItemsTable = ({
         <CardTitle>Report Details</CardTitle>
         <CardDescription>View your report details.</CardDescription>
         <CardAction>
-          <Button type="button" onClick={() => setIsCreatingNewItem(true)}>Add Report Item</Button>
+          
+          <Button type="button" onClick={() => setIsCreatingNewItem(true)} size="sm" className="h-8 gap-1">
+          <PlusCircle className="h-3.5 w-3.5" />
+            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+              Add Report Item
+            </span>
+          </Button>
         </CardAction>
       </CardHeader>
       <CardContent>
