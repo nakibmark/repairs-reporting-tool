@@ -10,7 +10,6 @@ export async function getReports(
   newOffset: number | null;
   totalReports: number;
 }> {
-  // Always search the full table, not per page
   if (search) {
     return {
       reports: await db.query.reports.findMany({
@@ -36,3 +35,7 @@ export async function getReports(
     totalReports: totalReports[0].count
   };
 }
+
+export async function deleteReport(id: number) {
+  await db.delete(reports).where(eq(reports.id, id));
+};
