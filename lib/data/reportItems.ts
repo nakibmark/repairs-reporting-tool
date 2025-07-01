@@ -1,5 +1,5 @@
 import { db } from '../db';
-import { reportItems, SelectReportItem, InsertReportItem} from '../schema';
+import { reportItems, SelectReportItem} from '../schema';
 import { eq } from 'drizzle-orm';
 
 
