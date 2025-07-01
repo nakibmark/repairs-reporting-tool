@@ -1,7 +1,7 @@
 'use server';
 import { deleteReport , createReport} from '@/lib/data/reports';
 import { SelectReport } from '@/lib/schema';
-
+import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 
 export async function deleteReportById(reportId: number) {
@@ -10,6 +10,6 @@ export async function deleteReportById(reportId: number) {
 };
 
 export async function CreateReportByReport(report: SelectReport) {
-    await createReport(report);
-    revalidatePath('/reports', 'page');
+    const createdId = await createReport(report);
+    redirect('/reports/'[createdId]);
 };
