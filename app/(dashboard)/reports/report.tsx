@@ -11,6 +11,7 @@ import { MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { SelectReport } from '@/lib/schema';
 import Link from 'next/link';
+import { deleteReportById } from './actions';
 
 export function Report({ report }: { report: SelectReport }) {
   return (
@@ -45,10 +46,7 @@ export function Report({ report }: { report: SelectReport }) {
               <Link href={`/reports/${report.id}`}>Edit</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <form action={() => {}}>
-                <input type="hidden" name="id" value={report.id} />
-                <button type="submit">Delete</button>
-              </form>
+                <button type="button" onClick={() => deleteReportById(report.id)}>Delete</button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
