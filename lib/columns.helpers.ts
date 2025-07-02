@@ -7,5 +7,5 @@ export const timestamps = {
     .notNull(),
   createdAt: timestamp({ withTimezone: true, mode: 'date' })
     .defaultNow()
-    .notNull()
+    .notNull(),
 };

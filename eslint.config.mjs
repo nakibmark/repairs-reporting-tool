@@ -1,12 +1,12 @@
-import { defineConfig, globalIgnores } from 'eslint/config'
-import js from '@eslint/js'
-import { FlatCompat } from '@eslint/eslintrc'
+import { defineConfig, globalIgnores } from 'eslint/config';
+import js from '@eslint/js';
+import { FlatCompat } from '@eslint/eslintrc';
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,
   recommendedConfig: js.configs.recommended,
   allConfig: js.configs.all,
-})
+});
 
 export default defineConfig([
   {
@@ -18,4 +18,4 @@ export default defineConfig([
     ),
   },
   globalIgnores(['.next', '.vercel', 'components']),
-])
+]);

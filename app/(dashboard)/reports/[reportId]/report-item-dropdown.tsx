@@ -1,12 +1,12 @@
-'use client'
-import { TableCell } from '@/components/ui/table'
-import React from 'react'
+'use client';
+import { TableCell } from '@/components/ui/table';
+import React from 'react';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover'
-import { Button } from '@/components/ui/button'
+} from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
 import {
   Command,
   CommandInput,
@@ -14,12 +14,12 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandItem,
-} from '@/components/ui/command'
+} from '@/components/ui/command';
 
 type Option = {
-  id: number
-  name: string
-}
+  id: number;
+  name: string;
+};
 
 const ReportItemDropdown = ({
   isEditing,
@@ -27,12 +27,12 @@ const ReportItemDropdown = ({
   currentValue,
   options,
 }: {
-  isEditing: boolean
-  onChange: (selectedId: string) => void
-  currentValue?: string
-  options: Option[]
+  isEditing: boolean;
+  onChange: (selectedId: string) => void;
+  currentValue?: string;
+  options: Option[];
 }) => {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false);
 
   return isEditing ? (
     <TableCell className="hidden md:table-cell">
@@ -53,8 +53,8 @@ const ReportItemDropdown = ({
                     key={option.name}
                     value={String(option.name)}
                     onSelect={() => {
-                      onChange(String(option.id))
-                      setOpen(false)
+                      onChange(String(option.id));
+                      setOpen(false);
                     }}
                   >
                     {option.name}
@@ -70,7 +70,7 @@ const ReportItemDropdown = ({
     <TableCell className="hidden md:table-cell">
       {currentValue || '-'}
     </TableCell>
-  )
-}
+  );
+};
 
-export default ReportItemDropdown
+export default ReportItemDropdown;

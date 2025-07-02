@@ -1,21 +1,21 @@
-import { db } from '../db'
-import { reportItems, SelectReportItem } from '../schema'
-import { eq } from 'drizzle-orm'
+import { db } from '../db';
+import { reportItems, SelectReportItem } from '../schema';
+import { eq } from 'drizzle-orm';
 
 export type ReportItemWithNames = Awaited<
   ReturnType<typeof getReportItemsWithNames>
->['items'][number]
+>['items'][number];
 
 export const getReportItems = async (
   id: number
 ): Promise<{
-  items: SelectReportItem[]
+  items: SelectReportItem[];
 }> => ({
   items: await db
     .select()
     .from(reportItems)
     .where(eq(reportItems.reportId, id)),
-})
+});
 
 export const getReportItemsWithNames = async (reportId: number) => {
   const items = await db.query.reportItems.findMany({
@@ -37,13 +37,13 @@ export const getReportItemsWithNames = async (reportId: number) => {
       warrantyTypeId: false,
       serviceLevelTypeId: false,
     },
-  })
+  });
 
-  return { items }
-}
+  return { items };
+};
 
 export async function deleteReportItemById(id: string) {
-  await db.delete(reportItems).where(eq(reportItems.id, id))
+  await db.delete(reportItems).where(eq(reportItems.id, id));
 }
 
 export async function updateReportItem(item: ReportItemWithNames) {
@@ -59,7 +59,7 @@ export async function updateReportItem(item: ReportItemWithNames) {
       dateIn: item.dateIn,
       dateOut: item.dateOut,
     })
-    .where(eq(reportItems.id, item.id))
+    .where(eq(reportItems.id, item.id));
 }
 
 export async function createReportItem(item: ReportItemWithNames) {
@@ -73,5 +73,5 @@ export async function createReportItem(item: ReportItemWithNames) {
     dateIn: item.dateIn,
     dateOut: item.dateOut,
     reportId: item.reportId,
-  })
+  });
 }

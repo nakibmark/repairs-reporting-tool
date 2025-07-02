@@ -5,7 +5,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
@@ -46,7 +46,9 @@ export function Report({ report }: { report: SelectReport }) {
               <Link href={`/reports/${report.id}`}>Edit</Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-                <button type="button" onClick={() => deleteReportById(report.id)}>Delete</button>
+              <button type="button" onClick={() => deleteReportById(report.id)}>
+                Delete
+              </button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

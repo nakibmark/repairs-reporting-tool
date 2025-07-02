@@ -1,19 +1,19 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { PlusCircle } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { ReportsTable } from './reports-table'
-import { getReports } from '@/lib/data/reports'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PlusCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ReportsTable } from './reports-table';
+import { getReports } from '@/lib/data/reports';
 
 export default async function ReportsPage(props: {
-  searchParams: Promise<{ q: string; offset: string }>
+  searchParams: Promise<{ q: string; offset: string }>;
 }) {
-  const searchParams = await props.searchParams
-  const search = searchParams.q ?? ''
-  const offset = searchParams.offset ?? 0
+  const searchParams = await props.searchParams;
+  const search = searchParams.q ?? '';
+  const offset = searchParams.offset ?? 0;
   const { reports, newOffset, totalReports } = await getReports(
     search,
     Number(offset)
-  )
+  );
 
   return (
     <Tabs defaultValue="all">
@@ -60,5 +60,5 @@ export default async function ReportsPage(props: {
         />
       </TabsContent>
     </Tabs>
-  )
+  );
 }

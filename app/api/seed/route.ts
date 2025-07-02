@@ -12,7 +12,7 @@ export async function GET() {
       columns: {
         partnerNo: f.string(),
         partnerName: f.companyName({
-          isUnique: true
+          isUnique: true,
         }),
         emailAddress: f.email(),
         phoneNumber: f.phoneNumber(),
@@ -20,12 +20,12 @@ export async function GET() {
         state: f.state(),
         country: f.country(),
         market: f.valuesFromArray({
-          values: ['US', 'LATAM', 'MX']
+          values: ['US', 'LATAM', 'MX'],
         }),
         region: f.valuesFromArray({
-          values: ['US', 'LATAM', 'MX']
-        })
-      }
+          values: ['US', 'LATAM', 'MX'],
+        }),
+      },
     },
     users: {
       count: 5,
@@ -33,42 +33,42 @@ export async function GET() {
         emailAddress: f.email(),
         name: f.fullName(),
         role: f.default({
-          defaultValue: 'admin'
-        })
-      }
+          defaultValue: 'admin',
+        }),
+      },
     },
     reports: {
       count: 10,
       with: {
-        reportItems: 20
+        reportItems: 20,
       },
       columns: {
         isSubmitted: f.boolean(),
         reportYear: f.int({
           minValue: 2023,
-          maxValue: 2050
+          maxValue: 2050,
         }),
         reportMonth: f.int({
           minValue: 1,
-          maxValue: 12
-        })
-      }
+          maxValue: 12,
+        }),
+      },
     },
     reportItems: {
       columns: {
         repairNo: f.int({
           minValue: 100000,
-          maxValue: 999999
+          maxValue: 999999,
         }),
         article: f.int({
           minValue: 100000,
-          maxValue: 999999
+          maxValue: 999999,
         }),
         serialNo: f.string(),
         comments: f.loremIpsum({
-          sentencesCount: 1
-        })
-      }
+          sentencesCount: 1,
+        }),
+      },
     },
     brands: {
       count: 4,
@@ -78,17 +78,17 @@ export async function GET() {
             'Cartier',
             'Vacheron Constantin',
             'Panerai',
-            'A. Lange and Sohne'
+            'A. Lange and Sohne',
           ],
-          isUnique: true
-        })
-      }
+          isUnique: true,
+        }),
+      },
     },
     serviceLevelTypes: {
       count: 6,
       columns: {
         isActive: f.default({
-          defaultValue: true
+          defaultValue: true,
         }),
         name: f.valuesFromArray({
           values: [
@@ -97,25 +97,25 @@ export async function GET() {
             'Repair',
             'Level 1',
             'Level 2',
-            'Other'
-          ]
-        })
-      }
+            'Other',
+          ],
+        }),
+      },
     },
     warrantyTypes: {
       count: 3,
       columns: {
         isActive: f.default({
-          defaultValue: true
+          defaultValue: true,
         }),
         name: f.valuesFromArray({
-          values: ['Sales Warranty', 'Service Warranty', 'Gift Warranty']
-        })
-      }
+          values: ['Sales Warranty', 'Service Warranty', 'Gift Warranty'],
+        }),
+      },
     },
     partnerBrands: {
-      count: 0
-    }
+      count: 0,
+    },
   }));
   return new Response('OK');
 }

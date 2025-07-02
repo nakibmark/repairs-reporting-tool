@@ -1,13 +1,11 @@
-import {
-  getReportItemsWithNames,
-} from '@/lib/data/reportItems';
+import { getReportItemsWithNames } from '@/lib/data/reportItems';
 import ReportItemsTable from './report-items-table';
 import { getServiceLevelTypes } from '@/lib/data/serviceLevelTypes';
 import { getBrands } from '@/lib/data/brands';
 import { getWarrantyTypes } from '@/lib/data/warrantyTypes';
 
 export default async function ReportDetailsPage({
-  params
+  params,
 }: {
   params: Promise<{ reportId: number }>;
 }) {
@@ -17,7 +15,9 @@ export default async function ReportDetailsPage({
   const { reportId } = await params;
   const { items } = await getReportItemsWithNames(reportId);
 
-  return <ReportItemsTable tableProps={{ items, brands, serviceLevelTypes, warrantyTypes }} />;
+  return (
+    <ReportItemsTable
+      tableProps={{ items, brands, serviceLevelTypes, warrantyTypes }}
+    />
+  );
 }
-
-
