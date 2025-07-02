@@ -14,12 +14,14 @@ export async function CreateReportByReport(report: {partnerId: number, reportYea
     redirect('/reports/' + createdId);
 };
 
-export async function setActivePartner(id: number){
+export async function setActivePartner(id: number | ''){
+    'use server'
     const cookieStore = await cookies()
     cookieStore.set('partnerId', String(id))
 }
 
 export async function getActivePartner(): Promise<number> {
+    'use server'
     const cookieStore = await cookies()
     if (cookieStore.has('partnerId')){
         return Number(cookieStore.get('partnerId'))

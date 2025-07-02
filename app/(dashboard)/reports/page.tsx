@@ -5,7 +5,7 @@ import ReportCreateButton from './report-create-button';
 import { getPartners } from '@/lib/data/partners';
 import ReportDropdown from './report-dropdown';
 import React from 'react';
-import { cookies } from 'next/headers'
+import { setActivePartner } from './actions';
 
 export default async function ReportsPage(props: {
   searchParams: Promise<{ q: string; offset: string }>;
@@ -17,9 +17,8 @@ export default async function ReportsPage(props: {
     search,
     Number(offset)
   );
-  const partners = await getPartners()
-  const cookieStore = await cookies()
-  cookieStore.set('partnerId', "")
+  const partners = await getPartners();
+  setActivePartner('');
   return (
     <Tabs defaultValue="all">
       <div className="flex items-center">
