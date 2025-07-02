@@ -1,6 +1,6 @@
-'use server'
+'use server';
 import { db } from '../db';
-import { reports, SelectReport } from '../schema';
+import { InsertReport, reports, SelectReport } from '../schema';
 import { count, eq, ilike } from 'drizzle-orm';
 
 export async function getReports(
@@ -39,15 +39,8 @@ export async function getReports(
 
 export async function deleteReport(id: number) {
   await db.delete(reports).where(eq(reports.id, id));
-};
+}
 
-export async function insertReport(report: {partnerId: number, reportYear: number, reportMonth: number, submissionPeriodClosesAt: Date}): Promise<number> {
-  console.dir(report)
-  const insertedID = await db.insert(reports).values({
-    partnerId: report.partnerId,
-    reportYear: report.reportYear,
-    reportMonth: report.reportMonth,
-    submissionPeriodClosesAt : report.submissionPeriodClosesAt
-  }).returning({ insertedId: reports.id })
-  return insertedID[0].insertedId
+export async function insertReport(report: InsertReport) {
+  return await db.insert(reports).values(report).returning();
 }
