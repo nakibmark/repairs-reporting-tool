@@ -2,9 +2,10 @@
 import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CreateReportByReport } from './actions';
-const handleCreateClick = (partnerId: number) => {
-    const report = {
-      partnerId: partnerId, 
+import { getActivePartner } from './actions';
+ async function handleCreateClick(partnerId: number) {
+  const report = {
+      partnerId: Number(await getActivePartner()), 
       reportYear: new Date().getFullYear(), 
       reportMonth: new Date().getMonth(), 
       submissionPeriodClosesAt: new Date(new Date().setMonth(new Date().getMonth() + 1, 0))

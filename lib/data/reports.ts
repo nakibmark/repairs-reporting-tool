@@ -42,6 +42,7 @@ export async function deleteReport(id: number) {
 };
 
 export async function createReport(report: {partnerId: number, reportYear: number, reportMonth: number, submissionPeriodClosesAt: Date}): Promise<number> {
+  console.dir(report)
   const insertedID = await db.insert(reports).values({
     partnerId: report.partnerId,
     reportYear: report.reportYear,

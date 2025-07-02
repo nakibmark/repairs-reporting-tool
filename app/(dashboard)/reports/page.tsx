@@ -18,7 +18,6 @@ export default async function ReportsPage(props: {
     Number(offset)
   );
   const partners = await getPartners();
-  setActivePartner('');
   return (
     <Tabs defaultValue="all">
       <div className="flex items-center">
