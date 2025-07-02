@@ -1,4 +1,1 @@
-'use server';
-
-import { revalidatePath } from 'next/cache';
-
+'use server'

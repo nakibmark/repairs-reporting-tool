@@ -25,9 +25,9 @@ export async function getReports(
     return { reports: [], newOffset: null, totalReports: 0 };
   }
 
-  let totalReports = await db.select({ count: count() }).from(reports);
-  let moreReports = await db.select().from(reports).limit(5).offset(offset);
-  let newOffset = moreReports.length >= 5 ? offset + 5 : null;
+  const totalReports = await db.select({ count: count() }).from(reports);
+  const moreReports = await db.select().from(reports).limit(5).offset(offset);
+  const newOffset = moreReports.length >= 5 ? offset + 5 : null;
 
   return {
     reports: moreReports,
