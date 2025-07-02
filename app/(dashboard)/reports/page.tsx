@@ -1,8 +1,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { File, PlusCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { ReportsTable } from './reports-table';
 import { getReports } from '@/lib/data/reports';
+import ReportCreateButton from './report-create-button';
+import { getPartners } from '@/lib/data/partners';
+import ReportDropdown from './report-dropdown';
+import React from 'react';
 
 export default async function ReportsPage(props: {
   searchParams: Promise<{ q: string; offset: string }>;
@@ -14,6 +16,7 @@ export default async function ReportsPage(props: {
     search,
     Number(offset)
   );
+  const partners = await getPartners()
 
   return (
     <Tabs defaultValue="all">
@@ -26,14 +29,10 @@ export default async function ReportsPage(props: {
             Archived
           </TabsTrigger>
         </TabsList>
-        <div className="ml-auto flex items-center gap-2">
-          <Button size="sm" className="h-8 gap-1">
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Report
-            </span>
-          </Button>
-        </div>
+        <ReportCreateButton />
+        <ReportDropdown 
+        options= {partners}
+        ></ReportDropdown>
       </div>
       <TabsContent value="all">
         <ReportsTable

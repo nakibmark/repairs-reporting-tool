@@ -1,6 +1,5 @@
 'use server';
 import { deleteReport , createReport} from '@/lib/data/reports';
-import { SelectReport } from '@/lib/schema';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 
@@ -9,7 +8,7 @@ export async function deleteReportById(reportId: number) {
     revalidatePath('/reports', 'page');
 };
 
-export async function CreateReportByReport(report: SelectReport) {
+export async function CreateReportByReport(report: {partnerId: number, reportYear: number, reportMonth: number, submissionPeriodClosesAt: Date}) {
     const createdId = await createReport(report);
-    redirect('/reports/'[createdId]);
+    redirect('/reports/' + createdId);
 };

@@ -1,7 +1,7 @@
 'use server'
 import { cache } from 'react';
 import { db } from '../db';
-import { brands, SelectBrand } from '../schema';
+import { brands } from '../schema';
 import { eq } from 'drizzle-orm';
 
 export const getBrandName = cache(async (id: number): Promise<string> => {
