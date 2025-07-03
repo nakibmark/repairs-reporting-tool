@@ -20,7 +20,7 @@ export async function createReport() {
     partnerId: Number(partnerId),
     reportYear: new Date().getFullYear(),
     reportMonth: new Date().getMonth(),
-    submissionPeriodClosesAt: lastDayThisMonth
+    submissionPeriodClosesAt: lastDayThisMonth,
   };
   const [{ id }] = await insertReport(newReport);
   return id;

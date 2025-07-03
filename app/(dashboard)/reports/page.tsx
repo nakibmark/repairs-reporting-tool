@@ -2,7 +2,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ReportsTable } from './reports-table';
 import { getReports } from '@/lib/data/reports';
 import ReportCreateButton from './report-create-button';
-import { getPartners } from '@/lib/data/partners';
 import ReportDropdown from './report-dropdown';
 import React from 'react';
 
@@ -16,7 +15,7 @@ export default async function ReportsPage(props: {
     search,
     Number(offset)
   );
-  const partners = await getPartners();
+
   return (
     <Tabs defaultValue="all">
       <div className="flex items-center">
@@ -29,9 +28,7 @@ export default async function ReportsPage(props: {
           </TabsTrigger>
         </TabsList>
         <ReportCreateButton />
-        <ReportDropdown 
-        options= {partners}
-        ></ReportDropdown>
+        <ReportDropdown />
       </div>
       <TabsContent value="all">
         <ReportsTable
