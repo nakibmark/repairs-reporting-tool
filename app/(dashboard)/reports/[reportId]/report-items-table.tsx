@@ -31,11 +31,13 @@ const ReportItemsTable = ({
     brands: DropdownOption[];
     serviceLevelTypes: DropdownOption[];
     warrantyTypes: DropdownOption[];
+    readOnly: boolean;
   };
 }) => {
-  const { items, brands, serviceLevelTypes, warrantyTypes } = tableProps;
+  const { items, brands, serviceLevelTypes, warrantyTypes, readOnly } =
+    tableProps;
   const [isCreatingNewItem, setIsCreatingNewItem] = useState(
-    items.length === 0
+    items.length === 0 && readOnly
   );
 
   return (
@@ -100,6 +102,7 @@ const ReportItemsTable = ({
                 brands={brands}
                 serviceLevelTypes={serviceLevelTypes}
                 warrantyTypes={warrantyTypes}
+                readOnly={readOnly}
               />
             ) : (
               <></>
@@ -111,6 +114,7 @@ const ReportItemsTable = ({
                 brands={brands}
                 serviceLevelTypes={serviceLevelTypes}
                 warrantyTypes={warrantyTypes}
+                readOnly={readOnly}
               />
             ))}
           </TableBody>

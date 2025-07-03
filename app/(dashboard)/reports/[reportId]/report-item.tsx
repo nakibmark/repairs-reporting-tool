@@ -25,8 +25,9 @@ const ReportItem = (props: {
   brands: DropdownOption[];
   serviceLevelTypes: DropdownOption[];
   warrantyTypes: DropdownOption[];
+  readOnly: boolean;
 }) => {
-  const { item, brands, serviceLevelTypes, warrantyTypes } = props;
+  const { item, brands, serviceLevelTypes, warrantyTypes, readOnly } = props;
 
   const { reportId: reportIdParam } = useParams();
   const [isEditing, setIsEditing] = React.useState(!item);
@@ -130,16 +131,20 @@ const ReportItem = (props: {
         isEditing={isEditing}
         value={editedItem?.comments}
       />
-      <ReportItemEditMenu
-        isEditing={isEditing}
-        handleEditClick={() => setIsEditing(true)}
-        handleCancelClick={() => {
-          setEditedItem(item);
-          setIsEditing(false);
-        }}
-        handleDeleteClick={() => deleteReportItem(item?.id)}
-        handleSaveClick={handleSaveClick}
-      />
+      {!readOnly ? (
+        <ReportItemEditMenu
+          isEditing={isEditing}
+          handleEditClick={() => setIsEditing(true)}
+          handleCancelClick={() => {
+            setEditedItem(item);
+            setIsEditing(false);
+          }}
+          handleDeleteClick={() => deleteReportItem(item?.id)}
+          handleSaveClick={handleSaveClick}
+        />
+      ) : (
+        <></>
+      )}
     </TableRow>
   );
 };
