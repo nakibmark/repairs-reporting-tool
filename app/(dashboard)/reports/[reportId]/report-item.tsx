@@ -131,20 +131,17 @@ const ReportItem = (props: {
         isEditing={isEditing}
         value={editedItem?.comments}
       />
-      {!readOnly ? (
-        <ReportItemEditMenu
-          isEditing={isEditing}
-          handleEditClick={() => setIsEditing(true)}
-          handleCancelClick={() => {
-            setEditedItem(item);
-            setIsEditing(false);
-          }}
-          handleDeleteClick={() => deleteReportItem(item?.id)}
-          handleSaveClick={handleSaveClick}
-        />
-      ) : (
-        <></>
-      )}
+      <ReportItemEditMenu
+        isEditing={isEditing}
+        handleEditClick={() => setIsEditing(true)}
+        handleCancelClick={() => {
+          setEditedItem(item);
+          setIsEditing(false);
+        }}
+        handleDeleteClick={() => deleteReportItem(item?.id)}
+        handleSaveClick={handleSaveClick}
+        disabled={readOnly}
+      />
     </TableRow>
   );
 };
