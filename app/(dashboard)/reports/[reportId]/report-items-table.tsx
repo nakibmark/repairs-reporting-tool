@@ -50,17 +50,21 @@ const ReportItemsTable = ({
           </div>
           <div className="ml-auto flex items-center gap-2">
             <CardAction>
-              <Button
-                type="button"
-                onClick={() => setIsCreatingNewItem(true)}
-                size="sm"
-                className="h-8 gap-1"
-              >
-                <PlusCircle className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Add Report Item
-                </span>
-              </Button>
+              {!readOnly ? (
+                <Button
+                  type="button"
+                  onClick={() => setIsCreatingNewItem(true)}
+                  size="sm"
+                  className="h-8 gap-1"
+                >
+                  <PlusCircle className="h-3.5 w-3.5" />
+                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                    Add Report Item
+                  </span>
+                </Button>
+              ) : (
+                <></>
+              )}
             </CardAction>
           </div>
         </div>
