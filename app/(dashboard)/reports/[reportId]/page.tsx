@@ -19,7 +19,14 @@ export default async function ReportDetailsPage({
 
   return (
     <ReportItemsTable
-      tableProps={{ items, brands, serviceLevelTypes, warrantyTypes, readOnly }}
+      tableProps={{
+        items,
+        brands,
+        serviceLevelTypes,
+        warrantyTypes,
+        readOnly,
+        reportId,
+      }}
     />
   );
 }

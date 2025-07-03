@@ -20,6 +20,7 @@ import ReportItem from './report-item';
 import { ReportItemWithNames } from '@/lib/data/reportItems';
 import React, { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
+import { setReportStatusById } from './actions';
 
 export type DropdownOption = { id: number; name: string };
 
@@ -32,10 +33,17 @@ const ReportItemsTable = ({
     serviceLevelTypes: DropdownOption[];
     warrantyTypes: DropdownOption[];
     readOnly: boolean;
+    reportId: number;
   };
 }) => {
-  const { items, brands, serviceLevelTypes, warrantyTypes, readOnly } =
-    tableProps;
+  const {
+    items,
+    brands,
+    serviceLevelTypes,
+    warrantyTypes,
+    readOnly,
+    reportId,
+  } = tableProps;
   const [isCreatingNewItem, setIsCreatingNewItem] = useState(
     items.length === 0 && readOnly
   );
@@ -68,7 +76,7 @@ const ReportItemsTable = ({
               {!readOnly ? (
                 <Button
                   type="button"
-                  onClick={() => {}}
+                  onClick={() => setReportStatusById(reportId, true)}
                   size="sm"
                   className="h-8 gap-1"
                 >
@@ -79,7 +87,7 @@ const ReportItemsTable = ({
               ) : (
                 <Button
                   type="button"
-                  onClick={() => {}}
+                  onClick={() => setReportStatusById(reportId, false)}
                   size="sm"
                   className="h-8 gap-1"
                 >
