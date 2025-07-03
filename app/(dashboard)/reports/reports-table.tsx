@@ -33,7 +33,7 @@ export function ReportsTable({
   submitted: boolean | null;
 }) {
   const router = useRouter();
-  const reportsPerPage = 5;
+  const reportsPerPage = 20;
 
   function prevPage() {
     router.back();

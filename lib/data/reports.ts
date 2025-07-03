@@ -1,5 +1,6 @@
+'use server';
 import { db } from '../db';
-import { reports, SelectReport } from '../schema';
+import { InsertReport, reports, SelectReport } from '../schema';
 import { count, eq, ilike } from 'drizzle-orm';
 
 export async function getReports(
@@ -26,8 +27,8 @@ export async function getReports(
   }
 
   const totalReports = await db.select({ count: count() }).from(reports);
-  const moreReports = await db.select().from(reports).limit(5).offset(offset);
-  const newOffset = moreReports.length >= 5 ? offset + 5 : null;
+  const moreReports = await db.select().from(reports).limit(20).offset(offset);
+  const newOffset = moreReports.length >= 20 ? offset + 20 : null;
 
   return {
     reports: moreReports,
@@ -38,4 +39,8 @@ export async function getReports(
 
 export async function deleteReport(id: number) {
   await db.delete(reports).where(eq(reports.id, id));
+}
+
+export async function insertReport(report: InsertReport) {
+  return await db.insert(reports).values(report).returning();
 }
