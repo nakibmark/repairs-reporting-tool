@@ -24,7 +24,7 @@ export async function saveReportItem(item: ReportItemWithNames) {
   revalidatePath('/reports/[reportId]/page', 'page');
 }
 
-export async function getReportStatusById(id: number): Promise<boolean> {
+export async function getReportStatusById(id: number) {
   return await getReportStatus(id);
 }
 
