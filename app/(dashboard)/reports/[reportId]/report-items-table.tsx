@@ -45,7 +45,7 @@ const ReportItemsTable = ({
     reportId,
   } = tableProps;
   const [isCreatingNewItem, setIsCreatingNewItem] = useState(
-    items.length === 0 && readOnly
+    items.length === 0 && !readOnly
   );
 
   return (
