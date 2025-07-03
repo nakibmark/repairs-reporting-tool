@@ -45,7 +45,7 @@ export async function insertReport(report: InsertReport) {
   return await db.insert(reports).values(report).returning();
 }
 
-export async function getReportStatus(id: number): Promise<boolean> {
+export async function getReportStatusById(id: number) {
   const results = await db
     .select({ field1: reports.isSubmitted })
     .from(reports)
@@ -54,8 +54,5 @@ export async function getReportStatus(id: number): Promise<boolean> {
 }
 
 export async function updateReportStatusById(id: number, isSubmitted: boolean) {
-  await db
-    .update(reports)
-    .set({ isSubmitted })
-    .where(eq(reports.id, id));
+  await db.update(reports).set({ isSubmitted }).where(eq(reports.id, id));
 }

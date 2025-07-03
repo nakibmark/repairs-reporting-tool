@@ -20,7 +20,7 @@ import ReportItem from './report-item';
 import { ReportItemWithNames } from '@/lib/data/reportItems';
 import React, { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
-import { setReportStatusById } from './actions';
+import { setReportStatus } from './actions';
 
 export type DropdownOption = { id: number; name: string };
 
@@ -76,7 +76,7 @@ const ReportItemsTable = ({
               {!readOnly ? (
                 <Button
                   type="button"
-                  onClick={() => setReportStatusById(reportId, true)}
+                  onClick={() => setReportStatus(reportId, true)}
                   size="sm"
                   className="h-8 gap-1"
                 >
@@ -87,7 +87,7 @@ const ReportItemsTable = ({
               ) : (
                 <Button
                   type="button"
-                  onClick={() => setReportStatusById(reportId, false)}
+                  onClick={() => setReportStatus(reportId, false)}
                   size="sm"
                   className="h-8 gap-1"
                 >
