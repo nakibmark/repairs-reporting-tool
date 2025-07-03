@@ -65,6 +65,29 @@ const ReportItemsTable = ({
               ) : (
                 <></>
               )}
+              {!readOnly ? (
+                <Button
+                  type="button"
+                  onClick={() => {}}
+                  size="sm"
+                  className="h-8 gap-1"
+                >
+                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                    Submit Report
+                  </span>
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  onClick={() => {}}
+                  size="sm"
+                  className="h-8 gap-1"
+                >
+                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                    Unsubmit Report
+                  </span>
+                </Button>
+              )}
             </CardAction>
           </div>
         </div>
