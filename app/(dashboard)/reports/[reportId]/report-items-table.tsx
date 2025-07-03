@@ -5,7 +5,7 @@ import {
   TableRow,
   TableHeader,
   TableBody,
-  Table
+  Table,
 } from '@/components/ui/table';
 import {
   Card,
@@ -13,7 +13,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardAction
+  CardAction,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import ReportItem from './report-item';
@@ -21,36 +21,47 @@ import { ReportItemWithNames } from '@/lib/data/reportItems';
 import React, { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
 
-export type DropdownOption = { id: number, name: string }
+export type DropdownOption = { id: number; name: string };
 
 const ReportItemsTable = ({
-  tableProps
+  tableProps,
 }: {
-  tableProps: { items: ReportItemWithNames[], brands: DropdownOption[], serviceLevelTypes: DropdownOption[], warrantyTypes: DropdownOption[] }
+  tableProps: {
+    items: ReportItemWithNames[];
+    brands: DropdownOption[];
+    serviceLevelTypes: DropdownOption[];
+    warrantyTypes: DropdownOption[];
+  };
 }) => {
-
   const { items, brands, serviceLevelTypes, warrantyTypes } = tableProps;
-  const [isCreatingNewItem, setIsCreatingNewItem] = useState(items.length === 0);
+  const [isCreatingNewItem, setIsCreatingNewItem] = useState(
+    items.length === 0
+  );
 
   return (
     <Card>
       <CardHeader>
-      <div className="flex items-center">
-        <div>
-          <CardTitle>Report Details</CardTitle>
-          <CardDescription>View your report details.</CardDescription>
+        <div className="flex items-center">
+          <div>
+            <CardTitle>Report Details</CardTitle>
+            <CardDescription>View your report details.</CardDescription>
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <CardAction>
+              <Button
+                type="button"
+                onClick={() => setIsCreatingNewItem(true)}
+                size="sm"
+                className="h-8 gap-1"
+              >
+                <PlusCircle className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  Add Report Item
+                </span>
+              </Button>
+            </CardAction>
+          </div>
         </div>
-        <div className="ml-auto flex items-center gap-2">
-        <CardAction>
-          <Button type="button" onClick={() => setIsCreatingNewItem(true)} size="sm" className="h-8 gap-1">
-          <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Report Item
-            </span>
-          </Button>
-        </CardAction>
-        </div>
-      </div>
       </CardHeader>
       <CardContent>
         <Table>
@@ -70,7 +81,9 @@ const ReportItemsTable = ({
               <TableHead className="hidden md:table-cell">
                 Warranty Type
               </TableHead>
-              <TableHead className="hidden md:table-cell">Service Type</TableHead>
+              <TableHead className="hidden md:table-cell">
+                Service Type
+              </TableHead>
               <TableHead className="hidden md:table-cell">
                 Date Intervention Out
               </TableHead>
@@ -81,15 +94,30 @@ const ReportItemsTable = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isCreatingNewItem ? <ReportItem key={0} brands={brands} serviceLevelTypes={serviceLevelTypes} warrantyTypes={warrantyTypes} /> : <></>}
+            {isCreatingNewItem ? (
+              <ReportItem
+                key={0}
+                brands={brands}
+                serviceLevelTypes={serviceLevelTypes}
+                warrantyTypes={warrantyTypes}
+              />
+            ) : (
+              <></>
+            )}
             {items.map((item) => (
-              <ReportItem key={item.id} item={item} brands={brands} serviceLevelTypes={serviceLevelTypes} warrantyTypes={warrantyTypes} />
+              <ReportItem
+                key={item.id}
+                item={item}
+                brands={brands}
+                serviceLevelTypes={serviceLevelTypes}
+                warrantyTypes={warrantyTypes}
+              />
             ))}
           </TableBody>
         </Table>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
 export default ReportItemsTable;

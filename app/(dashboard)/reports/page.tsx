@@ -5,7 +5,6 @@ import ReportCreateButton from './report-create-button';
 import { getPartners } from '@/lib/data/partners';
 import ReportDropdown from './report-dropdown';
 import React from 'react';
-import { setActivePartner } from './actions';
 
 export default async function ReportsPage(props: {
   searchParams: Promise<{ q: string; offset: string }>;

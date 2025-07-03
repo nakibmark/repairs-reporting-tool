@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 export default function Error({
   error,
-  reset
+  reset,
 }: {
   error: Error & { digest?: string };
   reset: () => void;
@@ -20,6 +20,7 @@ export default function Error({
         <h1 className="font-semibold text-lg md:text-2xl">
           Encountered an error.
         </h1>
+        <a onClick={reset}>Reset</a>
       </div>
     </main>
   );

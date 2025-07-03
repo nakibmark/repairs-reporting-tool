@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from '@/components/ui/card';
 import { signIn } from '@/lib/auth';
 
@@ -23,7 +23,7 @@ export default function LoginPage() {
             action={async () => {
               'use server';
               await signIn('github', {
-                redirectTo: '/'
+                redirectTo: '/',
               });
             }}
             className="w-full"

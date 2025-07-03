@@ -15,10 +15,10 @@ export async function getReports(
     return {
       reports: await db.query.reports.findMany({
         where: ilike(reports.id, `%${search}%`),
-        limit: 1000
+        limit: 1000,
       }),
       newOffset: null,
-      totalReports: 0
+      totalReports: 0,
     };
   }
 
@@ -33,7 +33,7 @@ export async function getReports(
   return {
     reports: moreReports,
     newOffset,
-    totalReports: totalReports[0].count
+    totalReports: totalReports[0].count,
   };
 }
 
