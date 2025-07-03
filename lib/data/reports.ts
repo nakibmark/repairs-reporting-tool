@@ -52,3 +52,10 @@ export async function getReportStatus(id: number): Promise<boolean> {
     .where(eq(reports.id, id));
   return results[0].field1;
 }
+
+export async function setReportStatus(id: number, status: boolean) {
+  await db
+    .update(reports)
+    .set({ isSubmitted: status })
+    .where(eq(reports.id, id));
+}
