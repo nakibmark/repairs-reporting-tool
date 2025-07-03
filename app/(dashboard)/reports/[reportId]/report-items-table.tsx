@@ -58,41 +58,28 @@ const ReportItemsTable = ({
           </div>
           <div className="ml-auto flex items-center gap-2">
             <CardAction>
-                <Button
-                  type="button"
-                  disabled={readOnly}
-                  onClick={() => setIsCreatingNewItem(true)}
-                  size="sm"
-                  className="h-8 gap-1"
-                >
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Add Report Item
-                  </span>
-                </Button>
-              {!readOnly ? (
-                <Button
-                  type="button"
-                  onClick={() => setReportStatus(reportId, true)}
-                  size="sm"
-                  className="h-8 gap-1"
-                >
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Submit Report
-                  </span>
-                </Button>
-              ) : (
-                <Button
-                  type="button"
-                  onClick={() => setReportStatus(reportId, false)}
-                  size="sm"
-                  className="h-8 gap-1"
-                >
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Unsubmit Report
-                  </span>
-                </Button>
-              )}
+              <Button
+                type="button"
+                disabled={readOnly}
+                onClick={() => setIsCreatingNewItem(true)}
+                size="sm"
+                className="h-8 gap-1"
+              >
+                <PlusCircle className="h-3.5 w-3.5" />
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  Add Report Item
+                </span>
+              </Button>
+              <Button
+                type="button"
+                onClick={() => setReportStatus(reportId, !readOnly)}
+                size="sm"
+                className="h-8 gap-1"
+              >
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  {readOnly ? 'Edit Report' : 'Submit Report'}
+                </span>
+              </Button>
             </CardAction>
           </div>
         </div>
