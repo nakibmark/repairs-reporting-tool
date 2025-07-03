@@ -30,4 +30,5 @@ export async function getReportStatusById(id: number): Promise<boolean> {
 
 export async function setReportStatusById(id: number, status: boolean) {
   await setReportStatus(id, status);
+  revalidatePath('/reports/[reportId]/page', 'page');
 }
