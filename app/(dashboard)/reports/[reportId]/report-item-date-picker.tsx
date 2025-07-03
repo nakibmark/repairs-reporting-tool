@@ -6,7 +6,7 @@ import { Calendar } from '@/components/ui/calendar';
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger
+  PopoverTrigger,
 } from '@/components/ui/popover';
 import { TZDate } from 'react-day-picker';
 import { format } from 'date-fns';
@@ -14,7 +14,7 @@ import { format } from 'date-fns';
 const ReportItemDatePicker = ({
   isEditing,
   onChange,
-  value
+  value,
 }: {
   isEditing: boolean;
   onChange: (date: string) => void;

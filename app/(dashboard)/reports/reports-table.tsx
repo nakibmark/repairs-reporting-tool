@@ -5,7 +5,7 @@ import {
   TableRow,
   TableHeader,
   TableBody,
-  Table
+  Table,
 } from '@/components/ui/table';
 import {
   Card,
@@ -13,7 +13,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from '@/components/ui/card';
 import { Report } from './report';
 import { SelectReport } from '@/lib/schema';
@@ -25,15 +25,15 @@ export function ReportsTable({
   reports,
   offset,
   totalReports,
-  submitted = null
+  submitted = null,
 }: {
   reports: SelectReport[];
   offset: number;
   totalReports: number;
   submitted: boolean | null;
 }) {
-  let router = useRouter();
-  let reportsPerPage = 5;
+  const router = useRouter();
+  const reportsPerPage = 5;
 
   function prevPage() {
     router.back();

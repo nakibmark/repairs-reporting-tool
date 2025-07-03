@@ -29,11 +29,11 @@ export const partners = table(
     // Fields for magic link (passwordless) login
     magicLinkToken: t.text().unique(), // Store the unique token for passwordless login
     magicLinkTokenExpiresAt: t.timestamp({ withTimezone: true, mode: 'date' }), // Expiry for the token
-    ...timestamps
+    ...timestamps,
   },
   (table) => [
     t.index('idx_partners_partner_no').on(table.partnerNo),
-    t.index('idx_partners_magic_link_token').on(table.magicLinkToken)
+    t.index('idx_partners_magic_link_token').on(table.magicLinkToken),
   ]
 );
 
@@ -48,13 +48,13 @@ export const users = table(
     locked: t.boolean().notNull().default(false),
     ssoProvider: t.text(), // e.g., 'google', 'okta', 'azuread'
     ssoId: t.text(), // Unique ID from the SSO provider
-    ...timestamps
+    ...timestamps,
   },
   (table) => [
     // Ensure email is indexed for lookups
     t.index('idx_users_email').on(table.emailAddress),
     // Ensure combination of provider and ID is unique if supporting multiple SSO providers
-    t.unique('users_sso_provider_id_unq').on(table.ssoProvider, table.ssoId)
+    t.unique('users_sso_provider_id_unq').on(table.ssoProvider, table.ssoId),
   ]
 );
 
@@ -63,7 +63,7 @@ export const brands = table(
   'brands',
   {
     id: t.integer().primaryKey().generatedAlwaysAsIdentity(),
-    name: t.text('name').notNull().unique()
+    name: t.text('name').notNull().unique(),
   },
   (table) => [t.index('idx_brands_name').on(table.name)]
 );
@@ -79,12 +79,12 @@ export const partnerBrands = table(
     brandId: t
       .integer()
       .notNull()
-      .references(() => brands.id, { onDelete: 'cascade' })
+      .references(() => brands.id, { onDelete: 'cascade' }),
   },
   (table) => [
     t.primaryKey({ columns: [table.partnerId, table.brandId] }),
     t.index('idx_partnerbrands_partner_id').on(table.partnerId),
-    t.index('idx_partnerbrands_brand_id').on(table.brandId)
+    t.index('idx_partnerbrands_brand_id').on(table.brandId),
   ]
 );
 
@@ -102,15 +102,15 @@ export const reports = table(
     isSubmitted: t.boolean().notNull().default(false),
     submittedAt: t.timestamp({
       withTimezone: true,
-      mode: 'date'
+      mode: 'date',
     }),
     submissionPeriodClosesAt: t
       .timestamp({
         withTimezone: true,
-        mode: 'date'
+        mode: 'date',
       })
       .notNull(),
-    ...timestamps
+    ...timestamps,
   },
   (table) => [
     t
@@ -126,7 +126,7 @@ export const reports = table(
     t.check(
       'report_year_valid',
       sql`${table.reportYear} >= 2023 AND ${table.reportYear} <= 2050`
-    )
+    ),
   ]
 );
 
@@ -137,7 +137,7 @@ export const warrantyTypes = table(
     id: t.integer().primaryKey().generatedAlwaysAsIdentity(),
     name: t.text().notNull().unique(),
     description: t.text(),
-    isActive: t.boolean().notNull().default(true)
+    isActive: t.boolean().notNull().default(true),
   },
   (table) => [t.index('idx_warranty_types_name').on(table.name)]
 );
@@ -149,7 +149,7 @@ export const serviceLevelTypes = table(
     id: t.integer().primaryKey().generatedAlwaysAsIdentity(),
     name: t.text().notNull().unique(),
     description: t.text(),
-    isActive: t.boolean().notNull().default(true)
+    isActive: t.boolean().notNull().default(true),
   },
   (table) => [t.index('idx_service_level_types_name').on(table.name)]
 );
@@ -181,7 +181,7 @@ export const reportItems = table(
       .notNull()
       .references(() => serviceLevelTypes.id, { onDelete: 'restrict' }),
     comments: t.text(),
-    ...timestamps
+    ...timestamps,
   },
   (table) => [
     t.index('idx_reportitems_report_id').on(table.reportId),
@@ -190,7 +190,7 @@ export const reportItems = table(
     t.index('idx_reportitems_warranty_type_id').on(table.warrantyTypeId),
     t
       .index('idx_reportitems_service_level_type_id')
-      .on(table.serviceLevelTypeId)
+      .on(table.serviceLevelTypeId),
   ]
 );
 
@@ -198,61 +198,61 @@ export const reportItems = table(
 
 export const partnersRelations = relations(partners, ({ many }) => ({
   partnerBrands: many(partnerBrands),
-  reports: many(reports)
+  reports: many(reports),
 }));
 
 export const brandsRelations = relations(brands, ({ many }) => ({
   partnerBrands: many(partnerBrands),
-  reportItems: many(reportItems)
+  reportItems: many(reportItems),
 }));
 
 export const partnerBrandsRelations = relations(partnerBrands, ({ one }) => ({
   partner: one(partners, {
     fields: [partnerBrands.partnerId],
-    references: [partners.id]
+    references: [partners.id],
   }),
   brand: one(brands, {
     fields: [partnerBrands.brandId],
-    references: [brands.id]
-  })
+    references: [brands.id],
+  }),
 }));
 
 export const reportsRelations = relations(reports, ({ one, many }) => ({
   partner: one(partners, {
     fields: [reports.partnerId],
-    references: [partners.id]
+    references: [partners.id],
   }),
-  reportItems: many(reportItems)
+  reportItems: many(reportItems),
 }));
 
 export const warrantyTypesRelations = relations(warrantyTypes, ({ many }) => ({
-  reportItems: many(reportItems)
+  reportItems: many(reportItems),
 }));
 
 export const serviceLevelTypesRelations = relations(
   serviceLevelTypes,
   ({ many }) => ({
-    reportItems: many(reportItems)
+    reportItems: many(reportItems),
   })
 );
 
 export const reportItemsRelations = relations(reportItems, ({ one }) => ({
   report: one(reports, {
     fields: [reportItems.reportId],
-    references: [reports.id]
+    references: [reports.id],
   }),
   brand: one(brands, {
     fields: [reportItems.brandId],
-    references: [brands.id]
+    references: [brands.id],
   }),
   warrantyType: one(warrantyTypes, {
     fields: [reportItems.warrantyTypeId],
-    references: [warrantyTypes.id]
+    references: [warrantyTypes.id],
   }),
   serviceLevelType: one(serviceLevelTypes, {
     fields: [reportItems.serviceLevelTypeId],
-    references: [serviceLevelTypes.id]
-  })
+    references: [serviceLevelTypes.id],
+  }),
 }));
 
 // --- Types ---
