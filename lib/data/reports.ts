@@ -53,9 +53,9 @@ export async function getReportStatus(id: number): Promise<boolean> {
   return results[0].field1;
 }
 
-export async function setReportStatus(id: number, status: boolean) {
+export async function updateReportStatusById(id: number, isSubmitted: boolean) {
   await db
     .update(reports)
-    .set({ isSubmitted: status })
+    .set({ isSubmitted })
     .where(eq(reports.id, id));
 }
