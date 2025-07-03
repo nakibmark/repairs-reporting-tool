@@ -58,9 +58,9 @@ const ReportItemsTable = ({
           </div>
           <div className="ml-auto flex items-center gap-2">
             <CardAction>
-              {!readOnly ? (
                 <Button
                   type="button"
+                  disabled={readOnly}
                   onClick={() => setIsCreatingNewItem(true)}
                   size="sm"
                   className="h-8 gap-1"
@@ -70,9 +70,6 @@ const ReportItemsTable = ({
                     Add Report Item
                   </span>
                 </Button>
-              ) : (
-                <></>
-              )}
               {!readOnly ? (
                 <Button
                   type="button"
