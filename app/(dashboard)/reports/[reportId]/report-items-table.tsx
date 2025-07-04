@@ -44,6 +44,7 @@ const ReportItemsTable = ({
     readOnly,
     reportId,
   } = tableProps;
+
   const [isCreatingNewItem, setIsCreatingNewItem] = useState(
     items.length === 0 && !readOnly
   );
@@ -67,7 +68,7 @@ const ReportItemsTable = ({
               >
                 <PlusCircle className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Add Report Item
+                  Add Repair
                 </span>
               </Button>
               <Button
@@ -115,7 +116,7 @@ const ReportItemsTable = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isCreatingNewItem ? (
+            {isCreatingNewItem && (
               <ReportItem
                 key={0}
                 brands={brands}
@@ -123,8 +124,6 @@ const ReportItemsTable = ({
                 warrantyTypes={warrantyTypes}
                 readOnly={readOnly}
               />
-            ) : (
-              <></>
             )}
             {items.map((item) => (
               <ReportItem

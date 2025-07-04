@@ -46,11 +46,10 @@ export async function insertReport(report: InsertReport) {
 }
 
 export async function getReportStatusById(id: number) {
-  const results = await db
-    .select({ field1: reports.isSubmitted })
-    .from(reports)
-    .where(eq(reports.id, id));
-  return results[0].field1;
+  return await db.query.reports.findFirst({
+    where: eq(reports.id, id),
+    columns: { isSubmitted: true },
+  });
 }
 
 export async function updateReportStatusById(id: number, isSubmitted: boolean) {

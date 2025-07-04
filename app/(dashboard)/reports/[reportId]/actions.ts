@@ -28,7 +28,8 @@ export async function saveReportItem(item: ReportItemWithNames) {
 }
 
 export async function getReportStatus(id: number) {
-  return await getReportStatusById(id);
+  const result = await getReportStatusById(id);
+  return result?.isSubmitted ?? false;
 }
 
 export async function setReportStatus(id: number, status: boolean) {
