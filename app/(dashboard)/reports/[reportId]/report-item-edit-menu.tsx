@@ -18,49 +18,48 @@ const ReportItemEditMenu = ({
   handleCancelClick,
   handleEditClick,
   handleDeleteClick,
+  disabled,
 }: {
-  isEditing: boolean;
+  disabled: boolean;
   handleEditClick: MouseEventHandler;
   handleSaveClick: MouseEventHandler;
   handleCancelClick: MouseEventHandler;
   handleDeleteClick: MouseEventHandler;
-}) =>
-  isEditing ? (
-    <TableCell>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button aria-haspopup="true" size="icon" variant="ghost">
-            <MoreHorizontal className="h-4 w-4" />
-            <span className="sr-only">Toggle menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={handleSaveClick}>Save</DropdownMenuItem>
-          <DropdownMenuItem onClick={handleCancelClick}>
-            Cancel
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </TableCell>
-  ) : (
-    <TableCell>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button aria-haspopup="true" size="icon" variant="ghost">
-            <MoreHorizontal className="h-4 w-4" />
-            <span className="sr-only">Toggle menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={handleEditClick}>Edit</DropdownMenuItem>
-          <DropdownMenuItem onClick={handleDeleteClick}>
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </TableCell>
-  );
+  isEditing: boolean;
+}) => (
+  <TableCell>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          aria-haspopup="true"
+          disabled={disabled}
+          size="icon"
+          variant="ghost"
+        >
+          <MoreHorizontal className="h-4 w-4" />
+          <span className="sr-only">Toggle menu</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        {isEditing ? (
+          <>
+            <DropdownMenuItem onClick={handleSaveClick}>Save</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleCancelClick}>
+              Cancel
+            </DropdownMenuItem>
+          </>
+        ) : (
+          <>
+            <DropdownMenuItem onClick={handleEditClick}>Edit</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleDeleteClick}>
+              Delete
+            </DropdownMenuItem>
+          </>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  </TableCell>
+);
 
 export default ReportItemEditMenu;

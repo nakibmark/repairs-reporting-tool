@@ -6,6 +6,10 @@ import {
   updateReportItem,
   createReportItem,
 } from '@/lib/data/reportItems';
+import {
+  getReportStatusById,
+  updateReportStatusById,
+} from '@/lib/data/reports';
 
 export async function deleteReportItem(itemId?: string) {
   if (itemId) {
@@ -20,5 +24,15 @@ export async function saveReportItem(item: ReportItemWithNames) {
   } else {
     await createReportItem(item);
   }
+  revalidatePath('/reports/[reportId]/page', 'page');
+}
+
+export async function getReportStatus(id: number) {
+  const result = await getReportStatusById(id);
+  return result?.isSubmitted ?? false;
+}
+
+export async function setReportStatus(id: number, status: boolean) {
+  await updateReportStatusById(id, status);
   revalidatePath('/reports/[reportId]/page', 'page');
 }

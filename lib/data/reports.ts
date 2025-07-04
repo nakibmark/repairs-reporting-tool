@@ -44,3 +44,14 @@ export async function deleteReport(id: number) {
 export async function insertReport(report: InsertReport) {
   return await db.insert(reports).values(report).returning();
 }
+
+export async function getReportStatusById(id: number) {
+  return await db.query.reports.findFirst({
+    where: eq(reports.id, id),
+    columns: { isSubmitted: true },
+  });
+}
+
+export async function updateReportStatusById(id: number, isSubmitted: boolean) {
+  await db.update(reports).set({ isSubmitted }).where(eq(reports.id, id));
+}

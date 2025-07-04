@@ -20,6 +20,7 @@ import ReportItem from './report-item';
 import { ReportItemWithNames } from '@/lib/data/reportItems';
 import React, { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
+import { setReportStatus } from './actions';
 
 export type DropdownOption = { id: number; name: string };
 
@@ -31,11 +32,21 @@ const ReportItemsTable = ({
     brands: DropdownOption[];
     serviceLevelTypes: DropdownOption[];
     warrantyTypes: DropdownOption[];
+    readOnly: boolean;
+    reportId: number;
   };
 }) => {
-  const { items, brands, serviceLevelTypes, warrantyTypes } = tableProps;
+  const {
+    items,
+    brands,
+    serviceLevelTypes,
+    warrantyTypes,
+    readOnly,
+    reportId,
+  } = tableProps;
+
   const [isCreatingNewItem, setIsCreatingNewItem] = useState(
-    items.length === 0
+    items.length === 0 && !readOnly
   );
 
   return (
@@ -50,13 +61,24 @@ const ReportItemsTable = ({
             <CardAction>
               <Button
                 type="button"
+                disabled={readOnly}
                 onClick={() => setIsCreatingNewItem(true)}
                 size="sm"
                 className="h-8 gap-1"
               >
                 <PlusCircle className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Add Report Item
+                  Add Repair
+                </span>
+              </Button>
+              <Button
+                type="button"
+                onClick={() => setReportStatus(reportId, !readOnly)}
+                size="sm"
+                className="h-8 gap-1"
+              >
+                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  {readOnly ? 'Edit Report' : 'Submit Report'}
                 </span>
               </Button>
             </CardAction>
@@ -94,15 +116,14 @@ const ReportItemsTable = ({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isCreatingNewItem ? (
+            {isCreatingNewItem && (
               <ReportItem
                 key={0}
                 brands={brands}
                 serviceLevelTypes={serviceLevelTypes}
                 warrantyTypes={warrantyTypes}
+                readOnly={readOnly}
               />
-            ) : (
-              <></>
             )}
             {items.map((item) => (
               <ReportItem
@@ -111,6 +132,7 @@ const ReportItemsTable = ({
                 brands={brands}
                 serviceLevelTypes={serviceLevelTypes}
                 warrantyTypes={warrantyTypes}
+                readOnly={readOnly}
               />
             ))}
           </TableBody>
