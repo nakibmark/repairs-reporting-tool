@@ -7,10 +7,10 @@ export async function getPartners() {
   return await selectPartners();
 }
 
-export async function setActivePartner(formData: FormData) {
+export async function setActivePartner(partnerId: string) {
   const cookieStore = await cookies();
-  const partnerId = formData.get('partnerId');
-  cookieStore.set('partnerId', String(partnerId));
+  cookieStore.set('partnerId', partnerId);
+  console.log('Cookies set: ', cookieStore.getAll());
 }
 
 export async function getActivePartner() {

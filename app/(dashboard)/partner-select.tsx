@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { getPartners } from './actions';
+import { getPartners, setActivePartner } from './actions';
 
 const PartnerSelect = ({
   partners,
@@ -18,18 +18,18 @@ const PartnerSelect = ({
   partners: Awaited<ReturnType<typeof getPartners>>;
   activePartner?: string;
 }) => (
-  <Select>
+  <Select onValueChange={setActivePartner}>
     <SelectTrigger className="w-[180px]">
       <SelectValue placeholder={'Select a partner'}>
-        {activePartner}
+        {`${activePartner} - ${partners.find((partner) => partner.id === Number(activePartner))?.name}`}
       </SelectValue>
     </SelectTrigger>
     <SelectContent>
       <SelectGroup>
         <SelectLabel>Partners</SelectLabel>
         {partners.map((partner) => (
-          <SelectItem key={partner.id} value={partner.name}>
-            {partner.name}
+          <SelectItem key={partner.id} value={String(partner.id)}>
+            {`${partner.id} - ${partner.name}`}
           </SelectItem>
         ))}
       </SelectGroup>
