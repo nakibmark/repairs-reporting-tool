@@ -2,7 +2,7 @@
 import { db } from '../db';
 import { partners } from '../schema';
 
-export const getPartners = async () =>
+export const selectPartners = async () =>
   await db
     .select({
       id: partners.id,

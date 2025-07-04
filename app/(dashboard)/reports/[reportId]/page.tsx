@@ -3,7 +3,7 @@ import ReportItemsTable from './report-items-table';
 import { getServiceLevelTypes } from '@/lib/data/serviceLevelTypes';
 import { getBrands } from '@/lib/data/brands';
 import { getWarrantyTypes } from '@/lib/data/warrantyTypes';
-import { getReportStatus } from './actions';
+import { getReportStatus } from '../actions';
 
 export default async function ReportDetailsPage({
   params,

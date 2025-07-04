@@ -5,17 +5,23 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { SelectReport } from '@/lib/schema';
-import Link from 'next/link';
-import { deleteReportById } from './actions';
+import { deleteReportById, setReportStatus } from './actions';
+import { useRouter } from 'next/navigation';
 
 export function Report({ report }: { report: SelectReport }) {
+  const router = useRouter();
+
   return (
-    <TableRow>
+    <TableRow
+      className="cursor-pointer"
+      onClick={() => router.push(`/reports/${report.id}`)}
+    >
       <TableCell className="hidden sm:table-cell"></TableCell>
       <TableCell className="font-medium">{report.id}</TableCell>
       <TableCell>
@@ -42,13 +48,25 @@ export function Report({ report }: { report: SelectReport }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>
-              <Link href={`/reports/${report.id}`}>Edit</Link>
+            <DropdownMenuItem
+              onClick={(e) => {
+                // Prevent the click event from propagating to the parent TableRow
+                // which would trigger navigation to the report details page.
+                e.stopPropagation();
+                setReportStatus(report.id, !report.isSubmitted);
+              }}
+            >
+              {report.isSubmitted ? 'Mark as Draft' : 'Submit'}
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <button type="button" onClick={() => deleteReportById(report.id)}>
-                Delete
-              </button>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteReportById(report.id);
+              }}
+            >
+              Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

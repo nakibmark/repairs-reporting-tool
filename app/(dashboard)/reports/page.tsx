@@ -2,7 +2,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ReportsTable } from './reports-table';
 import { getReports } from '@/lib/data/reports';
 import ReportCreateButton from './report-create-button';
-import ReportDropdown from './report-dropdown';
 import React from 'react';
 
 export default async function ReportsPage(props: {
@@ -28,7 +27,6 @@ export default async function ReportsPage(props: {
           </TabsTrigger>
         </TabsList>
         <ReportCreateButton />
-        <ReportDropdown />
       </div>
       <TabsContent value="all">
         <ReportsTable
