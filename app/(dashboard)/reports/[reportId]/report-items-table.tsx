@@ -20,7 +20,7 @@ import ReportItem from './report-item';
 import { ReportItemWithNames } from '@/lib/data/reportItems';
 import React, { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
-import { setReportStatus } from './actions';
+import { setReportStatus } from '../actions';
 
 export type DropdownOption = { id: number; name: string };
 

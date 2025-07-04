@@ -1,7 +1,12 @@
 'use server';
-import { deleteReport, insertReport } from '@/lib/data/reports';
+import {
+  deleteReport,
+  getReportStatusById,
+  insertReport,
+  updateReportStatusById,
+} from '@/lib/data/reports';
 import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
+import { getActivePartner } from '../actions';
 
 export async function deleteReportById(reportId: number) {
   await deleteReport(reportId);
@@ -26,13 +31,12 @@ export async function createReport() {
   return id;
 }
 
-export async function setActivePartner(formData: FormData) {
-  const cookieStore = await cookies();
-  const partnerId = formData.get('partnerId');
-  cookieStore.set('partnerId', String(partnerId));
+export async function getReportStatus(id: number) {
+  const result = await getReportStatusById(id);
+  return result?.isSubmitted ?? false;
 }
 
-export async function getActivePartner() {
-  const cookieStore = await cookies();
-  return cookieStore.get('partnerId')?.value;
+export async function setReportStatus(id: number, status: boolean) {
+  await updateReportStatusById(id, status);
+  revalidatePath('/reports', 'page');
 }
