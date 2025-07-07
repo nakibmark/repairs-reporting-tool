@@ -37,6 +37,49 @@ export async function getReports(
   };
 }
 
+export async function getReportsByPartnerId(
+  search: string,
+  offset: number,
+  partnerId: number
+): Promise<{
+  reports: SelectReport[];
+  newOffset: number | null;
+  totalReports: number;
+}> {
+  if (search) {
+    return {
+      reports: await db.query.reports.findMany({
+        where: ilike(reports.id, `%${search}%`),
+        limit: 1000,
+      }),
+      newOffset: null,
+      totalReports: 0,
+    };
+  }
+
+  if (offset === null) {
+    return { reports: [], newOffset: null, totalReports: 0 };
+  }
+
+  const totalReports = await db
+    .select({ count: count() })
+    .from(reports)
+    .where(eq(reports.partnerId, partnerId));
+  const moreReports = await db
+    .select()
+    .from(reports)
+    .where(eq(reports.partnerId, partnerId))
+    .limit(20)
+    .offset(offset);
+  const newOffset = moreReports.length >= 20 ? offset + 20 : null;
+
+  return {
+    reports: moreReports,
+    newOffset,
+    totalReports: totalReports[0].count,
+  };
+}
+
 export async function deleteReport(id: number) {
   await db.delete(reports).where(eq(reports.id, id));
 }
