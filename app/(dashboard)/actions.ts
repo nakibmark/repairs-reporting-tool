@@ -1,10 +1,10 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { selectPartners } from '../../lib/data/partners';
+import { selectPartnersOptions } from '../../lib/data/partners';
 
 export async function getPartners() {
-  return await selectPartners();
+  return await selectPartnersOptions();
 }
 
 export async function setActivePartner(partnerId: string) {
