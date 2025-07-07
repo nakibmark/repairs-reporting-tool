@@ -63,7 +63,7 @@ export function Partner({ partner }: { partner?: SelectPartner }) {
       <PartnerCell
         onChange={onInputChange('emailAddress')}
         isEditing={isEditing}
-        value={partner?.emailAddress}
+        value={editedPartner?.emailAddress}
       />
       <PartnerCell
         onChange={onInputChange('phoneNumber')}
