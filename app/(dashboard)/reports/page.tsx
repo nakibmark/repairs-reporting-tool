@@ -1,8 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ReportsTable } from './reports-table';
-import { getReports } from '@/lib/data/reports';
 import ReportCreateButton from './report-create-button';
 import React from 'react';
+import { getReports } from './actions';
 
 export default async function ReportsPage(props: {
   searchParams: Promise<{ q: string; offset: string }>;
