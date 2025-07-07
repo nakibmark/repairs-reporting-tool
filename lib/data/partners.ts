@@ -1,6 +1,6 @@
 'use server';
 import { db } from '../db';
-import { partners, SelectPartner } from '../schema';
+import { InsertPartner, partners, SelectPartner } from '../schema';
 import { eq } from 'drizzle-orm';
 
 export const selectPartnersOptions = async () =>
@@ -31,4 +31,8 @@ export async function updatePartner(partner: SelectPartner) {
       region: partner.region,
     })
     .where(eq(partners.id, partner.id));
+}
+
+export async function insertPartner(partner: InsertPartner) {
+  return await db.insert(partners).values(partner).returning();
 }

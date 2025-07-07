@@ -3,6 +3,7 @@ import {
   updatePartnerStatusById,
   selectPartners,
   updatePartner,
+  insertPartner,
 } from '@/lib/data/partners';
 import { SelectPartner } from '@/lib/schema';
 import { revalidatePath } from 'next/cache';
@@ -12,6 +13,7 @@ export async function getPartners() {
 }
 
 export async function deletePartner(partnerId: number | undefined) {
+  console.log(partnerId);
   if (partnerId) {
     await updatePartnerStatusById(partnerId, false);
     revalidatePath('/admin/partners/page', 'page');
@@ -19,5 +21,10 @@ export async function deletePartner(partnerId: number | undefined) {
 }
 
 export async function savePartner(partner: SelectPartner) {
-  await updatePartner(partner);
+  if (partner.id) {
+    await updatePartner(partner);
+  } else {
+    await insertPartner(partner);
+  }
+  revalidatePath('/admin/partners/page', 'page');
 }
