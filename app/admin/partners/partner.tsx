@@ -3,6 +3,7 @@ import { SelectPartner } from '@/lib/schema';
 import PartnerEditMenu from './partner-edit-menu';
 import React from 'react';
 import PartnerCell from './partner-cell';
+import { deletePartner } from './actions';
 
 export function Partner({ partner }: { partner?: SelectPartner }) {
   const [isEditing, setIsEditing] = React.useState(!partner);
@@ -70,7 +71,9 @@ export function Partner({ partner }: { partner?: SelectPartner }) {
           setEditedPartner(partner);
           setIsEditing(false);
         }}
-        handleDeleteClick={() => {}}
+        handleDeleteClick={() => {
+          deletePartner(editedPartner?.id);
+        }}
         handleSaveClick={() => {}}
       ></PartnerEditMenu>
     </TableRow>
