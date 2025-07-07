@@ -57,6 +57,7 @@ const PartnersTable = ({ partners }: { partners: SelectPartner[] }) => {
             <TableRow>
               <TableHead className="hidden md:table-cell">ID</TableHead>
               <TableHead className="hidden md:table-cell">Name</TableHead>
+              <TableHead className="hidden md:table-cell">Number</TableHead>
               <TableHead className="hidden md:table-cell">
                 Email Address
               </TableHead>
