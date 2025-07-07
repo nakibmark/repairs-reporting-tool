@@ -11,7 +11,7 @@ const PartnerCell = ({
 }: {
   isEditing: boolean;
   onChange: ChangeEventHandler<HTMLInputElement>;
-  value: string | null | undefined;
+  value: string | null | undefined | number;
 }) =>
   isEditing ? (
     <TableCell className="hidden md:table-cell">

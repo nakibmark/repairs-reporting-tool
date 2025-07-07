@@ -1,3 +1,7 @@
+import { getPartners } from './actions';
+import PartnersTable from './partners-table';
+
 export default async function PartnersPage() {
-  return <div>Placeholder for admin view of partners</div>;
+  const partners = await getPartners();
+  return <PartnersTable partners={partners} />;
 }
