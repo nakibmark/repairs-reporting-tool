@@ -1,9 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ReportsTable } from './reports-table';
-import { selectReportsByPartnerId } from '@/lib/data/reports';
 import ReportCreateButton from './report-create-button';
 import React from 'react';
-import { getActivePartner } from '../actions';
+import { getReports } from './actions';
 
 export default async function ReportsPage(props: {
   searchParams: Promise<{ q: string; offset: string }>;
@@ -11,11 +10,9 @@ export default async function ReportsPage(props: {
   const searchParams = await props.searchParams;
   const search = searchParams.q ?? '';
   const offset = searchParams.offset ?? 0;
-  const partnerId = await getActivePartner();
-  const { reports, newOffset, totalReports } = await selectReportsByPartnerId(
+  const { reports, newOffset, totalReports } = await getReports(
     search,
-    Number(offset),
-    partnerId
+    Number(offset)
   );
 
   return (
