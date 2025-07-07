@@ -40,44 +40,76 @@ export async function selectReports(
 export async function selectReportsByPartnerId(
   search: string,
   offset: number,
-  partnerId: number
+  partnerId: string | undefined
 ): Promise<{
   reports: SelectReport[];
   newOffset: number | null;
   totalReports: number;
 }> {
-  if (search) {
+  if (typeof partnerId === 'undefined') {
+    if (search) {
+      return {
+        reports: await db.query.reports.findMany({
+          where: ilike(reports.id, `%${search}%`),
+          limit: 1000,
+        }),
+        newOffset: null,
+        totalReports: 0,
+      };
+    }
+
+    if (offset === null) {
+      return { reports: [], newOffset: null, totalReports: 0 };
+    }
+
+    const totalReports = await db.select({ count: count() }).from(reports);
+    const moreReports = await db
+      .select()
+      .from(reports)
+      .limit(20)
+      .offset(offset);
+    const newOffset = moreReports.length >= 20 ? offset + 20 : null;
+
     return {
-      reports: await db.query.reports.findMany({
-        where: ilike(reports.id, `%${search}%`),
-        limit: 1000,
-      }),
-      newOffset: null,
-      totalReports: 0,
+      reports: moreReports,
+      newOffset,
+      totalReports: totalReports[0].count,
+    };
+  } else {
+    const partnerIdAsInteger = Number(partnerId);
+    if (search) {
+      return {
+        reports: await db.query.reports.findMany({
+          where: ilike(reports.id, `%${search}%`),
+          limit: 1000,
+        }),
+        newOffset: null,
+        totalReports: 0,
+      };
+    }
+
+    if (offset === null) {
+      return { reports: [], newOffset: null, totalReports: 0 };
+    }
+
+    const totalReports = await db
+      .select({ count: count() })
+      .from(reports)
+      .where(eq(reports.partnerId, partnerIdAsInteger));
+    const moreReports = await db
+      .select()
+      .from(reports)
+      .where(eq(reports.partnerId, partnerIdAsInteger))
+      .limit(20)
+      .offset(offset);
+    const newOffset = moreReports.length >= 20 ? offset + 20 : null;
+
+    return {
+      reports: moreReports,
+      newOffset,
+      totalReports: totalReports[0].count,
     };
   }
-
-  if (offset === null) {
-    return { reports: [], newOffset: null, totalReports: 0 };
-  }
-
-  const totalReports = await db
-    .select({ count: count() })
-    .from(reports)
-    .where(eq(reports.partnerId, partnerId));
-  const moreReports = await db
-    .select()
-    .from(reports)
-    .where(eq(reports.partnerId, partnerId))
-    .limit(20)
-    .offset(offset);
-  const newOffset = moreReports.length >= 20 ? offset + 20 : null;
-
-  return {
-    reports: moreReports,
-    newOffset,
-    totalReports: totalReports[0].count,
-  };
 }
 
 export async function deleteReport(id: number) {
