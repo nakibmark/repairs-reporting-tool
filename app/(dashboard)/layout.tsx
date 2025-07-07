@@ -31,12 +31,17 @@ import { VercelLogo } from '@/components/icons';
 import Providers from './providers';
 import { NavItem } from './nav-item';
 import { SearchInput } from './search';
+import PartnerSelect from './partner-select';
+import { getActivePartner, getPartners } from './actions';
+import { use } from 'react';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const partners = use(getPartners());
+  const activePartner = use(getActivePartner());
   return (
     <Providers>
       <main className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -45,6 +50,7 @@ export default function DashboardLayout({
           <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
             <MobileNav />
             <DashboardBreadcrumb />
+            <PartnerSelect partners={partners} activePartner={activePartner} />
             <SearchInput />
             <User />
           </header>
