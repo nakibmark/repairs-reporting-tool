@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ReportsTable } from './reports-table';
-import { getReports } from '@/lib/data/reports';
+import { selectReports } from '@/lib/data/reports';
 import ReportCreateButton from './report-create-button';
 import React from 'react';
 
@@ -10,7 +10,7 @@ export default async function ReportsPage(props: {
   const searchParams = await props.searchParams;
   const search = searchParams.q ?? '';
   const offset = searchParams.offset ?? 0;
-  const { reports, newOffset, totalReports } = await getReports(
+  const { reports, newOffset, totalReports } = await selectReports(
     search,
     Number(offset)
   );

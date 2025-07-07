@@ -1,7 +1,7 @@
 'use server';
 import {
   deleteReport,
-  getReportStatusById,
+  selectReportStatusById,
   insertReport,
   updateReportStatusById,
 } from '@/lib/data/reports';
@@ -32,7 +32,7 @@ export async function createReport() {
 }
 
 export async function getReportStatus(id: number) {
-  const result = await getReportStatusById(id);
+  const result = await selectReportStatusById(id);
   return result?.isSubmitted ?? false;
 }
 

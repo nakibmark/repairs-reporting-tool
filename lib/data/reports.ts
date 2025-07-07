@@ -3,7 +3,7 @@ import { db } from '../db';
 import { InsertReport, reports, SelectReport } from '../schema';
 import { count, eq, ilike } from 'drizzle-orm';
 
-export async function getReports(
+export async function selectReports(
   search: string,
   offset: number
 ): Promise<{
@@ -37,7 +37,7 @@ export async function getReports(
   };
 }
 
-export async function getReportsByPartnerId(
+export async function selectReportsByPartnerId(
   search: string,
   offset: number,
   partnerId: number
@@ -88,7 +88,7 @@ export async function insertReport(report: InsertReport) {
   return await db.insert(reports).values(report).returning();
 }
 
-export async function getReportStatusById(id: number) {
+export async function selectReportStatusById(id: number) {
   return await db.query.reports.findFirst({
     where: eq(reports.id, id),
     columns: { isSubmitted: true },
