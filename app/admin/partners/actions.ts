@@ -1,5 +1,5 @@
 'use server';
-import { deletePartnerById, selectPartners } from '@/lib/data/partners';
+import { updatePartnerStatusById, selectPartners } from '@/lib/data/partners';
 import { revalidatePath } from 'next/cache';
 
 export async function getPartners() {
@@ -8,7 +8,7 @@ export async function getPartners() {
 
 export async function deletePartner(partnerId: number | undefined) {
   if (partnerId) {
-    await deletePartnerById(partnerId);
+    await updatePartnerStatusById(partnerId, false);
     revalidatePath('/admin/partners/page', 'page');
   }
 }

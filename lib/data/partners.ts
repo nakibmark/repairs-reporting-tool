@@ -13,5 +13,6 @@ export const selectPartnersOptions = async () =>
 
 export const selectPartners = async () => await db.select().from(partners);
 
-export const deletePartnerById = async (partnerId: number) =>
-  await db.delete(partners).where(eq(partners.id, partnerId));
+export async function updatePartnerStatusById(id: number, isActive: boolean) {
+  await db.update(partners).set({ isActive }).where(eq(partners.id, id));
+}
