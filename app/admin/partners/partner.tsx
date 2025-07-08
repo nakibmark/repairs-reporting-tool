@@ -44,7 +44,7 @@ export function Partner({ partner }: { partner?: SelectPartner }) {
     };
 
   return (
-    <TableRow>
+    <TableRow className={editedPartner?.isActive ? 'bg-zinc-300' : ''}>
       <PartnerCell
         onChange={onInputChange('id')}
         isEditing={isEditing}
