@@ -1,5 +1,6 @@
 'use client';
 
+import { Label } from '@/components/ui/label';
 import {
   TableHead,
   TableRow,
@@ -13,19 +14,19 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardAction,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Partner from './partner';
 import React, { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
 import { SelectPartner } from '@/lib/schema';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export type DropdownOption = { id: number; name: string };
 
 const PartnersTable = ({ partners }: { partners: SelectPartner[] }) => {
   const [isCreatingNewItem, setIsCreatingNewPartner] = useState(false);
-
+  const [displayInactivePartners, setDisplayInactivePartners] = useState(false);
   return (
     <Card>
       <CardHeader>
@@ -34,20 +35,28 @@ const PartnersTable = ({ partners }: { partners: SelectPartner[] }) => {
             <CardTitle>Manage Partners</CardTitle>
             <CardDescription>Edit partner details.</CardDescription>
           </div>
-          <div className="ml-auto flex items-center gap-2">
-            <CardAction>
-              <Button
-                type="button"
-                onClick={() => setIsCreatingNewPartner(true)}
-                size="sm"
-                className="h-8 gap-1"
-              >
-                <PlusCircle className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Add partner
-                </span>
-              </Button>
-            </CardAction>
+          <div className="ml-auto flex items-center gap-2 space-x-2">
+            <div className="flex items-center ">
+              <Checkbox
+                checked={displayInactivePartners}
+                id="displayInactive"
+                onCheckedChange={() => {
+                  setDisplayInactivePartners(!displayInactivePartners);
+                }}
+              ></Checkbox>
+              <Label htmlFor="displayInactive">Display Inactive Partners</Label>
+            </div>
+            <Button
+              type="button"
+              onClick={() => setIsCreatingNewPartner(true)}
+              size="sm"
+              className="h-8 gap-1"
+            >
+              <PlusCircle className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Add partner
+              </span>
+            </Button>
           </div>
         </div>
       </CardHeader>
