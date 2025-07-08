@@ -7,7 +7,13 @@ import { deletePartner, savePartner } from './actions';
 
 const RequiredProps = ['partnerName', 'emailAddress', 'partnerNo'] as const;
 
-export function Partner({ partner }: { partner?: SelectPartner }) {
+export function Partner({
+  partner,
+  displayInactive,
+}: {
+  partner?: SelectPartner;
+  displayInactive: boolean;
+}) {
   const [isEditing, setIsEditing] = React.useState(!partner);
   const [editedPartner, setEditedPartner] = React.useState<
     Partial<SelectPartner> | undefined
@@ -44,7 +50,10 @@ export function Partner({ partner }: { partner?: SelectPartner }) {
     };
 
   return (
-    <TableRow className={editedPartner?.isActive ? 'bg-zinc-300' : ''}>
+    <TableRow
+      className={editedPartner?.isActive ? 'bg-zinc-300' : ''}
+      hidden={!displayInactive && editedPartner?.isActive}
+    >
       <PartnerCell
         onChange={onInputChange('id')}
         isEditing={isEditing}

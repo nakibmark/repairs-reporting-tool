@@ -84,9 +84,15 @@ const PartnersTable = ({ partners }: { partners: SelectPartner[] }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {isCreatingNewItem && <Partner key={0} />}
+            {isCreatingNewItem && (
+              <Partner key={0} displayInactive={displayInactivePartners} />
+            )}
             {partners.map((partner) => (
-              <Partner key={partner.id} partner={partner} />
+              <Partner
+                key={partner.id}
+                partner={partner}
+                displayInactive={displayInactivePartners}
+              />
             ))}
           </TableBody>
         </Table>
