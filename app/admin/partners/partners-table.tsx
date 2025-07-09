@@ -21,6 +21,7 @@ import React, { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
 import { SelectPartner } from '@/lib/schema';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 
 export type DropdownOption = { id: number; name: string };
 
@@ -36,6 +37,12 @@ const PartnersTable = ({ partners }: { partners: SelectPartner[] }) => {
             <CardDescription>Edit partner details.</CardDescription>
           </div>
           <div className="ml-auto flex items-center gap-2 space-x-2">
+            <form className="flex items-center">
+              <Input size={15} id="search"></Input>
+              <Button size="sm" type="submit">
+                Search
+              </Button>
+            </form>
             <div className="flex items-center ">
               <Checkbox
                 checked={displayInactivePartners}
