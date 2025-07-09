@@ -1,9 +1,10 @@
 'use server';
 import {
   deleteReport,
-  getReportStatusById,
+  selectReportStatusById,
   insertReport,
   updateReportStatusById,
+  selectReports,
 } from '@/lib/data/reports';
 import { revalidatePath } from 'next/cache';
 import { getActivePartner } from '../actions';
@@ -32,11 +33,23 @@ export async function createReport() {
 }
 
 export async function getReportStatus(id: number) {
-  const result = await getReportStatusById(id);
+  const result = await selectReportStatusById(id);
   return result?.isSubmitted ?? false;
 }
 
 export async function setReportStatus(id: number, status: boolean) {
   await updateReportStatusById(id, status);
   revalidatePath('/reports', 'page');
+}
+
+export async function getReports(offset: number) {
+  const { reports, newOffset, totalReports } = await selectReports(
+    Number(offset),
+    await getActivePartner()
+  );
+  return {
+    reports,
+    newOffset,
+    totalReports,
+  };
 }

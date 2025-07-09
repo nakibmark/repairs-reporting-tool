@@ -7,7 +7,7 @@ import {
   createReportItem,
 } from '@/lib/data/reportItems';
 import {
-  getReportStatusById,
+  selectReportStatusById,
   updateReportStatusById,
 } from '@/lib/data/reports';
 
@@ -28,7 +28,7 @@ export async function saveReportItem(item: ReportItemWithNames) {
 }
 
 export async function getReportStatus(id: number) {
-  const result = await getReportStatusById(id);
+  const result = await selectReportStatusById(id);
   return result?.isSubmitted ?? false;
 }
 

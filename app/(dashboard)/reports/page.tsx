@@ -1,19 +1,12 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ReportsTable } from './reports-table';
-import { getReports } from '@/lib/data/reports';
 import ReportCreateButton from './report-create-button';
 import React from 'react';
+import { getReports } from './actions';
 
-export default async function ReportsPage(props: {
-  searchParams: Promise<{ q: string; offset: string }>;
-}) {
-  const searchParams = await props.searchParams;
-  const search = searchParams.q ?? '';
-  const offset = searchParams.offset ?? 0;
-  const { reports, newOffset, totalReports } = await getReports(
-    search,
-    Number(offset)
-  );
+export default async function ReportsPage() {
+  const offset = 0;
+  const { reports, newOffset, totalReports } = await getReports(Number(offset));
 
   return (
     <Tabs defaultValue="all">
