@@ -1,7 +1,7 @@
 'use server';
 import { db } from '../db';
 import { InsertPartner, partners, SelectPartner } from '../schema';
-import { eq, ilike } from 'drizzle-orm';
+import { eq, ilike, or } from 'drizzle-orm';
 
 export const selectPartnersOptions = async () =>
   await db
@@ -42,14 +42,9 @@ export async function selectPartnersSearch(search: string) {
   const foundPartners = await db
     .select()
     .from(partners)
-    .where(ilike(partners.partnerNo, search))
+    .where(
+      or(ilike(partners.partnerNo, search), ilike(partners.partnerName, search))
+    )
     .orderBy(partners.id);
-  foundPartners.push(
-    ...(await db
-      .select()
-      .from(partners)
-      .where(ilike(partners.partnerName, search))
-      .orderBy(partners.id))
-  );
   return foundPartners;
 }
