@@ -4,6 +4,7 @@ import {
   selectPartners,
   updatePartner,
   insertPartner,
+  selectPartnersSearch,
 } from '@/lib/data/partners';
 import { SelectPartner } from '@/lib/schema';
 import { revalidatePath } from 'next/cache';
@@ -27,4 +28,8 @@ export async function savePartner(partner: SelectPartner) {
     await insertPartner(partner);
   }
   revalidatePath('/admin/partners/page', 'page');
+}
+
+export async function searchPartners(search: string) {
+  return await selectPartnersSearch(search);
 }
