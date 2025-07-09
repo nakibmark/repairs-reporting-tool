@@ -3,5 +3,5 @@ import PartnersTable from './partners-table';
 
 export default async function PartnersPage() {
   const partners = await getPartners();
-  return <PartnersTable partners={partners} />;
+  return <PartnersTable partnersProp={partners} />;
 }

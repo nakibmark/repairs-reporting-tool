@@ -22,12 +22,18 @@ import { PlusCircle } from 'lucide-react';
 import { SelectPartner } from '@/lib/schema';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
+import { searchPartners } from './actions';
 
 export type DropdownOption = { id: number; name: string };
 
-const PartnersTable = ({ partners }: { partners: SelectPartner[] }) => {
+const PartnersTable = ({ partnersProp }: { partnersProp: SelectPartner[] }) => {
   const [isCreatingNewItem, setIsCreatingNewPartner] = useState(false);
   const [displayInactivePartners, setDisplayInactivePartners] = useState(false);
+  const [partners, setPartners] = useState(partnersProp);
+  async function handleSearchClick(formData: FormData) {
+    setPartners(await searchPartners(String(formData.get('searchInput'))));
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -37,8 +43,8 @@ const PartnersTable = ({ partners }: { partners: SelectPartner[] }) => {
             <CardDescription>Edit partner details.</CardDescription>
           </div>
           <div className="ml-auto flex items-center gap-2 space-x-2">
-            <form className="flex items-center">
-              <Input size={15} id="search"></Input>
+            <form className="flex items-center" action={handleSearchClick}>
+              <Input size={15} name="searchInput" type="text"></Input>
               <Button size="sm" type="submit">
                 Search
               </Button>
