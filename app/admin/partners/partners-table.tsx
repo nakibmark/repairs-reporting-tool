@@ -22,7 +22,7 @@ import { PlusCircle } from 'lucide-react';
 import { SelectPartner } from '@/lib/schema';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { searchPartners } from './actions';
+import { getPartners, searchPartners } from './actions';
 
 export type DropdownOption = { id: number; name: string };
 
@@ -31,7 +31,11 @@ const PartnersTable = ({ partnersProp }: { partnersProp: SelectPartner[] }) => {
   const [displayInactivePartners, setDisplayInactivePartners] = useState(false);
   const [partners, setPartners] = useState(partnersProp);
   async function handleSearchClick(formData: FormData) {
-    setPartners(await searchPartners(String(formData.get('searchInput'))));
+    setPartners(
+      String(formData.get('searchInput'))
+        ? await searchPartners(String(formData.get('searchInput')))
+        : await getPartners()
+    );
   }
 
   return (
