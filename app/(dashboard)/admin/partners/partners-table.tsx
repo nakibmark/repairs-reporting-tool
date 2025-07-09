@@ -30,6 +30,7 @@ const PartnersTable = ({ partnersProp }: { partnersProp: SelectPartner[] }) => {
   const [isCreatingNewItem, setIsCreatingNewPartner] = useState(false);
   const [displayInactivePartners, setDisplayInactivePartners] = useState(false);
   const [partners, setPartners] = useState(partnersProp);
+
   async function handleSearchClick(formData: FormData) {
     setPartners(
       String(formData.get('searchInput'))
