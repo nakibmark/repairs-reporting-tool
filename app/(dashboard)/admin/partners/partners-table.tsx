@@ -24,7 +24,7 @@ import { SelectPartner } from '@/lib/schema';
 import { Checkbox } from '@/components/ui/checkbox';
 import PartnerSearch from './partner-search';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import Pagination from './partners-pagination';
+import PartnersPagination from './partners-pagination';
 
 export type DropdownOption = { id: number; name: string };
 
@@ -116,7 +116,7 @@ const PartnersTable = ({
         </Table>
       </CardContent>
       <CardFooter>
-        <Pagination totalPages={totalPages}></Pagination>
+        <PartnersPagination totalPages={totalPages}></PartnersPagination>
       </CardFooter>
     </Card>
   );
