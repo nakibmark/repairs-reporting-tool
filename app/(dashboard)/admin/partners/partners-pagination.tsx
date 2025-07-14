@@ -3,8 +3,11 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { generatePagination } from '@/lib/utils';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function PartnersPagination({
   totalPages,
@@ -13,13 +16,24 @@ export default function PartnersPagination({
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { replace } = useRouter();
   const currentPage = Number(searchParams.get('page')) || 1;
   const allPages = generatePagination(currentPage, totalPages);
+
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', pageNumber.toString());
     return `${pathname}?${params.toString()}`;
   };
+
+  const handlePartnersPerPageChange = useDebouncedCallback(
+    (partnersPerPage: string) => {
+      const params = new URLSearchParams(searchParams);
+      params.set('partnersPerPage', partnersPerPage);
+      replace(`${pathname}?${params.toString()}`);
+    },
+    450
+  );
   return (
     <>
       {
@@ -56,6 +70,16 @@ export default function PartnersPagination({
             href={createPageURL(currentPage + 1)}
             isDisabled={currentPage >= totalPages}
           />
+          <div className="justify-right items-center flex">
+            <Input
+              className="w-10"
+              onChange={(e) => {
+                handlePartnersPerPageChange(e.target.value);
+              }}
+              defaultValue={searchParams.get('partnersPerPage')?.toString()}
+            ></Input>
+            <Label>Partners Per Page</Label>
+          </div>
         </div>
       }
     </>

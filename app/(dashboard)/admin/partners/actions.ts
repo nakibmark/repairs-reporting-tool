@@ -12,9 +12,10 @@ import { revalidatePath } from 'next/cache';
 
 export async function getPartners(
   currentPage: number,
-  displayInactive: boolean
+  displayInactive: boolean,
+  partnersPerPage: number
 ) {
-  return await selectPartners(displayInactive, currentPage, 10);
+  return await selectPartners(displayInactive, currentPage, partnersPerPage);
 }
 
 export async function deletePartner(partnerId: number | undefined) {
@@ -37,9 +38,15 @@ export async function savePartner(partner: SelectPartner) {
 export async function searchPartners(
   query: string,
   currentPage: number,
-  displayInactive: boolean
+  displayInactive: boolean,
+  partnersPerPage: number
 ) {
-  return await selectPartnersSearch(query, displayInactive, currentPage, 10);
+  return await selectPartnersSearch(
+    query,
+    displayInactive,
+    currentPage,
+    partnersPerPage
+  );
 }
 
 export async function getTotalPages(
