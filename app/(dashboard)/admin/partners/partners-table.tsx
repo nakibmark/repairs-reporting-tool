@@ -22,13 +22,21 @@ import { PlusCircle } from 'lucide-react';
 import { SelectPartner } from '@/lib/schema';
 import { Checkbox } from '@/components/ui/checkbox';
 import PartnerSearch from './partner-search';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 
 export type DropdownOption = { id: number; name: string };
 
-const PartnersTable = ({ partners }: { partners: SelectPartner[] }) => {
+const PartnersTable = ({
+  partners,
+  displayInactive,
+}: {
+  partners: SelectPartner[];
+  displayInactive: boolean;
+}) => {
   const [isCreatingNewItem, setIsCreatingNewPartner] = useState(false);
-  const [displayInactivePartners, setDisplayInactivePartners] = useState(false);
-
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
   return (
     <Card>
       <CardHeader>
@@ -41,10 +49,12 @@ const PartnersTable = ({ partners }: { partners: SelectPartner[] }) => {
             <PartnerSearch></PartnerSearch>
             <div className="flex items-center ">
               <Checkbox
-                checked={displayInactivePartners}
+                checked={displayInactive}
                 id="displayInactive"
                 onCheckedChange={() => {
-                  setDisplayInactivePartners(!displayInactivePartners);
+                  const params = new URLSearchParams(searchParams);
+                  params.set('displayInactive', String(!displayInactive));
+                  replace(`${pathname}?${params.toString()}`);
                 }}
               ></Checkbox>
               <Label htmlFor="displayInactive">Display Inactive Partners</Label>
@@ -88,13 +98,13 @@ const PartnersTable = ({ partners }: { partners: SelectPartner[] }) => {
           </TableHeader>
           <TableBody>
             {isCreatingNewItem && (
-              <Partner key={0} displayInactive={displayInactivePartners} />
+              <Partner key={0} displayInactive={displayInactive} />
             )}
             {partners.map((partner) => (
               <Partner
                 key={partner.id}
                 partner={partner}
-                displayInactive={displayInactivePartners}
+                displayInactive={displayInactive}
               />
             ))}
           </TableBody>

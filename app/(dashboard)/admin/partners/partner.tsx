@@ -51,8 +51,8 @@ export function Partner({
 
   return (
     <TableRow
-      className={editedPartner?.isActive ? 'bg-zinc-300' : ''}
-      hidden={!displayInactive && editedPartner?.isActive}
+      className={!editedPartner?.isActive ? 'bg-zinc-300' : ''}
+      hidden={!displayInactive && !editedPartner?.isActive}
     >
       <PartnerCell
         onChange={onInputChange('id')}

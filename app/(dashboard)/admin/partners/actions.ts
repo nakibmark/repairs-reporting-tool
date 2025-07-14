@@ -9,8 +9,11 @@ import {
 import { SelectPartner } from '@/lib/schema';
 import { revalidatePath } from 'next/cache';
 
-export async function getPartners() {
-  return await selectPartners();
+export async function getPartners(
+  currentPage: number,
+  displayInactive: boolean
+) {
+  return await selectPartners(currentPage, 10, displayInactive);
 }
 
 export async function deletePartner(partnerId: number | undefined) {
@@ -30,6 +33,10 @@ export async function savePartner(partner: SelectPartner) {
   revalidatePath('/admin/partners/page', 'page');
 }
 
-export async function searchPartners(search: string, currentPage: number) {
-  return await selectPartnersSearch(search, currentPage, 10);
+export async function searchPartners(
+  search: string,
+  currentPage: number,
+  displayInactive: boolean
+) {
+  return await selectPartnersSearch(search, currentPage, 10, displayInactive);
 }

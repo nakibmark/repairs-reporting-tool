@@ -1,7 +1,7 @@
 'use server';
 import { db } from '../db';
 import { InsertPartner, partners, SelectPartner } from '../schema';
-import { eq, ilike, or } from 'drizzle-orm';
+import { and, eq, ilike, or } from 'drizzle-orm';
 
 export const selectPartnersOptions = async () =>
   await db
@@ -11,8 +11,28 @@ export const selectPartnersOptions = async () =>
     })
     .from(partners);
 
-export const selectPartners = async () =>
-  await db.select().from(partners).orderBy(partners.id);
+export const selectPartners = async (
+  currentPage: number,
+  partnersPerPage: number,
+  displayInactive: boolean
+) => {
+  const offset = (currentPage - 1) * partnersPerPage;
+  const foundPartners = displayInactive
+    ? await db
+        .select()
+        .from(partners)
+        .orderBy(partners.id)
+        .limit(partnersPerPage)
+        .offset(offset)
+    : await db
+        .select()
+        .from(partners)
+        .where(eq(partners.isActive, true))
+        .orderBy(partners.id)
+        .limit(partnersPerPage)
+        .offset(offset);
+  return foundPartners;
+};
 
 export async function updatePartnerStatusById(id: number, isActive: boolean) {
   await db.update(partners).set({ isActive }).where(eq(partners.id, id));
@@ -41,16 +61,37 @@ export async function insertPartner(partner: InsertPartner) {
 export async function selectPartnersSearch(
   search: string,
   currentPage: number,
-  partnersPerPage: number
+  partnersPerPage: number,
+  displayInactive: boolean
 ) {
-  const foundPartners = await db
-    .select()
-    .from(partners)
-    .where(
-      or(ilike(partners.partnerNo, search), ilike(partners.partnerName, search))
-    )
-    .orderBy(partners.id)
-    .limit(partnersPerPage)
-    .offset((currentPage - 1) * partnersPerPage);
+  const offset = (currentPage - 1) * partnersPerPage;
+  const foundPartners = displayInactive
+    ? await db
+        .select()
+        .from(partners)
+        .where(
+          or(
+            ilike(partners.partnerNo, search),
+            ilike(partners.partnerName, search)
+          )
+        )
+        .orderBy(partners.id)
+        .limit(partnersPerPage)
+        .offset(offset)
+    : await db
+        .select()
+        .from(partners)
+        .where(
+          and(
+            eq(partners.isActive, true),
+            or(
+              ilike(partners.partnerNo, search),
+              ilike(partners.partnerName, search)
+            )
+          )
+        )
+        .orderBy(partners.id)
+        .limit(partnersPerPage)
+        .offset(offset);
   return foundPartners;
 }
