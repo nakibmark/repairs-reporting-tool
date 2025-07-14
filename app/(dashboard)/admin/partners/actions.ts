@@ -31,5 +31,5 @@ export async function savePartner(partner: SelectPartner) {
 }
 
 export async function searchPartners(search: string, currentPage: number) {
-  return await selectPartnersSearch(search, currentPage);
+  return await selectPartnersSearch(search, currentPage, 10);
 }

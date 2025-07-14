@@ -38,13 +38,19 @@ export async function insertPartner(partner: InsertPartner) {
   return await db.insert(partners).values(partner).returning();
 }
 
-export async function selectPartnersSearch(search: string) {
+export async function selectPartnersSearch(
+  search: string,
+  currentPage: number,
+  partnersPerPage: number
+) {
   const foundPartners = await db
     .select()
     .from(partners)
     .where(
       or(ilike(partners.partnerNo, search), ilike(partners.partnerName, search))
     )
-    .orderBy(partners.id);
+    .orderBy(partners.id)
+    .limit(partnersPerPage)
+    .offset((currentPage - 1) * partnersPerPage);
   return foundPartners;
 }
