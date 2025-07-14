@@ -42,14 +42,7 @@ export async function setReportStatus(id: number, status: boolean) {
   revalidatePath('/reports', 'page');
 }
 
-export async function getReports(offset: number) {
-  const { reports, newOffset, totalReports } = await selectReports(
-    Number(offset),
-    await getActivePartner()
-  );
-  return {
-    reports,
-    newOffset,
-    totalReports,
-  };
+export async function getReports() {
+  const reports = await selectReports(await getActivePartner());
+  return reports;
 }

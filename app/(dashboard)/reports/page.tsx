@@ -5,8 +5,7 @@ import React from 'react';
 import { getReports } from './actions';
 
 export default async function ReportsPage() {
-  const offset = 0;
-  const { reports, newOffset, totalReports } = await getReports(Number(offset));
+  const reports = await getReports();
 
   return (
     <Tabs defaultValue="all">
@@ -22,28 +21,13 @@ export default async function ReportsPage() {
         <ReportCreateButton />
       </div>
       <TabsContent value="all">
-        <ReportsTable
-          reports={reports}
-          offset={newOffset ?? 0}
-          totalReports={totalReports}
-          submitted={null}
-        />
+        <ReportsTable reports={reports} submitted={null} />
       </TabsContent>
       <TabsContent value="submitted">
-        <ReportsTable
-          reports={reports}
-          offset={newOffset ?? 0}
-          totalReports={totalReports}
-          submitted={true}
-        />
+        <ReportsTable reports={reports} submitted={true} />
       </TabsContent>
       <TabsContent value="draft">
-        <ReportsTable
-          reports={reports}
-          offset={newOffset ?? 0}
-          totalReports={totalReports}
-          submitted={false}
-        />
+        <ReportsTable reports={reports} submitted={false} />
       </TabsContent>
     </Tabs>
   );
