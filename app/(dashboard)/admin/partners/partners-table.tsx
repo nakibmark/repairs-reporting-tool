@@ -12,6 +12,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -23,15 +24,18 @@ import { SelectPartner } from '@/lib/schema';
 import { Checkbox } from '@/components/ui/checkbox';
 import PartnerSearch from './partner-search';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import Pagination from './partners-pagination';
 
 export type DropdownOption = { id: number; name: string };
 
 const PartnersTable = ({
   partners,
   displayInactive,
+  totalPages,
 }: {
   partners: SelectPartner[];
   displayInactive: boolean;
+  totalPages: number;
 }) => {
   const [isCreatingNewItem, setIsCreatingNewPartner] = useState(false);
   const searchParams = useSearchParams();
@@ -54,6 +58,7 @@ const PartnersTable = ({
                 onCheckedChange={() => {
                   const params = new URLSearchParams(searchParams);
                   params.set('displayInactive', String(!displayInactive));
+                  params.set('page', '1');
                   replace(`${pathname}?${params.toString()}`);
                 }}
               ></Checkbox>
@@ -110,6 +115,9 @@ const PartnersTable = ({
           </TableBody>
         </Table>
       </CardContent>
+      <CardFooter>
+        <Pagination totalPages={totalPages}></Pagination>
+      </CardFooter>
     </Card>
   );
 };

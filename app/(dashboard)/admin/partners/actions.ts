@@ -5,6 +5,7 @@ import {
   updatePartner,
   insertPartner,
   selectPartnersSearch,
+  selectTotalPages,
 } from '@/lib/data/partners';
 import { SelectPartner } from '@/lib/schema';
 import { revalidatePath } from 'next/cache';
@@ -13,7 +14,7 @@ export async function getPartners(
   currentPage: number,
   displayInactive: boolean
 ) {
-  return await selectPartners(currentPage, 10, displayInactive);
+  return await selectPartners(displayInactive, currentPage, 10);
 }
 
 export async function deletePartner(partnerId: number | undefined) {
@@ -34,9 +35,17 @@ export async function savePartner(partner: SelectPartner) {
 }
 
 export async function searchPartners(
-  search: string,
+  query: string,
   currentPage: number,
   displayInactive: boolean
 ) {
-  return await selectPartnersSearch(search, currentPage, 10, displayInactive);
+  return await selectPartnersSearch(query, displayInactive, currentPage, 10);
+}
+
+export async function getTotalPages(
+  partnersPerPage: number,
+  query: string,
+  displayInactive: boolean
+) {
+  return await selectTotalPages(partnersPerPage, query, displayInactive);
 }

@@ -1,4 +1,4 @@
-import { getPartners, searchPartners } from './actions';
+import { getPartners, getTotalPages, searchPartners } from './actions';
 import PartnersTable from './partners-table';
 
 export default async function PartnersPage(props: {
@@ -15,7 +15,12 @@ export default async function PartnersPage(props: {
   const partners = query
     ? await searchPartners(query, currentPage, displayInactive)
     : await getPartners(currentPage, displayInactive);
+  const totalPages = await getTotalPages(10, query, displayInactive);
   return (
-    <PartnersTable partners={partners} displayInactive={displayInactive} />
+    <PartnersTable
+      partners={partners}
+      displayInactive={displayInactive}
+      totalPages={totalPages}
+    />
   );
 }
