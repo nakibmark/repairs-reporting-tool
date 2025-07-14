@@ -30,6 +30,6 @@ export async function savePartner(partner: SelectPartner) {
   revalidatePath('/admin/partners/page', 'page');
 }
 
-export async function searchPartners(search: string) {
-  return await selectPartnersSearch(search);
+export async function searchPartners(search: string, currentPage: number) {
+  return await selectPartnersSearch(search, currentPage);
 }
