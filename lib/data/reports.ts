@@ -47,3 +47,14 @@ export async function selectReportStatusById(id: number) {
 export async function updateReportStatusById(id: number, isSubmitted: boolean) {
   await db.update(reports).set({ isSubmitted }).where(eq(reports.id, id));
 }
+
+export async function selectTotalPages(
+  reportsPerPage: number,
+  partnerId?: number
+) {
+  const results = partnerId
+    ? await db.select().from(reports).where(eq(reports.partnerId, partnerId))
+    : await db.select().from(reports);
+
+  return Math.ceil(results.length / reportsPerPage);
+}
