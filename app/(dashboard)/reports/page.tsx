@@ -7,12 +7,12 @@ import { getReports, getTotalPages } from './actions';
 export default async function ReportsPage(props: {
   searchParams?: Promise<{
     page?: string;
-    reportsPerPage?: string;
+    itemsPerPage?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
   const currentPage = Number(searchParams?.page) || 1;
-  const reportsPerPage = Number(searchParams?.reportsPerPage) || 10;
+  const reportsPerPage = Number(searchParams?.itemsPerPage) || 10;
   const totalPages = await getTotalPages(reportsPerPage);
   const reports = await getReports(reportsPerPage, currentPage);
 
