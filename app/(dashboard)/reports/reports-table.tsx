@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/card';
 import { Report } from './report';
 import { SelectReport } from '@/lib/schema';
-import ReportsPagination from './reports-pagination';
+import Pagination from '@/components/ui/pagination';
 
 export function ReportsTable({
   reports,
@@ -64,7 +64,7 @@ export function ReportsTable({
         </Table>
       </CardContent>
       <CardFooter>
-        <ReportsPagination totalPages={totalPages}></ReportsPagination>
+        <Pagination totalPages={totalPages}></Pagination>
       </CardFooter>
     </Card>
   );
