@@ -71,8 +71,8 @@ export async function selectPartnersSearch(
         .from(partners)
         .where(
           or(
-            ilike(partners.partnerNo, search),
-            ilike(partners.partnerName, search)
+            ilike(partners.partnerNo, '%' + search + '%'),
+            ilike(partners.partnerName, '%' + search + '%')
           )
         )
         .orderBy(partners.id)
@@ -85,8 +85,8 @@ export async function selectPartnersSearch(
           and(
             eq(partners.isActive, true),
             or(
-              ilike(partners.partnerNo, search),
-              ilike(partners.partnerName, search)
+              ilike(partners.partnerNo, '%' + search + '%'),
+              ilike(partners.partnerName, '%' + search + '%')
             )
           )
         )
@@ -108,8 +108,8 @@ export async function selectTotalPages(
           .from(partners)
           .where(
             or(
-              ilike(partners.partnerNo, search),
-              ilike(partners.partnerName, search)
+              ilike(partners.partnerNo, '%' + search + '%'),
+              ilike(partners.partnerName, '%' + search + '%')
             )
           )
           .orderBy(partners.id)
@@ -120,8 +120,8 @@ export async function selectTotalPages(
             and(
               eq(partners.isActive, true),
               or(
-                ilike(partners.partnerNo, search),
-                ilike(partners.partnerName, search)
+                ilike(partners.partnerNo, '%' + search + '%'),
+                ilike(partners.partnerName, '%' + search + '%')
               )
             )
           )
