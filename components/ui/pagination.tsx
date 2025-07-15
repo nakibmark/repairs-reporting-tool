@@ -9,11 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useDebouncedCallback } from 'use-debounce';
 
-export default function PartnersPagination({
-  totalPages,
-}: {
-  totalPages: number;
-}) {
+export default function Pagination({ totalPages }: { totalPages: number }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -27,9 +23,9 @@ export default function PartnersPagination({
   };
 
   const handlePartnersPerPageChange = useDebouncedCallback(
-    (partnersPerPage: string) => {
+    (itemsPerPage: string) => {
       const params = new URLSearchParams(searchParams);
-      params.set('partnersPerPage', partnersPerPage);
+      params.set('itemsPerPage', itemsPerPage);
       replace(`${pathname}?${params.toString()}`);
     },
     450
@@ -76,9 +72,9 @@ export default function PartnersPagination({
               onChange={(e) => {
                 handlePartnersPerPageChange(e.target.value);
               }}
-              defaultValue={searchParams.get('partnersPerPage')?.toString()}
+              defaultValue={searchParams.get('itemsPerPage')?.toString()}
             ></Input>
-            <Label>Partners Per Page</Label>
+            <Label>Items Per Page</Label>
           </div>
         </div>
       }
