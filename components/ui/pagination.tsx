@@ -14,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useDebouncedCallback } from 'use-debounce';
 
 export default function Pagination({ totalPages }: { totalPages: number }) {
   const pathname = usePathname();
