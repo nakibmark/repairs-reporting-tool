@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useDebouncedCallback } from 'use-debounce';
 
-export default function PartnersPagination({
+export default function ReportsPagination({
   totalPages,
 }: {
   totalPages: number;

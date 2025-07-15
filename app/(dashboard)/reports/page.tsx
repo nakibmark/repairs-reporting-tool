@@ -2,10 +2,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ReportsTable } from './reports-table';
 import ReportCreateButton from './report-create-button';
 import React from 'react';
-import { getReports } from './actions';
+import { getReports, getTotalPages } from './actions';
 
-export default async function ReportsPage() {
-  const reports = await getReports();
+export default async function ReportsPage(props: {
+  searchParams?: Promise<{
+    page?: string;
+    reportsPerPage?: string;
+  }>;
+}) {
+  const searchParams = await props.searchParams;
+  const currentPage = Number(searchParams?.page) || 1;
+  const reportsPerPage = Number(searchParams?.reportsPerPage) || 10;
+  const totalPages = await getTotalPages(reportsPerPage);
+  const reports = await getReports(reportsPerPage, currentPage);
 
   return (
     <Tabs defaultValue="all">
@@ -21,13 +30,25 @@ export default async function ReportsPage() {
         <ReportCreateButton />
       </div>
       <TabsContent value="all">
-        <ReportsTable reports={reports} submitted={null} />
+        <ReportsTable
+          reports={reports}
+          submitted={null}
+          totalPages={totalPages}
+        />
       </TabsContent>
       <TabsContent value="submitted">
-        <ReportsTable reports={reports} submitted={true} />
+        <ReportsTable
+          reports={reports}
+          submitted={true}
+          totalPages={totalPages}
+        />
       </TabsContent>
       <TabsContent value="draft">
-        <ReportsTable reports={reports} submitted={false} />
+        <ReportsTable
+          reports={reports}
+          submitted={false}
+          totalPages={totalPages}
+        />
       </TabsContent>
     </Tabs>
   );

@@ -4,28 +4,17 @@ import { InsertReport, reports } from '../schema';
 import { eq } from 'drizzle-orm';
 
 export async function selectReports(
-  partnerId?: string,
-  reportsPerPage?: number,
-  currentPage?: number
+  reportsPerPage: number,
+  currentPage: number,
+  partnerId?: string
 ) {
-  const offset =
-    currentPage && reportsPerPage ? (currentPage - 1) * reportsPerPage : null;
-  const results =
-    reportsPerPage && offset
-      ? await db
-          .select()
-          .from(reports)
-          .where(
-            partnerId ? eq(reports.partnerId, Number(partnerId)) : undefined
-          )
-          .limit(reportsPerPage)
-          .offset(offset)
-      : await db
-          .select()
-          .from(reports)
-          .where(
-            partnerId ? eq(reports.partnerId, Number(partnerId)) : undefined
-          );
+  const offset = (currentPage - 1) * reportsPerPage;
+  const results = await db
+    .select()
+    .from(reports)
+    .where(partnerId ? eq(reports.partnerId, Number(partnerId)) : undefined)
+    .limit(reportsPerPage)
+    .offset(offset);
   return results;
 }
 

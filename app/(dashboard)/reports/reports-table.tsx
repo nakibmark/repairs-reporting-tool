@@ -17,14 +17,17 @@ import {
 } from '@/components/ui/card';
 import { Report } from './report';
 import { SelectReport } from '@/lib/schema';
+import ReportsPagination from './reports-pagination';
 
 export function ReportsTable({
   reports,
   submitted = null,
+  totalPages,
 }: {
   reports: SelectReport[];
 
   submitted: boolean | null;
+  totalPages: number;
 }) {
   return (
     <Card>
@@ -60,7 +63,9 @@ export function ReportsTable({
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter></CardFooter>
+      <CardFooter>
+        <ReportsPagination totalPages={totalPages}></ReportsPagination>
+      </CardFooter>
     </Card>
   );
 }

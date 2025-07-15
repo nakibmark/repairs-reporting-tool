@@ -5,6 +5,7 @@ import {
   insertReport,
   updateReportStatusById,
   selectReports,
+  selectTotalPages,
 } from '@/lib/data/reports';
 import { revalidatePath } from 'next/cache';
 import { getActivePartner } from '../actions';
@@ -42,7 +43,18 @@ export async function setReportStatus(id: number, status: boolean) {
   revalidatePath('/reports', 'page');
 }
 
-export async function getReports() {
-  const reports = await selectReports(await getActivePartner());
+export async function getReports(reportsPerPage: number, currentPage: number) {
+  const reports = await selectReports(
+    reportsPerPage,
+    currentPage,
+    await getActivePartner()
+  );
   return reports;
+}
+
+export async function getTotalPages(reportsPerPage: number) {
+  return await selectTotalPages(
+    reportsPerPage,
+    Number(await getActivePartner())
+  );
 }
