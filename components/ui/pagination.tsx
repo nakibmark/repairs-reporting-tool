@@ -76,7 +76,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
           <div className="justify-right items-center flex">
             <Select onValueChange={setItemsPerPage}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={'10'}>
+                <SelectValue placeholder={'10 Items Per Page'}>
                   {`${searchParams.get('itemsPerPage')}` + ' Items Per Page'}
                 </SelectValue>
               </SelectTrigger>
