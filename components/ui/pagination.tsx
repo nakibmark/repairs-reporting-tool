@@ -5,8 +5,15 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { generatePagination } from '@/lib/utils';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useDebouncedCallback } from 'use-debounce';
 
 export default function Pagination({ totalPages }: { totalPages: number }) {
@@ -16,20 +23,20 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   const currentPage = Number(searchParams.get('page')) || 1;
   const allPages = generatePagination(currentPage, totalPages);
 
+  const itemsPerPageOptions = [5, 10, 20, 50];
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', pageNumber.toString());
     return `${pathname}?${params.toString()}`;
   };
 
-  const handlePartnersPerPageChange = useDebouncedCallback(
-    (itemsPerPage: string) => {
-      const params = new URLSearchParams(searchParams);
-      params.set('itemsPerPage', itemsPerPage);
-      replace(`${pathname}?${params.toString()}`);
-    },
-    450
-  );
+  const setItemsPerPage = (value: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('itemsPerPage', value);
+    params.delete('page');
+    replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
   return (
     <>
       {
@@ -67,14 +74,23 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
             isDisabled={currentPage >= totalPages}
           />
           <div className="justify-right items-center flex">
-            <Input
-              className="w-10"
-              onChange={(e) => {
-                handlePartnersPerPageChange(e.target.value);
-              }}
-              defaultValue={searchParams.get('itemsPerPage')?.toString()}
-            ></Input>
-            <Label>Items Per Page</Label>
+            <Select onValueChange={setItemsPerPage}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={'10'}>
+                  {`${searchParams.get('itemsPerPage')}` + ' Items Per Page'}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Items Per Page</SelectLabel>
+                  {itemsPerPageOptions.map((option) => (
+                    <SelectItem key={option} value={String(option)}>
+                      {`${option}`}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       }

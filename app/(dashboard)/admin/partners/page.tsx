@@ -6,14 +6,14 @@ export default async function PartnersPage(props: {
     query?: string;
     page?: string;
     displayInactive?: string;
-    partnersPerPage?: string;
+    itemsPerPage?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const displayInactive = searchParams?.displayInactive === 'true' || false;
-  const partnersPerPage = Number(searchParams?.partnersPerPage) || 10;
+  const partnersPerPage = Number(searchParams?.itemsPerPage) || 10;
   const partners = query
     ? await searchPartners(query, currentPage, displayInactive, partnersPerPage)
     : await getPartners(currentPage, displayInactive, partnersPerPage);
