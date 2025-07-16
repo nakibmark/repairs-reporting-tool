@@ -12,8 +12,8 @@ export const selectPartnersOptions = async () =>
     .from(partners);
 
 export const selectPartners = async (
-  displayInactive: boolean,
   currentPage: number,
+  displayInactive: boolean,
   partnersPerPage: number
 ) => {
   const offset = (currentPage - 1) * partnersPerPage;

@@ -15,7 +15,7 @@ export async function getPartners(
   displayInactive: boolean,
   partnersPerPage: number
 ) {
-  return await selectPartners(displayInactive, currentPage, partnersPerPage);
+  return await selectPartners(currentPage, displayInactive, partnersPerPage);
 }
 
 export async function deletePartner(partnerId: number | undefined) {
