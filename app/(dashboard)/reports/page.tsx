@@ -2,11 +2,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ReportsTable } from './reports-table';
 import ReportCreateButton from './report-create-button';
 import React from 'react';
-import { getReports } from './actions';
+import { getReports, getTotalPages } from './actions';
 
-export default async function ReportsPage() {
-  const offset = 0;
-  const { reports, newOffset, totalReports } = await getReports(Number(offset));
+export default async function ReportsPage(props: {
+  searchParams?: Promise<{
+    page?: string;
+    itemsPerPage?: string;
+  }>;
+}) {
+  const searchParams = await props.searchParams;
+  const currentPage = Number(searchParams?.page) || 1;
+  const reportsPerPage = Number(searchParams?.itemsPerPage) || 10;
+  const totalPages = await getTotalPages(reportsPerPage);
+  const reports = await getReports(reportsPerPage, currentPage);
 
   return (
     <Tabs defaultValue="all">
@@ -24,25 +32,22 @@ export default async function ReportsPage() {
       <TabsContent value="all">
         <ReportsTable
           reports={reports}
-          offset={newOffset ?? 0}
-          totalReports={totalReports}
           submitted={null}
+          totalPages={totalPages}
         />
       </TabsContent>
       <TabsContent value="submitted">
         <ReportsTable
           reports={reports}
-          offset={newOffset ?? 0}
-          totalReports={totalReports}
           submitted={true}
+          totalPages={totalPages}
         />
       </TabsContent>
       <TabsContent value="draft">
         <ReportsTable
           reports={reports}
-          offset={newOffset ?? 0}
-          totalReports={totalReports}
           submitted={false}
+          totalPages={totalPages}
         />
       </TabsContent>
     </Tabs>
