@@ -50,18 +50,19 @@ const PartnersTable = ({
             <CardDescription>Edit partner details.</CardDescription>
           </div>
           <div className="ml-auto flex items-center gap-2 space-x-2">
-            <PartnerSearch></PartnerSearch>
+            <PartnerSearch />
             <div className="flex items-center ">
               <Checkbox
                 checked={displayInactive}
                 id="displayInactive"
                 onCheckedChange={() => {
                   const params = new URLSearchParams(searchParams);
-                  params.set('displayInactive', String(!displayInactive));
-                  params.set('page', '1');
+                  if (displayInactive) params.delete('displayInactive');
+                  else params.set('displayInactive', 'true');
+                  params.delete('page');
                   replace(`${pathname}?${params.toString()}`);
                 }}
-              ></Checkbox>
+              />
               <Label htmlFor="displayInactive">Display Inactive Partners</Label>
             </div>
             <Button
@@ -116,7 +117,7 @@ const PartnersTable = ({
         </Table>
       </CardContent>
       <CardFooter>
-        <Pagination totalPages={totalPages}></Pagination>
+        <Pagination totalPages={totalPages} />
       </CardFooter>
     </Card>
   );

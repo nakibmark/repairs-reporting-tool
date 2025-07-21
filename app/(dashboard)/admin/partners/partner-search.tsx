@@ -13,14 +13,12 @@ const PartnerSearch = () => {
     if (term) {
       params.set('query', term);
       params.delete('page');
-      //params.set('page', '1');
     } else {
       params.delete('query');
       params.delete('page');
-      //params.set('page', '1');
     }
     replace(`${pathname}?${params.toString()}`);
-  }, 350);
+  }, 250);
 
   return (
     <div>
