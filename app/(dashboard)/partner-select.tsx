@@ -18,7 +18,7 @@ const PartnerSelect = ({
   options: { id: number; name: string }[];
   activeOption?: string;
 }) => (
-  <Select onValueChange={setActivePartner}>
+  <Select value={activeOption} onValueChange={setActivePartner}>
     <SelectTrigger className="w-[180px]">
       <SelectValue placeholder={'Select a partner'}>
         {`${activeOption} - ${options.find((partner) => partner.id === Number(activeOption))?.name}`}
@@ -27,6 +27,13 @@ const PartnerSelect = ({
     <SelectContent>
       <SelectGroup>
         <SelectLabel>Partners</SelectLabel>
+        <SelectItem key={'__clear'} value={'__clear'}>
+          {/*
+           * hacky workaround for radix-ui not allowing "" as a select value as of 2025-07-21
+           * https://github.com/radix-ui/primitives/issues/2706
+           */}
+          Clear selection
+        </SelectItem>
         {options.map((partner) => (
           <SelectItem key={partner.id} value={String(partner.id)}>
             {`${partner.id} - ${partner.name}`}
