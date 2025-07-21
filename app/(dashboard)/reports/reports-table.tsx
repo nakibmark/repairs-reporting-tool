@@ -19,7 +19,13 @@ import { Report } from './report';
 import { SelectReport } from '@/lib/schema';
 import Pagination from '@/components/ui/pagination';
 
-export const ReportsTable = ({ reports }: { reports: SelectReport[] }) => (
+export const ReportsTable = ({
+  reports,
+  totalPages,
+}: {
+  reports: SelectReport[];
+  totalPages: number;
+}) => (
   <Card>
     <CardHeader>
       <CardTitle>Reports</CardTitle>
@@ -50,8 +56,7 @@ export const ReportsTable = ({ reports }: { reports: SelectReport[] }) => (
       </Table>
     </CardContent>
     <CardFooter>
-      {/* TODO: Actual total pages */}
-      <Pagination totalPages={1}></Pagination>
+      <Pagination totalPages={totalPages} />
     </CardFooter>
   </Card>
 );

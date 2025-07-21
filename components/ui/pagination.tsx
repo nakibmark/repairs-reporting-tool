@@ -31,7 +31,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
 
   const setItemsPerPage = (value: string) => {
     const params = new URLSearchParams(searchParams);
-    params.set('itemsPerPage', value);
+    params.set('size', value);
     params.delete('page');
     replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
@@ -76,7 +76,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
             <Select onValueChange={setItemsPerPage}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder={'10 Items Per Page'}>
-                  {`${searchParams.get('itemsPerPage')}` + ' Items Per Page'}
+                  {`${searchParams.get('size')}` + ' Items Per Page'}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>

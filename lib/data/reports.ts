@@ -3,21 +3,29 @@ import { db } from '../db';
 import { InsertReport, reports } from '../schema';
 import { eq, sql } from 'drizzle-orm';
 
-export async function selectReports(
-  currentPage: number,
-  reportsPerPage: number,
-  partnerId?: string
-) {
-  const offset = (currentPage - 1) * reportsPerPage;
-  const results = await db
+export const selectReports = async ({
+  currentPage,
+  limit,
+  query,
+}: {
+  currentPage: number;
+  limit: number;
+  query?: string;
+}) => {
+  const offset = (currentPage - 1) * limit;
+  const where = query ? eq(reports.partnerId, +query) : undefined;
+  const reportResults = await db
     .select()
     .from(reports)
-    .where(partnerId ? eq(reports.partnerId, Number(partnerId)) : undefined)
+    .where(where)
     .orderBy(reports.submissionPeriodClosesAt)
-    .limit(reportsPerPage)
+    .limit(limit)
     .offset(offset);
-  return results;
-}
+
+  const count = await db.$count(reports, where);
+
+  return { reports: reportResults, totalPages: Math.ceil(count / limit) };
+};
 
 const preparedFindReportStatusById = db.query.reports
   .findFirst({

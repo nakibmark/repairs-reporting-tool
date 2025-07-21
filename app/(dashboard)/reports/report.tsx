@@ -22,7 +22,7 @@ export function Report({ report }: { report: SelectReport }) {
       className="cursor-pointer"
       onClick={() => router.push(`/reports/${report.id}`)}
     >
-      <TableCell className="hidden sm:table-cell"></TableCell>
+      <TableCell className="hidden sm:table-cell" />
       <TableCell className="font-medium">{report.id}</TableCell>
       <TableCell>
         <Badge variant="outline" className="capitalize">

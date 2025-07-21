@@ -17,7 +17,11 @@ export default async function ReportsPage({
   const { page = '1', size = '10' } =
     await searchParams.then(flattenSearchParams);
 
-  const reports = await selectReports(Number(page), Number(size), partnerId);
+  const { reports, totalPages } = await selectReports({
+    currentPage: +page,
+    limit: +size,
+    query: partnerId,
+  });
 
   return (
     <Tabs defaultValue="all">
@@ -33,13 +37,13 @@ export default async function ReportsPage({
         <ReportCreateButton />
       </div>
       <TabsContent value="all">
-        <ReportsTable reports={reports} />
+        <ReportsTable reports={reports} totalPages={totalPages} />
       </TabsContent>
       <TabsContent value="submitted">
-        <ReportsTable reports={reports} />
+        <ReportsTable reports={reports} totalPages={totalPages} />
       </TabsContent>
       <TabsContent value="draft">
-        <ReportsTable reports={reports} />
+        <ReportsTable reports={reports} totalPages={totalPages} />
       </TabsContent>
     </Tabs>
   );
