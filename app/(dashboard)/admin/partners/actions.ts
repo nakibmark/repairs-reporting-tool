@@ -15,7 +15,6 @@ export async function getPartners(
   displayInactive: boolean,
   partnersPerPage: number
 ) {
-
   return await selectPartners(currentPage, displayInactive, partnersPerPage);
 }
 
