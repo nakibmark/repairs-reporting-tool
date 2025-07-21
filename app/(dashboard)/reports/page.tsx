@@ -2,19 +2,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ReportsTable } from './reports-table';
 import ReportCreateButton from './report-create-button';
 import React from 'react';
-import { getReports, getTotalPages } from './actions';
+import { cookies } from 'next/headers';
+import { selectReports } from '@/lib/data/reports';
+import { flattenSearchParams } from 'app/utils/flattenSearchParams';
+import { SearchParams } from 'next/dist/server/request/search-params';
 
-export default async function ReportsPage(props: {
-  searchParams?: Promise<{
-    page?: string;
-    itemsPerPage?: string;
-  }>;
+export default async function ReportsPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
 }) {
-  const searchParams = await props.searchParams;
-  const currentPage = Number(searchParams?.page) || 1;
-  const reportsPerPage = Number(searchParams?.itemsPerPage) || 10;
-  const totalPages = await getTotalPages(reportsPerPage);
-  const reports = await getReports(reportsPerPage, currentPage);
+  const cookieStore = await cookies();
+  const partnerId = cookieStore.get('partnerId')?.value;
+  const { page = '1', size = '10' } =
+    await searchParams.then(flattenSearchParams);
+
+  const reports = await selectReports(Number(page), Number(size), partnerId);
 
   return (
     <Tabs defaultValue="all">
@@ -30,25 +33,13 @@ export default async function ReportsPage(props: {
         <ReportCreateButton />
       </div>
       <TabsContent value="all">
-        <ReportsTable
-          reports={reports}
-          submitted={null}
-          totalPages={totalPages}
-        />
+        <ReportsTable reports={reports} />
       </TabsContent>
       <TabsContent value="submitted">
-        <ReportsTable
-          reports={reports}
-          submitted={true}
-          totalPages={totalPages}
-        />
+        <ReportsTable reports={reports} />
       </TabsContent>
       <TabsContent value="draft">
-        <ReportsTable
-          reports={reports}
-          submitted={false}
-          totalPages={totalPages}
-        />
+        <ReportsTable reports={reports} />
       </TabsContent>
     </Tabs>
   );

@@ -1,11 +1,8 @@
 'use server';
 import {
   deleteReport,
-  selectReportStatusById,
   insertReport,
   updateReportStatusById,
-  selectReports,
-  selectTotalPages,
 } from '@/lib/data/reports';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
@@ -34,25 +31,7 @@ export async function createReport() {
   return id;
 }
 
-export async function getReportStatus(id: number) {
-  const result = await selectReportStatusById(id);
-  return result?.isSubmitted ?? false;
-}
-
 export async function setReportStatus(id: number, status: boolean) {
   await updateReportStatusById(id, status);
   revalidatePath('/reports', 'page');
-}
-
-export async function getReports(reportsPerPage: number, currentPage: number) {
-  const cookieStore = await cookies();
-  const partnerId = cookieStore.get('partnerId')?.value;
-  const reports = await selectReports(reportsPerPage, currentPage, partnerId);
-  return reports;
-}
-
-export async function getTotalPages(reportsPerPage: number) {
-  const cookieStore = await cookies();
-  const partnerId = cookieStore.get('partnerId')?.value;
-  return await selectTotalPages(reportsPerPage, Number(partnerId));
 }

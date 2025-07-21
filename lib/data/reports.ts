@@ -26,7 +26,7 @@ const preparedFindReportStatusById = db.query.reports
   })
   .prepare('find_report_status_by_id');
 
-export const selectReportStatusById = async (id: number) =>
+export const findReportStatusById = async (id: number) =>
   await preparedFindReportStatusById.execute({ id }).then((result) => {
     if (!result) {
       throw new Error(`Report for ID ${id} not found`);
