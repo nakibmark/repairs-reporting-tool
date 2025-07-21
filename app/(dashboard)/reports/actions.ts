@@ -8,7 +8,7 @@ import {
   selectTotalPages,
 } from '@/lib/data/reports';
 import { revalidatePath } from 'next/cache';
-import { getActivePartner } from '../actions';
+import { cookies } from 'next/headers';
 
 export async function deleteReportById(reportId: number) {
   await deleteReport(reportId);
@@ -16,7 +16,8 @@ export async function deleteReportById(reportId: number) {
 }
 
 export async function createReport() {
-  const partnerId = await getActivePartner();
+  const cookieStore = await cookies();
+  const partnerId = cookieStore.get('partnerId')?.value;
   if (!partnerId) {
     throw new Error('Partner ID not set');
   }
@@ -44,17 +45,14 @@ export async function setReportStatus(id: number, status: boolean) {
 }
 
 export async function getReports(reportsPerPage: number, currentPage: number) {
-  const reports = await selectReports(
-    reportsPerPage,
-    currentPage,
-    await getActivePartner()
-  );
+  const cookieStore = await cookies();
+  const partnerId = cookieStore.get('partnerId')?.value;
+  const reports = await selectReports(reportsPerPage, currentPage, partnerId);
   return reports;
 }
 
 export async function getTotalPages(reportsPerPage: number) {
-  return await selectTotalPages(
-    reportsPerPage,
-    Number(await getActivePartner())
-  );
+  const cookieStore = await cookies();
+  const partnerId = cookieStore.get('partnerId')?.value;
+  return await selectTotalPages(reportsPerPage, Number(partnerId));
 }

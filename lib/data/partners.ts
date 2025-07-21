@@ -1,15 +1,18 @@
 'use server';
+import { cache } from 'react';
 import { db } from '../db';
 import { InsertPartner, partners, SelectPartner } from '../schema';
 import { and, eq, ilike, or } from 'drizzle-orm';
 
-export const selectPartnersOptions = async () =>
-  await db
-    .select({
-      id: partners.id,
-      name: partners.partnerName,
-    })
-    .from(partners);
+export const getPartnerOptions = cache(
+  async () =>
+    await db
+      .select({
+        id: partners.id,
+        name: partners.partnerName,
+      })
+      .from(partners)
+);
 
 export const selectPartners = async (
   currentPage: number,

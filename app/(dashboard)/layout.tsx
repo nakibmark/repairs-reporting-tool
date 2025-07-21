@@ -31,16 +31,17 @@ import { VercelLogo } from '@/components/icons';
 import Providers from './providers';
 import { NavItem } from './nav-item';
 import PartnerSelect from './partner-select';
-import { getActivePartner, getPartners } from './actions';
-import { use } from 'react';
+import { getPartnerOptions } from '@/lib/data/partners';
+import { cookies } from 'next/headers';
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const partners = use(getPartners());
-  const activePartner = use(getActivePartner());
+  const cookieStore = await cookies();
+  const activePartner = cookieStore.get('partnerId')?.value;
+
   return (
     <Providers>
       <main className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -49,7 +50,10 @@ export default function DashboardLayout({
           <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
             <MobileNav />
             <DashboardBreadcrumb />
-            <PartnerSelect partners={partners} activePartner={activePartner} />
+            <PartnerSelect
+              options={await getPartnerOptions()}
+              activeOption={activePartner}
+            />
             <User />
           </header>
           <main className="grid flex-1 items-start gap-2 p-4 sm:px-6 sm:py-0 md:gap-4 bg-muted/40">
