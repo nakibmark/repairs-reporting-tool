@@ -12,6 +12,7 @@ export const selectPartnersOptions = async () =>
     .from(partners);
 
 export const selectPartners = async (
+
   currentPage: number,
   displayInactive: boolean,
   partnersPerPage: number

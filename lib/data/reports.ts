@@ -1,37 +1,21 @@
 'use server';
 import { db } from '../db';
-import { InsertReport, reports, SelectReport } from '../schema';
-import { count, eq } from 'drizzle-orm';
+import { InsertReport, reports } from '../schema';
+import { eq } from 'drizzle-orm';
 
 export async function selectReports(
-  offset: number,
+  reportsPerPage: number,
+  currentPage: number,
   partnerId?: string
-): Promise<{
-  reports: SelectReport[];
-  newOffset: number | null;
-  totalReports: number;
-}> {
-  if (offset === null) {
-    return { reports: [], newOffset: null, totalReports: 0 };
-  }
-
-  const totalReports = await db
-    .select({ count: count() })
-    .from(reports)
-    .where(partnerId ? eq(reports.partnerId, Number(partnerId)) : undefined);
-  const moreReports = await db
+) {
+  const offset = (currentPage - 1) * reportsPerPage;
+  const results = await db
     .select()
     .from(reports)
     .where(partnerId ? eq(reports.partnerId, Number(partnerId)) : undefined)
-    .limit(20)
+    .limit(reportsPerPage)
     .offset(offset);
-  const newOffset = moreReports.length >= 20 ? offset + 20 : null;
-
-  return {
-    reports: moreReports,
-    newOffset,
-    totalReports: totalReports[0].count,
-  };
+  return results;
 }
 
 export async function deleteReport(id: number) {
@@ -51,4 +35,15 @@ export async function selectReportStatusById(id: number) {
 
 export async function updateReportStatusById(id: number, isSubmitted: boolean) {
   await db.update(reports).set({ isSubmitted }).where(eq(reports.id, id));
+}
+
+export async function selectTotalPages(
+  reportsPerPage: number,
+  partnerId?: number
+) {
+  const results = partnerId
+    ? await db.select().from(reports).where(eq(reports.partnerId, partnerId))
+    : await db.select().from(reports);
+
+  return Math.ceil(results.length / reportsPerPage);
 }

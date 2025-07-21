@@ -17,32 +17,18 @@ import {
 } from '@/components/ui/card';
 import { Report } from './report';
 import { SelectReport } from '@/lib/schema';
-import { useRouter } from 'next/navigation';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import Pagination from '@/components/ui/pagination';
 
 export function ReportsTable({
   reports,
-  offset,
-  totalReports,
   submitted = null,
+  totalPages,
 }: {
   reports: SelectReport[];
-  offset: number;
-  totalReports: number;
+
   submitted: boolean | null;
+  totalPages: number;
 }) {
-  const router = useRouter();
-  const reportsPerPage = 20;
-
-  function prevPage() {
-    router.back();
-  }
-
-  function nextPage() {
-    router.push(`/reports/?offset=${offset}`, { scroll: false });
-  }
-
   return (
     <Card>
       <CardHeader>
@@ -78,38 +64,7 @@ export function ReportsTable({
         </Table>
       </CardContent>
       <CardFooter>
-        <form className="flex items-center w-full justify-between">
-          <div className="text-xs text-muted-foreground">
-            Showing{' '}
-            <strong>
-              {Math.max(0, Math.min(offset - reportsPerPage, totalReports) + 1)}
-              -{offset}
-            </strong>{' '}
-            of <strong>{totalReports}</strong> reports
-          </div>
-          <div className="flex">
-            <Button
-              formAction={prevPage}
-              variant="ghost"
-              size="sm"
-              type="submit"
-              disabled={offset === reportsPerPage}
-            >
-              <ChevronLeft className="mr-2 h-4 w-4" />
-              Prev
-            </Button>
-            <Button
-              formAction={nextPage}
-              variant="ghost"
-              size="sm"
-              type="submit"
-              disabled={offset + reportsPerPage > totalReports}
-            >
-              Next
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        </form>
+        <Pagination totalPages={totalPages}></Pagination>
       </CardFooter>
     </Card>
   );
