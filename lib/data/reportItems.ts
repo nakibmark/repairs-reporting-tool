@@ -1,7 +1,7 @@
 'use server';
 import { db } from '../db';
 import { InsertReportItem, reportItems } from '../schema';
-import { eq, sql } from 'drizzle-orm';
+import { asc, eq, sql } from 'drizzle-orm';
 
 export type ReportItemWithNames = Awaited<
   ReturnType<typeof findReportItemsWithNames>
@@ -10,7 +10,7 @@ export type ReportItemWithNames = Awaited<
 const preparedFindReportItems = db.query.reportItems
   .findMany({
     where: eq(reportItems.reportId, sql.placeholder('reportId')),
-    orderBy: (items, { asc }) => [asc(items.createdAt)],
+    orderBy: [asc(reportItems.createdAt)],
     with: {
       brand: {
         columns: { id: true, name: true },
@@ -42,5 +42,6 @@ export async function upsertReportItem(item: InsertReportItem) {
   await db
     .insert(reportItems)
     .values(item)
-    .onConflictDoUpdate({ target: reportItems.id, set: item });
+    .onConflictDoUpdate({ target: reportItems.id, set: item })
+    .returning();
 }

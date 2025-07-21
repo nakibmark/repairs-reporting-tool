@@ -13,7 +13,7 @@ export default function CustomersPage() {
         <CardTitle>Customers</CardTitle>
         <CardDescription>View all customers and their orders.</CardDescription>
       </CardHeader>
-      <CardContent></CardContent>
+      <CardContent />
     </Card>
   );
 }
