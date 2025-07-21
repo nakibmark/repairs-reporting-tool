@@ -37,20 +37,14 @@ const ReportItem = (props: {
 
   const editedItemIsSaveable = (
     saveTarget: typeof editedItem
-  ): saveTarget is ReportItemWithNames => {
-    return (
-      saveTarget !== undefined &&
-      RequiredProps.every(
-        (prop) => Object.hasOwn(saveTarget, prop) && saveTarget[prop] != null
-      )
+  ): saveTarget is ReportItemWithNames =>
+    saveTarget !== undefined &&
+    RequiredProps.every(
+      (prop) => Object.hasOwn(saveTarget, prop) && saveTarget[prop] != null
     );
-  };
 
   const handleSaveClick = () => {
     if (editedItemIsSaveable(editedItem)) {
-      editedItem.serialNo = editedItem.serialNo ?? null;
-      editedItem.comments = editedItem.comments ?? null;
-      editedItem.article = editedItem.article ?? null;
       saveReportItem(editedItem);
     }
     setIsEditing(false);
