@@ -20,6 +20,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const currentPage = Number(searchParams.get('page')) || 1;
+  const currentSize = searchParams.get('size') || '10';
   const allPages = generatePagination(currentPage, totalPages);
 
   const itemsPerPageOptions = [5, 10, 20, 50];
@@ -31,7 +32,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
 
   const setItemsPerPage = (value: string) => {
     const params = new URLSearchParams(searchParams);
-    params.set('itemsPerPage', value);
+    params.set('size', value);
     params.delete('page');
     replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
@@ -72,12 +73,10 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
             href={createPageURL(currentPage + 1)}
             isDisabled={currentPage >= totalPages}
           />
-          <div className="justify-right items-center flex">
-            <Select onValueChange={setItemsPerPage}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder={'10 Items Per Page'}>
-                  {`${searchParams.get('itemsPerPage')}` + ' Items Per Page'}
-                </SelectValue>
+          <div className="flex items-center justify-right ml-2 md:ml-4">
+            <Select value={currentSize} onValueChange={setItemsPerPage}>
+              <SelectTrigger size="lg">
+                <SelectValue>{currentSize + ' Items Per Page'}</SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>

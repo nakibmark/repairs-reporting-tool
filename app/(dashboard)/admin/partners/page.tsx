@@ -1,31 +1,31 @@
-import { getPartners, getTotalPages, searchPartners } from './actions';
+import { findPartners } from '@/lib/data/partners';
 import PartnersTable from './partners-table';
+import { SearchParams } from 'next/dist/server/request/search-params';
+import { flattenSearchParams } from 'app/utils/flattenSearchParams';
 
-export default async function PartnersPage(props: {
-  searchParams?: Promise<{
-    query?: string;
-    page?: string;
-    displayInactive?: string;
-    itemsPerPage?: string;
-  }>;
+export default async function PartnersPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
 }) {
-  const searchParams = await props.searchParams;
-  const query = searchParams?.query || '';
-  const currentPage = Number(searchParams?.page) || 1;
-  const displayInactive = searchParams?.displayInactive === 'true' || false;
-  const partnersPerPage = Number(searchParams?.itemsPerPage) || 10;
-  const partners = query
-    ? await searchPartners(query, currentPage, displayInactive, partnersPerPage)
-    : await getPartners(currentPage, displayInactive, partnersPerPage);
-  const totalPages = await getTotalPages(
-    partnersPerPage,
+  const {
+    query = '',
+    page = '1',
+    size = '10',
+    displayInactive = false,
+  } = await searchParams.then(flattenSearchParams);
+
+  const { partners, totalPages } = await findPartners({
+    currentPage: +page,
+    limit: +size,
+    displayInactive: !!displayInactive,
     query,
-    displayInactive
-  );
+  });
+
   return (
     <PartnersTable
       partners={partners}
-      displayInactive={displayInactive}
+      displayInactive={!!displayInactive}
       totalPages={totalPages}
     />
   );

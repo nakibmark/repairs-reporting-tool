@@ -1,19 +1,14 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { selectPartnersOptions } from '../../lib/data/partners';
-
-export async function getPartners() {
-  return await selectPartnersOptions();
-}
 
 export async function setActivePartner(partnerId: string) {
   const cookieStore = await cookies();
-  cookieStore.set('partnerId', partnerId);
-  console.log('Cookies set: ', cookieStore.getAll());
-}
-
-export async function getActivePartner() {
-  const cookieStore = await cookies();
-  return cookieStore.get('partnerId')?.value;
+  if (partnerId === '__clear') {
+    // hacky workaround for radix-ui not allowing "" as a select value as of 2025-07-21
+    // https://github.com/radix-ui/primitives/issues/2706
+    cookieStore.delete('partnerId');
+  } else {
+    cookieStore.set('partnerId', partnerId);
+  }
 }

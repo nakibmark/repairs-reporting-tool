@@ -1,26 +1,16 @@
+'use server';
 import { db } from '../db';
-import { reportItems, SelectReportItem } from '../schema';
-import { eq } from 'drizzle-orm';
+import { InsertReportItem, reportItems } from '../schema';
+import { asc, eq, sql } from 'drizzle-orm';
 
 export type ReportItemWithNames = Awaited<
-  ReturnType<typeof getReportItemsWithNames>
->['items'][number];
+  ReturnType<typeof findReportItemsWithNames>
+>[number];
 
-export const getReportItems = async (
-  id: number
-): Promise<{
-  items: SelectReportItem[];
-}> => ({
-  items: await db
-    .select()
-    .from(reportItems)
-    .where(eq(reportItems.reportId, id)),
-});
-
-export const getReportItemsWithNames = async (reportId: number) => {
-  const items = await db.query.reportItems.findMany({
-    where: eq(reportItems.reportId, reportId),
-    orderBy: (items, { asc }) => [asc(items.createdAt)],
+const preparedFindReportItems = db.query.reportItems
+  .findMany({
+    where: eq(reportItems.reportId, sql.placeholder('reportId')),
+    orderBy: [asc(reportItems.createdAt)],
     with: {
       brand: {
         columns: { id: true, name: true },
@@ -37,41 +27,21 @@ export const getReportItemsWithNames = async (reportId: number) => {
       warrantyTypeId: false,
       serviceLevelTypeId: false,
     },
-  });
+  })
+  .prepare('find_report_items_with_names');
 
-  return { items };
+export const findReportItemsWithNames = async (reportId: number) => {
+  return await preparedFindReportItems.execute({ reportId });
 };
 
 export async function deleteReportItemById(id: string) {
   await db.delete(reportItems).where(eq(reportItems.id, id));
 }
 
-export async function updateReportItem(item: ReportItemWithNames) {
+export async function upsertReportItem(item: InsertReportItem) {
   await db
-    .update(reportItems)
-    .set({
-      serialNo: item.serialNo,
-      article: item.article,
-      brandId: item.brand.id,
-      warrantyTypeId: item.warrantyType.id,
-      serviceLevelTypeId: item.serviceLevelType.id,
-      repairNo: item.repairNo,
-      dateIn: item.dateIn,
-      dateOut: item.dateOut,
-    })
-    .where(eq(reportItems.id, item.id));
-}
-
-export async function createReportItem(item: ReportItemWithNames) {
-  await db.insert(reportItems).values({
-    serialNo: item.serialNo,
-    article: item.article,
-    brandId: item.brand.id,
-    warrantyTypeId: item.warrantyType.id,
-    serviceLevelTypeId: item.serviceLevelType.id,
-    repairNo: item.repairNo,
-    dateIn: item.dateIn,
-    dateOut: item.dateOut,
-    reportId: item.reportId,
-  });
+    .insert(reportItems)
+    .values(item)
+    .onConflictDoUpdate({ target: reportItems.id, set: item })
+    .returning();
 }

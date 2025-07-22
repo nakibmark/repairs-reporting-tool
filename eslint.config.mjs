@@ -10,6 +10,15 @@ const compat = new FlatCompat({
 
 export default defineConfig([
   {
+    rules: {
+      'react/self-closing-comp': [
+        'error',
+        {
+          component: true,
+          html: true,
+        },
+      ],
+    },
     extends: compat.extends(
       'next/core-web-vitals',
       'next/typescript',
@@ -17,5 +26,5 @@ export default defineConfig([
       'prettier'
     ),
   },
-  globalIgnores(['.next', '.vercel', 'components']),
+  globalIgnores(['.next', '.vercel']),
 ]);

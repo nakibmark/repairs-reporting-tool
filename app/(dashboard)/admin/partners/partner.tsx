@@ -3,7 +3,7 @@ import { SelectPartner } from '@/lib/schema';
 import PartnerEditMenu from './partner-edit-menu';
 import React from 'react';
 import PartnerCell from './partner-cell';
-import { deletePartner, savePartner } from './actions';
+import { setPartnerInactive, savePartner } from './actions';
 
 const RequiredProps = ['partnerName', 'emailAddress', 'partnerNo'] as const;
 
@@ -112,12 +112,12 @@ export function Partner({
           setIsEditing(false);
         }}
         handleDeleteClick={() => {
-          deletePartner(editedPartner?.id);
+          setPartnerInactive(editedPartner?.id);
         }}
         handleSaveClick={() => {
           handleSaveClick();
         }}
-      ></PartnerEditMenu>
+       />
     </TableRow>
   );
 }

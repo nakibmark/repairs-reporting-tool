@@ -29,7 +29,7 @@ export default async function ProductsPage() {
           </Button>
         </div>
       </div>
-      <TabsContent value="all"></TabsContent>
+      <TabsContent value="all" />
     </Tabs>
   );
 }
