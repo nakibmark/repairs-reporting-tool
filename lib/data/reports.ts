@@ -1,4 +1,4 @@
-'use server';
+import 'server-only';
 import { db } from '../db';
 import { InsertReport, reports } from '../schema';
 import { eq, sql } from 'drizzle-orm';

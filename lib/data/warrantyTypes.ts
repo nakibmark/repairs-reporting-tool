@@ -1,4 +1,4 @@
-'use server';
+import 'server-only';
 import { db } from '../db';
 import { warrantyTypes } from '../schema';
 import { eq } from 'drizzle-orm';

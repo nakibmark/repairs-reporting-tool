@@ -1,4 +1,4 @@
-'use server';
+import 'server-only';
 import { db } from '../db';
 import { InsertPartner, partners } from '../schema';
 import { and, asc, eq, ilike, or } from 'drizzle-orm';

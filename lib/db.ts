@@ -1,5 +1,4 @@
 import 'server-only';
-
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import * as schema from './schema';
 
