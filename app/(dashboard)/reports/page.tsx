@@ -1,4 +1,3 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ReportsTable } from './reports-table';
 import ReportCreateButton from './report-create-button';
 import React from 'react';
@@ -24,27 +23,11 @@ export default async function ReportsPage({
   });
 
   return (
-    <Tabs defaultValue="all">
+    <div>
       <div className="flex items-center">
-        <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="submitted">Submitted</TabsTrigger>
-          <TabsTrigger value="draft">Draft</TabsTrigger>
-          <TabsTrigger value="archived" className="hidden sm:flex">
-            Archived
-          </TabsTrigger>
-        </TabsList>
         <ReportCreateButton />
       </div>
-      <TabsContent value="all">
-        <ReportsTable reports={reports} totalPages={totalPages} />
-      </TabsContent>
-      <TabsContent value="submitted">
-        <ReportsTable reports={reports} totalPages={totalPages} />
-      </TabsContent>
-      <TabsContent value="draft">
-        <ReportsTable reports={reports} totalPages={totalPages} />
-      </TabsContent>
-    </Tabs>
+      <ReportsTable reports={reports} totalPages={totalPages} />
+    </div>
   );
 }
