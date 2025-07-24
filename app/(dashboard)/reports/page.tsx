@@ -16,7 +16,7 @@ export default async function ReportsPage({
   const {
     page = '1',
     size = '10',
-    submitted = undefined,
+    submitted,
   } = await searchParams.then(flattenSearchParams);
   let submittedFilter: boolean | undefined;
   if (submitted === 'submitted') {
