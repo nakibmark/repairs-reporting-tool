@@ -41,7 +41,7 @@ const FilterSelect = ({
     >
       <SelectTrigger className="flex">
         <SelectValue placeholder={filterName}>
-          {!!activeFilter
+          {activeFilter
             ? `${filterName} = ${options.find((filter) => filter.name === searchParams.get(filterName.toLowerCase()))?.name}`
             : filterName}
         </SelectValue>

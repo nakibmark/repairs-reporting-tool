@@ -33,7 +33,7 @@ export const ReportsTable = ({
   totalPages: number;
 }) => {
   const searchParams = useSearchParams();
-  const submittedFilter = !!searchParams.get('submitted')
+  const submittedFilter = searchParams.get('submitted')
     ? String(searchParams.get('submitted'))
     : undefined;
   return (

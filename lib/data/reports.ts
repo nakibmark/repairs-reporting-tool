@@ -1,19 +1,26 @@
 import 'server-only';
 import { db } from '../db';
 import { InsertReport, reports } from '../schema';
-import { eq, sql } from 'drizzle-orm';
+import { eq, sql, and } from 'drizzle-orm';
 
 export const selectReports = async ({
   currentPage,
   limit,
   query,
+  submittedFilter,
 }: {
   currentPage: number;
   limit: number;
   query?: string;
+  submittedFilter?: boolean;
 }) => {
   const offset = (currentPage - 1) * limit;
-  const where = query ? eq(reports.partnerId, +query) : undefined;
+  const where = and(
+    query ? eq(reports.partnerId, +query) : undefined,
+    !(submittedFilter === undefined)
+      ? eq(reports.isSubmitted, submittedFilter)
+      : undefined
+  );
   const reportResults = await db
     .select()
     .from(reports)
