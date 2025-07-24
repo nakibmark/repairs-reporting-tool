@@ -17,9 +17,9 @@ export const selectReports = async ({
   const offset = (currentPage - 1) * limit;
   const where = and(
     query ? eq(reports.partnerId, +query) : undefined,
-    !(submittedFilter === undefined)
-      ? eq(reports.isSubmitted, submittedFilter)
-      : undefined
+    submittedFilter === undefined
+      ? undefined
+      : eq(reports.isSubmitted, submittedFilter)
   );
   const reportResults = await db
     .select()
