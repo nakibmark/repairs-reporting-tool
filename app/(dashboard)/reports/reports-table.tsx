@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableBody,
   Table,
+  TableCell,
 } from '@/components/ui/table';
 import {
   Card,
@@ -15,16 +16,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Report } from './report';
 import { SelectReport } from '@/lib/schema';
 import Pagination from '@/components/ui/pagination';
-import FilterSelect from '../../../components/ui/filter-select';
-import { useSearchParams } from 'next/navigation';
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
+import { defaultReportColumns } from './reports-columns';
 
-const submissionOptions = [
-  { id: 1, name: 'submitted' },
-  { id: 2, name: 'draft' },
-];
 export const ReportsTable = ({
   reports,
   totalPages,
@@ -32,10 +32,13 @@ export const ReportsTable = ({
   reports: SelectReport[];
   totalPages: number;
 }) => {
-  const searchParams = useSearchParams();
-  const submittedFilter = searchParams.get('submitted')
-    ? String(searchParams.get('submitted'))
-    : undefined;
+  const columns = defaultReportColumns;
+  const data = reports;
+  const table = useReactTable({
+    columns,
+    data,
+    getCoreRowModel: getCoreRowModel(),
+  });
   return (
     <Card>
       <CardHeader>
@@ -45,30 +48,45 @@ export const ReportsTable = ({
       <CardContent>
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="hidden sm:table-cell">
-                <span className="sr-only">Image</span>
-              </TableHead>
-              <TableHead>ID</TableHead>
-              <TableHead>
-                <FilterSelect
-                  options={submissionOptions}
-                  filterName="Submitted"
-                  activeFilter={submittedFilter}
-                />
-              </TableHead>
-              <TableHead className="hidden md:table-cell">Month</TableHead>
-              <TableHead className="hidden md:table-cell">Year</TableHead>
-              <TableHead className="hidden md:table-cell">Created at</TableHead>
-              <TableHead>
-                <span className="sr-only">Actions</span>
-              </TableHead>
-            </TableRow>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
           </TableHeader>
           <TableBody>
-            {reports.map((report) => (
-              <Report key={report.id} report={report} />
-            ))}
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </CardContent>
