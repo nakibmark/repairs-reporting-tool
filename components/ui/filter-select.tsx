@@ -11,38 +11,39 @@ import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
 const FilterSelect = ({
   options,
-  activeOption,
   filterName,
+  activeFilter,
 }: {
   options: { id: number; name: string }[];
   filterName: string;
-  activeOption?: string;
+  activeFilter?: string;
 }) => {
   const { replace } = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams);
   return (
     <Select
-      value={activeOption}
+      value={activeFilter}
       onValueChange={(value) => {
+        const params = new URLSearchParams(searchParams);
         if (value === '__clear') {
           // hacky workaround for radix-ui not allowing "" as a select value as of 2025-07-21
           // https://github.com/radix-ui/primitives/issues/2706
-          const params = new URLSearchParams(searchParams);
-          params.delete(filterName);
+          params.delete(filterName.toLowerCase());
         } else {
           params.set(
-            filterName,
+            filterName.toLowerCase(),
             String(options.find((filter) => filter.id === Number(value))?.name)
           );
         }
         replace(`${pathname}?${params.toString()}`, { scroll: false });
       }}
     >
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="flex">
         <SelectValue placeholder={filterName}>
-          {`${filterName} = ${options.find((filter) => filter.id === Number(activeOption))?.name}`}
+          {!!activeFilter
+            ? `${filterName} = ${options.find((filter) => filter.name === searchParams.get(filterName.toLowerCase()))?.name}`
+            : filterName}
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
