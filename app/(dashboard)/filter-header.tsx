@@ -11,13 +11,13 @@ import { SelectReport } from '@/lib/schema';
 import { ListFilterIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 
-export function Filter({
+const FilterHeader = ({
   column,
   name,
 }: {
   column: Column<SelectReport, unknown>;
   name: string;
-}) {
+}) => {
   const columnFilterValue = column.getFilterValue();
   const { filterVariant } = column.columnDef.meta ?? {};
   const onBooleanChange = (value: string): void => {
@@ -57,4 +57,6 @@ export function Filter({
   ) : (
     <></>
   );
-}
+};
+
+export default FilterHeader;

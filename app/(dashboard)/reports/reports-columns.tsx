@@ -5,7 +5,7 @@ import { createColumnHelper, RowData } from '@tanstack/react-table';
 import RowActions from './row-actions';
 
 import '@tanstack/react-table';
-import { Filter } from '@/components/ui/filters';
+import FilterHeader from '../filter-header';
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -20,17 +20,13 @@ export const defaultReportColumns = [
     header: 'Report ID',
   }),
   columnHelper.accessor('isSubmitted', {
-    header: ({ column }) => {
-      return column.getCanFilter() ? (
-        <Filter column={column} name="Status" />
+    header: ({ column }) =>
+      column.getCanFilter() ? (
+        <FilterHeader column={column} name="Status" />
       ) : (
         'Status'
-      );
-    },
-    cell: (info) => {
-      const isSubmitted = info.getValue();
-      return isSubmitted ? 'Submitted' : 'Draft';
-    },
+      ),
+    cell: (info) => (info.getValue() ? 'Submitted' : 'Draft'),
     filterFn: 'equals',
     meta: {
       filterVariant: 'submitted',

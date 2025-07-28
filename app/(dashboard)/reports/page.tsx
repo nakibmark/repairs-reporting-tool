@@ -1,5 +1,4 @@
 import { ReportsTable } from './reports-table';
-import ReportCreateButton from './report-create-button';
 import React from 'react';
 import { cookies } from 'next/headers';
 import { selectReports } from '@/lib/data/reports';
@@ -22,12 +21,5 @@ export default async function ReportsPage({
     query: partnerId,
   });
 
-  return (
-    <div>
-      <div className="flex items-center">
-        <ReportCreateButton />
-      </div>
-      <ReportsTable reports={reports} totalPages={totalPages} />
-    </div>
-  );
+  return <ReportsTable reports={reports} totalPages={totalPages} />;
 }

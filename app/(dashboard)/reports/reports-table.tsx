@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import {
   TableHead,
   TableRow,
@@ -28,6 +27,8 @@ import {
 } from '@tanstack/react-table';
 import { defaultReportColumns } from './reports-columns';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import ReportCreateButton from './report-create-button';
 
 export const ReportsTable = ({
   reports,
@@ -37,14 +38,10 @@ export const ReportsTable = ({
   totalPages: number;
 }) => {
   const router = useRouter();
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const columns = defaultReportColumns;
-  const data = reports;
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
-    columns,
-    data,
+    columns: defaultReportColumns,
+    data: reports,
     filterFns: {},
     state: {
       columnFilters,
@@ -57,6 +54,7 @@ export const ReportsTable = ({
   return (
     <Card>
       <CardHeader>
+        <ReportCreateButton />
         <CardTitle>Reports</CardTitle>
         <CardDescription>View and manage your reports.</CardDescription>
       </CardHeader>
@@ -101,7 +99,7 @@ export const ReportsTable = ({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={defaultReportColumns.length}
                   className="h-24 text-center"
                 >
                   No results.
