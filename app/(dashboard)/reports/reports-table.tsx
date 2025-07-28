@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableBody,
   Table,
+  TableCell,
 } from '@/components/ui/table';
 import {
   Card,
@@ -15,9 +16,19 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Report } from './report';
 import { SelectReport } from '@/lib/schema';
 import Pagination from '@/components/ui/pagination';
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  useReactTable,
+  ColumnFiltersState,
+} from '@tanstack/react-table';
+import { defaultReportColumns } from './reports-columns';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import ReportCreateButton from './report-create-button';
 
 export const ReportsTable = ({
   reports,
@@ -25,38 +36,82 @@ export const ReportsTable = ({
 }: {
   reports: SelectReport[];
   totalPages: number;
-}) => (
-  <Card>
-    <CardHeader>
-      <CardTitle>Reports</CardTitle>
-      <CardDescription>View and manage your reports.</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="hidden sm:table-cell">
-              <span className="sr-only">Image</span>
-            </TableHead>
-            <TableHead>ID</TableHead>
-            <TableHead>Submitted</TableHead>
-            <TableHead className="hidden md:table-cell">Month</TableHead>
-            <TableHead className="hidden md:table-cell">Year</TableHead>
-            <TableHead className="hidden md:table-cell">Created at</TableHead>
-            <TableHead>
-              <span className="sr-only">Actions</span>
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {reports.map((report) => (
-            <Report key={report.id} report={report} />
-          ))}
-        </TableBody>
-      </Table>
-    </CardContent>
-    <CardFooter>
-      <Pagination totalPages={totalPages} />
-    </CardFooter>
-  </Card>
-);
+}) => {
+  const router = useRouter();
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const table = useReactTable({
+    columns: defaultReportColumns,
+    data: reports,
+    filterFns: {},
+    state: {
+      columnFilters,
+    },
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
+
+  return (
+    <Card>
+      <CardHeader>
+        <ReportCreateButton />
+        <CardTitle>Reports</CardTitle>
+        <CardDescription>View and manage your reports.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    <div className="flex">
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </div>
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  className="cursor-pointer"
+                  onClick={() => router.push(`/reports/${row.original.id}`)}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={defaultReportColumns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </CardContent>
+      <CardFooter>
+        <Pagination totalPages={totalPages} />
+      </CardFooter>
+    </Card>
+  );
+};
