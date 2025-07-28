@@ -16,6 +16,10 @@ export const defaultReportColumns = [
       const isSubmitted = info.getValue();
       return isSubmitted ? 'Submitted' : 'Draft';
     },
+    filterFn: 'equals',
+    meta: {
+      filterVariant: 'submitted',
+    },
   }),
   columnHelper.accessor((row) => `${row.reportMonth}/${row.reportYear}`, {
     id: 'reportMonthYear',

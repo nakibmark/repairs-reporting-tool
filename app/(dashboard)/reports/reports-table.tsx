@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import {
   TableHead,
   TableRow,
@@ -21,8 +22,11 @@ import Pagination from '@/components/ui/pagination';
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   useReactTable,
+  ColumnFiltersState,
 } from '@tanstack/react-table';
+import { Filter } from './report-filters';
 import { defaultReportColumns } from './reports-columns';
 
 export const ReportsTable = ({
@@ -32,13 +36,23 @@ export const ReportsTable = ({
   reports: SelectReport[];
   totalPages: number;
 }) => {
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
   const columns = defaultReportColumns;
   const data = reports;
   const table = useReactTable({
     columns,
     data,
+    filterFns: {},
+    state: {
+      columnFilters,
+    },
+    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
   });
+
   return (
     <Card>
       <CardHeader>
@@ -58,6 +72,11 @@ export const ReportsTable = ({
                           header.column.columnDef.header,
                           header.getContext()
                         )}
+                    {header.column.getCanFilter() ? (
+                      <div>
+                        <Filter column={header.column} />
+                      </div>
+                    ) : null}
                   </TableHead>
                 ))}
               </TableRow>
