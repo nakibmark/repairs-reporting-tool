@@ -11,11 +11,16 @@ import { SelectReport } from '@/lib/schema';
 import { ListFilterIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 
-export function Filter({ column }: { column: Column<SelectReport, unknown> }) {
+export function Filter({
+  column,
+  name,
+}: {
+  column: Column<SelectReport, unknown>;
+  name: string;
+}) {
   const columnFilterValue = column.getFilterValue();
   const { filterVariant } = column.columnDef.meta ?? {};
-
-  const onChange = (value: string): void => {
+  const onBooleanChange = (value: string): void => {
     switch (value) {
       case 'true':
         column.setFilterValue(true);
@@ -28,14 +33,15 @@ export function Filter({ column }: { column: Column<SelectReport, unknown> }) {
         return;
     }
   };
+
   return filterVariant === 'submitted' ? (
     <Select
       value={columnFilterValue?.toString() || ''}
-      onValueChange={onChange}
+      onValueChange={onBooleanChange}
     >
       <SelectTrigger asChild>
         <Button variant="ghost">
-          {'Status'}
+          {name}
           <ListFilterIcon />
         </Button>
       </SelectTrigger>
