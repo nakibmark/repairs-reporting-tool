@@ -27,6 +27,7 @@ import {
   ColumnFiltersState,
 } from '@tanstack/react-table';
 import { defaultReportColumns } from './reports-columns';
+import { useRouter } from 'next/navigation';
 
 export const ReportsTable = ({
   reports,
@@ -35,6 +36,7 @@ export const ReportsTable = ({
   reports: SelectReport[];
   totalPages: number;
 }) => {
+  const router = useRouter();
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -81,7 +83,11 @@ export const ReportsTable = ({
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  className="cursor-pointer"
+                  onClick={() => router.push(`/reports/${row.original.id}`)}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
