@@ -1,46 +1,54 @@
-/* eslint-disable */
-import { Column, RowData } from '@tanstack/react-table';
+import { Column } from '@tanstack/react-table';
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectSeparator,
   SelectTrigger,
-  SelectValue,
 } from '@/components/ui/select';
+import { SelectReport } from '@/lib/schema';
+import { ListFilterIcon } from '@/components/icons';
+import { Button } from '@/components/ui/button';
 
-declare module '@tanstack/react-table' {
-  //allows us to define custom properties for our columns
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filterVariant?: 'submitted';
-  }
-}
-
-export function Filter({ column }: { column: Column<any, unknown> }) {
+export function Filter({ column }: { column: Column<SelectReport, unknown> }) {
   const columnFilterValue = column.getFilterValue();
   const { filterVariant } = column.columnDef.meta ?? {};
 
+  const onChange = (value: string): void => {
+    switch (value) {
+      case 'true':
+        column.setFilterValue(true);
+        return;
+      case 'false':
+        column.setFilterValue(false);
+        return;
+      case '__clear':
+        column.setFilterValue(null);
+        return;
+    }
+  };
   return filterVariant === 'submitted' ? (
     <Select
-      value={columnFilterValue?.toString()}
-      onValueChange={() => {
-        column.setFilterValue(() => {});
-      }}
+      value={columnFilterValue?.toString() || ''}
+      onValueChange={onChange}
     >
-      <SelectTrigger className="flex">
-        <SelectValue placeholder={'Submitted'}>
-          {'Submitted = ' + columnFilterValue}
-        </SelectValue>
+      <SelectTrigger asChild>
+        <Button variant="ghost">
+          {'Status'}
+          <ListFilterIcon />
+        </Button>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem value={'__clear'}>Clear selection</SelectItem>
+          <SelectItem value={'__clear'}>Clear filter</SelectItem>
+          <SelectSeparator />
           <SelectItem value={'true'}>Submitted</SelectItem>
           <SelectItem value={'false'}>Draft</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>
   ) : (
-    <div />
+    <></>
   );
 }

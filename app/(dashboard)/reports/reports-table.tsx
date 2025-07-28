@@ -26,7 +26,6 @@ import {
   useReactTable,
   ColumnFiltersState,
 } from '@tanstack/react-table';
-import { Filter } from './report-filters';
 import { defaultReportColumns } from './reports-columns';
 
 export const ReportsTable = ({
@@ -66,17 +65,14 @@ export const ReportsTable = ({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    {header.column.getCanFilter() ? (
-                      <div>
-                        <Filter column={header.column} />
-                      </div>
-                    ) : null}
+                    <div className="flex">
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </div>
                   </TableHead>
                 ))}
               </TableRow>
