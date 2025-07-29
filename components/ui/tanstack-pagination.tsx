@@ -23,37 +23,18 @@ interface TanstackPaginationProps<TData> {
 export function TanstackPagination<TData>({
   table,
 }: TanstackPaginationProps<TData>) {
+  const handlePageSizeChange = (value: string) => {
+    if (value === 'all') {
+      table.setPageSize(1000); // Show all rows by setting a high page size
+    } else {
+      table.setPageSize(Number(value));
+    }
+  };
+
   return (
     <div className="flex items-center justify-between px-2">
-      <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{' '}
-        {table.getFilteredRowModel().rows.length} row(s) selected.
-      </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
-        <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Rows per page</p>
-          <Select
-            value={`${table.getState().pagination.pageSize}`}
-            onValueChange={(value) => {
-              table.setPageSize(Number(value));
-            }}
-          >
-            <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue placeholder={table.getState().pagination.pageSize} />
-            </SelectTrigger>
-            <SelectContent side="top">
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
-                  {pageSize}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {table.getState().pagination.pageIndex + 1} of{' '}
-          {table.getPageCount()}
-        </div>
+        {/* Pagination controls come first */}
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
@@ -92,6 +73,34 @@ export function TanstackPagination<TData>({
             <ChevronsRight className="h-4 w-4" />
           </Button>
         </div>
+
+        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+          Page {table.getState().pagination.pageIndex + 1} of{' '}
+          {table.getPageCount()}
+        </div>
+      </div>
+
+      {/* Page size selection comes after */}
+      <div className="flex items-center space-x-2">
+        <p className="text-sm font-medium">Rows per page</p>
+        <Select
+          value={
+            table.getState().pagination.pageSize >= 1000
+              ? 'all'
+              : `${table.getState().pagination.pageSize}`
+          }
+          onValueChange={handlePageSizeChange}
+        >
+          <SelectTrigger className="h-8 w-[70px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent side="top">
+            <SelectItem value="5">5</SelectItem>
+            <SelectItem value="10">10</SelectItem>
+            <SelectItem value="20">20</SelectItem>
+            <SelectItem value="all">All</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
