@@ -1,10 +1,24 @@
 'use client';
 
 import { SelectPartner } from '@/lib/schema';
-import { createColumnHelper } from '@tanstack/react-table';
+import { createColumnHelper, Row } from '@tanstack/react-table';
 import PartnerFilterHeader from './partner-filter-header';
 
 const columnHelper = createColumnHelper<SelectPartner>();
+
+// Custom filter function for multi-select OR logic
+const multiSelectFilter = (
+  row: Row<SelectPartner>,
+  columnId: string,
+  filterValue: string[]
+) => {
+  if (!filterValue || filterValue.length === 0) {
+    return true; // Show all rows if no filter is applied
+  }
+
+  const cellValue = row.getValue(columnId) as string;
+  return filterValue.includes(cellValue);
+};
 
 export const defaultPartnerColumns = [
   columnHelper.accessor('id', {
@@ -31,7 +45,7 @@ export const defaultPartnerColumns = [
         'City'
       ),
     cell: (info) => info.getValue() || '-',
-    filterFn: 'equals',
+    filterFn: multiSelectFilter,
     meta: {
       filterVariant: 'select',
     },
@@ -44,7 +58,7 @@ export const defaultPartnerColumns = [
         'State'
       ),
     cell: (info) => info.getValue() || '-',
-    filterFn: 'equals',
+    filterFn: multiSelectFilter,
     meta: {
       filterVariant: 'select',
     },
@@ -57,7 +71,7 @@ export const defaultPartnerColumns = [
         'Country'
       ),
     cell: (info) => info.getValue() || '-',
-    filterFn: 'equals',
+    filterFn: multiSelectFilter,
     meta: {
       filterVariant: 'select',
     },
@@ -70,7 +84,7 @@ export const defaultPartnerColumns = [
         'Market'
       ),
     cell: (info) => info.getValue() || '-',
-    filterFn: 'equals',
+    filterFn: multiSelectFilter,
     meta: {
       filterVariant: 'select',
     },
@@ -83,7 +97,7 @@ export const defaultPartnerColumns = [
         'Region'
       ),
     cell: (info) => info.getValue() || '-',
-    filterFn: 'equals',
+    filterFn: multiSelectFilter,
     meta: {
       filterVariant: 'select',
     },

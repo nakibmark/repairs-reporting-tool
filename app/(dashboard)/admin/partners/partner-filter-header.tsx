@@ -2,16 +2,17 @@
 
 import { Column } from '@tanstack/react-table';
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectSeparator,
-  SelectTrigger,
-} from '@/components/ui/select';
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { SelectPartner } from '@/lib/schema';
 import { ListFilterIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 const PartnerFilterHeader = ({
   column,
@@ -20,7 +21,8 @@ const PartnerFilterHeader = ({
   column: Column<SelectPartner, unknown>;
   name: string;
 }) => {
-  const columnFilterValue = column.getFilterValue();
+  const columnFilterValue = column.getFilterValue() as string[] | undefined;
+  const selectedValues = columnFilterValue || [];
 
   // Get faceted unique values from Tanstack Table
   const facetedUniqueValues = column.getFacetedUniqueValues();
@@ -28,37 +30,70 @@ const PartnerFilterHeader = ({
     .filter((value): value is string => value != null && value !== '')
     .sort();
 
-  const onFilterChange = (value: string): void => {
-    if (value === '__clear') {
-      column.setFilterValue(null);
+  const handleValueToggle = (value: string): void => {
+    const currentValues = selectedValues || [];
+    if (currentValues.includes(value)) {
+      // Remove value if already selected
+      const newValues = currentValues.filter((v) => v !== value);
+      column.setFilterValue(newValues.length > 0 ? newValues : undefined);
     } else {
-      column.setFilterValue(value);
+      // Add value to selection
+      column.setFilterValue([...currentValues, value]);
     }
   };
 
+  const clearFilter = (): void => {
+    column.setFilterValue(undefined);
+  };
+
+  const selectAll = (): void => {
+    column.setFilterValue(sortedUniqueValues);
+  };
+
   return (
-    <Select
-      value={columnFilterValue?.toString() || ''}
-      onValueChange={onFilterChange}
-    >
-      <SelectTrigger asChild>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="justify-between">
-          {name}
+          <div className="flex items-center gap-1">
+            {name}
+            {selectedValues.length > 0 && (
+              <Badge variant="secondary" className="ml-1 h-4 text-xs">
+                {selectedValues.length}
+              </Badge>
+            )}
+          </div>
           <ListFilterIcon />
         </Button>
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectItem value={'__clear'}>Clear filter</SelectItem>
-          {sortedUniqueValues.length > 0 && <SelectSeparator />}
-          {sortedUniqueValues.map((value) => (
-            <SelectItem key={value} value={value}>
-              {value}
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="start">
+        <DropdownMenuLabel>Filter by {name}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuCheckboxItem
+          checked={false}
+          onCheckedChange={clearFilter}
+          className="font-medium"
+        >
+          Clear filter
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem
+          checked={selectedValues.length === sortedUniqueValues.length}
+          onCheckedChange={selectAll}
+          className="font-medium"
+        >
+          Select all
+        </DropdownMenuCheckboxItem>
+        <DropdownMenuSeparator />
+        {sortedUniqueValues.map((value) => (
+          <DropdownMenuCheckboxItem
+            key={value}
+            checked={selectedValues.includes(value)}
+            onCheckedChange={() => handleValueToggle(value)}
+          >
+            {value}
+          </DropdownMenuCheckboxItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
