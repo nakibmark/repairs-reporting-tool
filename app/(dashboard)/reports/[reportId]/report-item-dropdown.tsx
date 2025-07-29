@@ -16,11 +16,6 @@ import {
   CommandItem,
 } from '@/components/ui/command';
 
-export type DropdownOption = {
-  id: number;
-  name: string;
-};
-
 type Option = {
   id: number;
   name: string;
@@ -33,47 +28,59 @@ const ReportItemDropdown = ({
   options,
 }: {
   isEditing: boolean;
-  onChange: (selectedId: string) => void;
-  currentValue?: string;
-  options: Option[];
+  onChange: (selectedId: number) => void;
+  currentValue?: number | undefined;
+  options: Option[] | undefined;
 }) => {
   const [open, setOpen] = React.useState(false);
 
-  return isEditing ? (
+  const selectedOption = currentValue
+    ? options?.find((o) => o.id === currentValue)
+    : null;
+
+  if (isEditing) {
+    return (
+      <TableCell className="hidden md:table-cell">
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="w-[150px] justify-start">
+              {selectedOption?.name || 'Select option...'}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0" align="start">
+            <Command>
+              <CommandInput placeholder="Filter values..." />
+              <CommandList>
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandGroup>
+                  {!Array.isArray(options) ? (
+                    <CommandItem disabled>Loading options...</CommandItem>
+                  ) : (
+                    options.map((option) => (
+                      <CommandItem
+                        key={option.id}
+                        value={option.name}
+                        onSelect={() => {
+                          onChange(option.id);
+                          setOpen(false);
+                        }}
+                      >
+                        {option.name}
+                      </CommandItem>
+                    ))
+                  )}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </TableCell>
+    );
+  }
+
+  return (
     <TableCell className="hidden md:table-cell">
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button variant="outline" className="w-[150px] justify-start">
-            {currentValue || 'Select option...'}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
-          <Command>
-            <CommandInput placeholder="Filter values..." />
-            <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup>
-                {options.map((option) => (
-                  <CommandItem
-                    key={option.name}
-                    value={String(option.name)}
-                    onSelect={() => {
-                      onChange(String(option.id));
-                      setOpen(false);
-                    }}
-                  >
-                    {option.name}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
-    </TableCell>
-  ) : (
-    <TableCell className="hidden md:table-cell">
-      {currentValue || '-'}
+      {selectedOption?.name || '-'}
     </TableCell>
   );
 };

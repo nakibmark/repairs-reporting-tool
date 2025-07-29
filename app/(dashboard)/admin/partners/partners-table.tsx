@@ -17,7 +17,7 @@ import { SelectPartner } from '@/lib/schema';
 import { Checkbox } from '@/components/ui/checkbox';
 import PartnerSearch from './partner-search';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import { DataTable } from '@/components/data-table';
+import DataTable from '@/components/data-table';
 import { partnerColumns } from './partners-columns';
 import { ColumnDef } from '@tanstack/react-table';
 
@@ -45,7 +45,7 @@ const PartnersTable = ({
           </div>
           <div className="ml-auto flex items-center gap-2 space-x-2">
             <PartnerSearch />
-            <div className="flex items-center ">
+            <div className="flex items-center gap-1">
               <Checkbox
                 checked={displayInactive}
                 id="displayInactive"

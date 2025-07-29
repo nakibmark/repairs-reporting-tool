@@ -1,15 +1,15 @@
 'use client';
 
 import { createColumnHelper } from '@tanstack/react-table';
-import { ReportItemWithNames } from '@/lib/data/reportItems';
+import { SelectReportItem } from '@/lib/schema';
 
-const columnHelper = createColumnHelper<ReportItemWithNames>();
+const columnHelper = createColumnHelper<SelectReportItem>();
 
 export const reportItemColumns = [
   columnHelper.accessor('dateIn', {
     header: 'Date Intervention In',
   }),
-  columnHelper.accessor('brand.name', {
+  columnHelper.accessor('brandId', {
     header: 'Maison',
   }),
   columnHelper.accessor('repairNo', {
@@ -23,10 +23,10 @@ export const reportItemColumns = [
     header: 'Serial Number',
     cell: (info) => info.getValue() || '-',
   }),
-  columnHelper.accessor('warrantyType.name', {
+  columnHelper.accessor('warrantyTypeId', {
     header: 'Warranty Type',
   }),
-  columnHelper.accessor('serviceLevelType.name', {
+  columnHelper.accessor('serviceLevelTypeId', {
     header: 'Service Type',
   }),
   columnHelper.accessor('dateOut', {

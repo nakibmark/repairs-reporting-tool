@@ -1,20 +1,37 @@
 import { TableRow } from '@/components/ui/table';
-import { SelectPartner } from '@/lib/schema';
+import { InsertPartner, SelectPartner } from '@/lib/schema';
 import EditMenu from '@/components/ui/edit-menu';
-import React from 'react';
+import React, { useCallback } from 'react';
 import EditableTableCell from '@/components/ui/editable-table-cell';
 import { setPartnerInactive, savePartner } from './actions';
 import { useEditableRow } from '@/components/hooks/use-editable-row';
 
 const RequiredProps = ['partnerName', 'emailAddress', 'partnerNo'] as const;
 
-export function Partner({
+const Partner = ({
   partner,
   displayInactive,
 }: {
   partner?: SelectPartner;
   displayInactive: boolean;
-}) {
+}) => {
+  const saveEditedPartner = useCallback(
+    (editedPartner: Partial<InsertPartner>) => {
+      if (
+        editedPartner &&
+        RequiredProps.every(
+          (prop) =>
+            Object.hasOwn(editedPartner, prop) && editedPartner[prop] != null
+        )
+      ) {
+        savePartner(editedPartner as InsertPartner);
+      } else {
+        throw new Error('editedPartner does not conform to InsertPartner');
+      }
+    },
+    []
+  );
+
   const {
     isEditing,
     editedData: editedPartner,
@@ -22,23 +39,7 @@ export function Partner({
     handleCancelClick,
     handleSaveClick,
     onInputChange,
-  } = useEditableRow<SelectPartner>(partner, (editedPartner) => {
-    if (
-      editedPartner &&
-      RequiredProps.every(
-        (prop) =>
-          Object.hasOwn(editedPartner, prop) && editedPartner[prop] != null
-      )
-    ) {
-      editedPartner.phoneNumber = editedPartner.phoneNumber ?? null;
-      editedPartner.city = editedPartner.city ?? null;
-      editedPartner.state = editedPartner.state ?? null;
-      editedPartner.country = editedPartner.country ?? null;
-      editedPartner.market = editedPartner.market ?? null;
-      editedPartner.region = editedPartner.region ?? null;
-      savePartner(editedPartner as SelectPartner);
-    }
-  });
+  } = useEditableRow<SelectPartner>(partner, saveEditedPartner);
 
   return (
     <TableRow
@@ -106,5 +107,5 @@ export function Partner({
       />
     </TableRow>
   );
-}
+};
 export default Partner;

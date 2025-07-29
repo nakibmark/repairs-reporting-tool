@@ -16,37 +16,35 @@ import {
   getFacetedUniqueValues,
   getPaginationRowModel,
   useReactTable,
-  ColumnDef,
   ColumnFiltersState,
   PaginationState,
+  TableOptions,
 } from '@tanstack/react-table';
 import { TanstackPagination } from '@/components/ui/tanstack-pagination';
 import React from 'react';
 
-interface DataTableProps<TData> {
-  columns: ColumnDef<TData>[];
-  data: TData[];
-  renderRow?: (row: TData) => React.ReactNode;
-  onRowClick?: (row: TData) => void;
-}
+const FIRST_PAGE = 0;
+const DEFAULT_PAGE_SIZE = 10;
 
-export function DataTable<TData>({
-  columns,
-  data,
-  renderRow,
-  onRowClick,
-}: DataTableProps<TData>) {
+const DataTable = <TData,>(
+  props: Partial<TableOptions<TData>> &
+    Pick<TableOptions<TData>, 'columns' | 'data'> & {
+      renderRow?: (row: TData) => React.ReactNode;
+      onRowClick?: (row: TData) => void;
+    }
+) => {
+  const { renderRow, onRowClick } = props;
+
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
   const [pagination, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
+    pageIndex: FIRST_PAGE,
+    pageSize: DEFAULT_PAGE_SIZE,
   });
 
   const table = useReactTable({
-    columns,
-    data,
+    ...props,
     filterFns: {},
     state: {
       columnFilters,
@@ -104,7 +102,10 @@ export function DataTable<TData>({
             )
           ) : (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell
+                colSpan={props.columns.length}
+                className="h-24 text-center"
+              >
                 No results.
               </TableCell>
             </TableRow>
@@ -114,4 +115,6 @@ export function DataTable<TData>({
       <TanstackPagination table={table} />
     </div>
   );
-}
+};
+
+export default DataTable;

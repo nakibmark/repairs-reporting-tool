@@ -15,6 +15,26 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link
+          rel="preload"
+          href="/api/brands"
+          as="fetch"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/api/serviceLevelTypes"
+          as="fetch"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/api/warrantyTypes"
+          as="fetch"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="flex min-h-screen w-full flex-col">{children}</body>
       <Analytics />
     </html>

@@ -1,14 +1,17 @@
 'use client';
 
 import { TableRow } from '@/components/ui/table';
-import { SelectReportItem } from '@/lib/schema';
+import { InsertReportItem, SelectReportItem } from '@/lib/schema';
 import EditMenu from '@/components/ui/edit-menu';
 import React from 'react';
 import EditableTableCell from '@/components/ui/editable-table-cell';
 import { deleteReportItem, saveReportItem } from './actions';
-import ReportItemDropdown, { DropdownOption } from './report-item-dropdown';
+import ReportItemDropdown from './report-item-dropdown';
 import { ReportItemDatePicker } from './report-item-date-picker';
 import { useEditableRow } from '@/components/hooks/use-editable-row';
+import useSWR from 'swr';
+
+const API_BASE_URL = '/api';
 
 const RequiredProps = [
   'repairNo',
@@ -19,21 +22,42 @@ const RequiredProps = [
   'serviceLevelTypeId',
 ] as const;
 
-export function ReportItem({
+const areRequiredPropsPresent = (
+  item: Partial<InsertReportItem> | undefined
+): item is InsertReportItem =>
+  !!item &&
+  RequiredProps.every(
+    (prop) =>
+      Object.hasOwn(item, prop) && item[prop] != null && item[prop] !== 0
+  );
+
+const ReportItem = ({
   reportItem,
-  reportId,
-  dropdownOptions,
   onCancel,
 }: {
   reportItem?: SelectReportItem;
-  reportId: number;
-  dropdownOptions: {
-    brandOptions: DropdownOption[];
-    warrantyTypeOptions: DropdownOption[];
-    serviceLevelTypeOptions: DropdownOption[];
-  };
   onCancel?: () => void;
-}) {
+}) => {
+  const useOptions = (key: string) =>
+    useSWR(`${API_BASE_URL}/${key}`, (url) =>
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => data[key])
+    );
+
+  const { data: brands } = useOptions('brands');
+  const { data: serviceLevelTypes } = useOptions('serviceLevelTypes');
+  const { data: warrantyTypes } = useOptions('warrantyTypes');
+
+  const saveEditedReportItem = (
+    editedReportItem: Partial<InsertReportItem> | undefined
+  ): void => {
+    if (areRequiredPropsPresent(editedReportItem)) {
+      saveReportItem(editedReportItem);
+      onCancel?.();
+    }
+  };
+
   const {
     isEditing,
     editedData: editedReportItem,
@@ -43,62 +67,7 @@ export function ReportItem({
     onInputChange,
     onDropdownChange,
     onDateChange,
-  } = useEditableRow<SelectReportItem>(
-    reportItem
-      ? { ...reportItem, reportId }
-      : {
-          reportId,
-          repairNo: '',
-          article: '',
-          serialNo: '',
-          dateIn: '',
-          dateOut: null,
-          comments: null,
-          brandId: 0,
-          warrantyTypeId: 0,
-          serviceLevelTypeId: 0,
-          id: '',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-    (editedReportItem) => {
-      if (
-        editedReportItem &&
-        RequiredProps.every((prop) => {
-          return (
-            Object.hasOwn(editedReportItem, prop) &&
-            editedReportItem[prop] != null &&
-            editedReportItem[prop] !== 0
-          );
-        })
-      ) {
-        editedReportItem.comments = editedReportItem.comments ?? null;
-        editedReportItem.dateOut = editedReportItem.dateOut ?? null;
-
-        // Convert SelectReportItem to ReportItemWithNames format for the save action
-        const brandOption = dropdownOptions.brandOptions.find(
-          (b) => b.id === editedReportItem.brandId
-        );
-        const warrantyOption = dropdownOptions.warrantyTypeOptions.find(
-          (w) => w.id === editedReportItem.warrantyTypeId
-        );
-        const serviceOption = dropdownOptions.serviceLevelTypeOptions.find(
-          (s) => s.id === editedReportItem.serviceLevelTypeId
-        );
-
-        if (brandOption && warrantyOption && serviceOption) {
-          const reportItemWithNames = {
-            ...editedReportItem,
-            brand: brandOption,
-            warrantyType: warrantyOption,
-            serviceLevelType: serviceOption,
-          };
-          saveReportItem(reportItemWithNames);
-          onCancel?.();
-        }
-      }
-    }
-  );
+  } = useEditableRow<SelectReportItem>(reportItem, saveEditedReportItem);
 
   // Custom handler for date changes that converts string to Date
   const handleDateChange =
@@ -109,6 +78,19 @@ export function ReportItem({
 
   return (
     <TableRow>
+      <ReportItemDatePicker
+        isEditing={isEditing}
+        value={editedReportItem?.dateIn}
+        onChange={handleDateChange('dateIn')}
+      />
+      <ReportItemDropdown
+        isEditing={isEditing}
+        options={brands}
+        currentValue={editedReportItem?.brandId}
+        onChange={(selectedId) => {
+          onDropdownChange('brandId')(selectedId);
+        }}
+      />
       <EditableTableCell
         onChange={onInputChange('repairNo')}
         isEditing={isEditing}
@@ -126,36 +108,16 @@ export function ReportItem({
       />
       <ReportItemDropdown
         isEditing={isEditing}
-        options={dropdownOptions.brandOptions}
-        currentValue={
-          dropdownOptions.brandOptions.find(
-            (b) => b.id === editedReportItem?.brandId
-          )?.name
-        }
-        onChange={(selectedId) => {
-          onDropdownChange('brandId')(selectedId);
-        }}
-      />
-      <ReportItemDropdown
-        isEditing={isEditing}
-        options={dropdownOptions.warrantyTypeOptions}
-        currentValue={
-          dropdownOptions.warrantyTypeOptions.find(
-            (w) => w.id === editedReportItem?.warrantyTypeId
-          )?.name
-        }
+        options={warrantyTypes}
+        currentValue={editedReportItem?.warrantyTypeId}
         onChange={(selectedId) => {
           onDropdownChange('warrantyTypeId')(selectedId);
         }}
       />
       <ReportItemDropdown
         isEditing={isEditing}
-        options={dropdownOptions.serviceLevelTypeOptions}
-        currentValue={
-          dropdownOptions.serviceLevelTypeOptions.find(
-            (s) => s.id === editedReportItem?.serviceLevelTypeId
-          )?.name
-        }
+        options={serviceLevelTypes}
+        currentValue={editedReportItem?.serviceLevelTypeId}
         onChange={(selectedId) => {
           onDropdownChange('serviceLevelTypeId')(selectedId);
         }}
@@ -186,5 +148,5 @@ export function ReportItem({
       />
     </TableRow>
   );
-}
+};
 export default ReportItem;

@@ -33,10 +33,8 @@ export const useEditableRow = <T extends { id?: number | string }>(
       );
     };
 
-  const onDropdownChange = (field: keyof T) => (value: string) => {
-    setEditedData(
-      (prev) => ({ ...prev, [field]: Number(value) }) as Partial<T>
-    );
+  const onDropdownChange = (field: keyof T) => (value: number) => {
+    setEditedData((prev) => ({ ...prev, [field]: value }) as Partial<T>);
   };
 
   const onDateChange = (field: keyof T) => (date?: Date) => {

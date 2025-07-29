@@ -3,36 +3,16 @@ import { db } from '../db';
 import { InsertReportItem, reportItems } from '../schema';
 import { asc, eq, sql } from 'drizzle-orm';
 
-export type ReportItemWithNames = Awaited<
-  ReturnType<typeof findReportItemsWithNames>
->[number];
+const preparedSelectReportItems = db
+  .select()
+  .from(reportItems)
+  .where(eq(reportItems.reportId, sql.placeholder('reportId')))
+  .orderBy(asc(reportItems.createdAt))
+  .prepare('select_report_items_by_report_id');
 
-const preparedFindReportItems = db.query.reportItems
-  .findMany({
-    where: eq(reportItems.reportId, sql.placeholder('reportId')),
-    orderBy: [asc(reportItems.createdAt)],
-    with: {
-      brand: {
-        columns: { id: true, name: true },
-      },
-      warrantyType: {
-        columns: { id: true, name: true },
-      },
-      serviceLevelType: {
-        columns: { id: true, name: true },
-      },
-    },
-    columns: {
-      brandId: false,
-      warrantyTypeId: false,
-      serviceLevelTypeId: false,
-    },
-  })
-  .prepare('find_report_items_with_names');
-
-export const findReportItemsWithNames = async (reportId: number) => {
-  return await preparedFindReportItems.execute({ reportId });
-};
+export async function selectReportItemsByReportId(reportId: number) {
+  return await preparedSelectReportItems.execute({ reportId });
+}
 
 export async function deleteReportItemById(id: string) {
   await db.delete(reportItems).where(eq(reportItems.id, id));

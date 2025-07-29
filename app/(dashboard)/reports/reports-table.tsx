@@ -12,7 +12,7 @@ import { SelectReport } from '@/lib/schema';
 import { ColumnDef } from '@tanstack/react-table';
 import { reportColumns } from './report-columns';
 import ReportCreateButton from './report-create-button';
-import { DataTable } from '@/components/data-table';
+import DataTable from '@/components/data-table';
 
 export const ReportsTable = ({ reports }: { reports: SelectReport[] }) => (
   <Card>

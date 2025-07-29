@@ -1,6 +1,6 @@
 'use server';
 import { updatePartnerStatusById, upsertPartner } from '@/lib/data/partners';
-import { SelectPartner } from '@/lib/schema';
+import { InsertPartner } from '@/lib/schema';
 import { revalidatePath } from 'next/cache';
 
 export async function setPartnerInactive(partnerId: number | undefined) {
@@ -10,7 +10,7 @@ export async function setPartnerInactive(partnerId: number | undefined) {
   }
 }
 
-export async function savePartner(partner: SelectPartner) {
+export async function savePartner(partner: InsertPartner) {
   await upsertPartner(partner);
   revalidatePath('/admin/partners/page', 'page');
 }
