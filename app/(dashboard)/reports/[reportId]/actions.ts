@@ -7,11 +7,9 @@ import {
 } from '@/lib/data/reportItems';
 import { updateReportStatusById } from '@/lib/data/reports';
 
-export async function deleteReportItem(itemId?: string) {
-  if (itemId) {
-    await deleteReportItemById(itemId);
-    revalidatePath('/reports/[reportId]/page', 'page');
-  }
+export async function deleteReportItem(reportItemId: string) {
+  await deleteReportItemById(reportItemId);
+  revalidatePath('/reports/[reportId]', 'page');
 }
 
 export async function saveReportItem(item: ReportItemWithNames) {

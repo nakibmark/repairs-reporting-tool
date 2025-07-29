@@ -1,35 +1,39 @@
 'use client';
 
 import { SelectReport } from '@/lib/schema';
-import { createColumnHelper, RowData } from '@tanstack/react-table';
+import { createColumnHelper } from '@tanstack/react-table';
 import RowActions from './row-actions';
-
-import '@tanstack/react-table';
 import FilterHeader from '../filter-header';
-declare module '@tanstack/react-table' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filterVariant?: 'submitted' | 'select';
-  }
-}
 
 const columnHelper = createColumnHelper<SelectReport>();
 
-export const defaultReportColumns = [
+export const reportColumns = [
   columnHelper.accessor('id', {
     header: 'Report ID',
   }),
   columnHelper.accessor('isSubmitted', {
     header: ({ column }) =>
       column.getCanFilter() ? (
-        <FilterHeader column={column} name="Status" />
+        <FilterHeader
+          column={column}
+          name="Status"
+          options={[
+            { label: 'Submitted', value: 'true' },
+            { label: 'Draft', value: 'false' },
+          ]}
+        />
       ) : (
         'Status'
       ),
     cell: (info) => (info.getValue() ? 'Submitted' : 'Draft'),
-    filterFn: 'equals',
-    meta: {
-      filterVariant: 'submitted',
+    filterFn: (row, columnId, filterValue) => {
+      const cellValue = row.getValue(columnId) as boolean;
+      if (filterValue === 'true') {
+        return cellValue === true; // Show only submitted reports
+      } else if (filterValue === 'false') {
+        return cellValue === false; // Show only draft reports
+      }
+      return true; // Show all rows if no filter is applied
     },
   }),
   columnHelper.accessor((row) => `${row.reportMonth}/${row.reportYear}`, {

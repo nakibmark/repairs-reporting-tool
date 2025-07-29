@@ -2,7 +2,7 @@
 
 import { SelectPartner } from '@/lib/schema';
 import { createColumnHelper, Row } from '@tanstack/react-table';
-import PartnerFilterHeader from './partner-filter-header';
+import FilterHeader from '../../filter-header';
 
 const columnHelper = createColumnHelper<SelectPartner>();
 
@@ -20,7 +20,7 @@ const multiSelectFilter = (
   return filterValue.includes(cellValue);
 };
 
-export const defaultPartnerColumns = [
+export const partnerColumns = [
   columnHelper.accessor('id', {
     header: 'ID',
   }),
@@ -40,70 +40,55 @@ export const defaultPartnerColumns = [
   columnHelper.accessor('city', {
     header: ({ column }) =>
       column.getCanFilter() ? (
-        <PartnerFilterHeader column={column} name="City" />
+        <FilterHeader column={column} name="City" />
       ) : (
         'City'
       ),
     cell: (info) => info.getValue() || '-',
     filterFn: multiSelectFilter,
-    meta: {
-      filterVariant: 'select',
-    },
   }),
   columnHelper.accessor('state', {
     header: ({ column }) =>
       column.getCanFilter() ? (
-        <PartnerFilterHeader column={column} name="State" />
+        <FilterHeader column={column} name="State" />
       ) : (
         'State'
       ),
     cell: (info) => info.getValue() || '-',
     filterFn: multiSelectFilter,
-    meta: {
-      filterVariant: 'select',
-    },
   }),
   columnHelper.accessor('country', {
     header: ({ column }) =>
       column.getCanFilter() ? (
-        <PartnerFilterHeader column={column} name="Country" />
+        <FilterHeader column={column} name="Country" />
       ) : (
         'Country'
       ),
     cell: (info) => info.getValue() || '-',
     filterFn: multiSelectFilter,
-    meta: {
-      filterVariant: 'select',
-    },
   }),
   columnHelper.accessor('market', {
     header: ({ column }) =>
       column.getCanFilter() ? (
-        <PartnerFilterHeader column={column} name="Market" />
+        <FilterHeader column={column} name="Market" />
       ) : (
         'Market'
       ),
     cell: (info) => info.getValue() || '-',
     filterFn: multiSelectFilter,
-    meta: {
-      filterVariant: 'select',
-    },
   }),
   columnHelper.accessor('region', {
     header: ({ column }) =>
       column.getCanFilter() ? (
-        <PartnerFilterHeader column={column} name="Region" />
+        <FilterHeader column={column} name="Region" />
       ) : (
         'Region'
       ),
     cell: (info) => info.getValue() || '-',
     filterFn: multiSelectFilter,
-    meta: {
-      filterVariant: 'select',
-    },
   }),
   columnHelper.display({
     id: 'actions',
-    header: () => <span className="sr-only">Actions</span>,
+    header: 'Actions',
   }),
 ];

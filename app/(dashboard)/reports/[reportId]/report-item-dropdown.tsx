@@ -16,6 +16,11 @@ import {
   CommandItem,
 } from '@/components/ui/command';
 
+export type DropdownOption = {
+  id: number;
+  name: string;
+};
+
 type Option = {
   id: number;
   name: string;

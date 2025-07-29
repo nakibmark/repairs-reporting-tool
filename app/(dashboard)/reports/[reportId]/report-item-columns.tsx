@@ -5,7 +5,7 @@ import { ReportItemWithNames } from '@/lib/data/reportItems';
 
 const columnHelper = createColumnHelper<ReportItemWithNames>();
 
-export const defaultReportItemColumns = [
+export const reportItemColumns = [
   columnHelper.accessor('dateIn', {
     header: 'Date Intervention In',
   }),

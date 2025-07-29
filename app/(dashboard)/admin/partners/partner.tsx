@@ -1,9 +1,10 @@
 import { TableRow } from '@/components/ui/table';
 import { SelectPartner } from '@/lib/schema';
-import PartnerEditMenu from './partner-edit-menu';
+import EditMenu from '../../../../components/ui/edit-menu';
 import React from 'react';
-import PartnerCell from './partner-cell';
+import EditableTableCell from '../../../../components/ui/editable-table-cell';
 import { setPartnerInactive, savePartner } from './actions';
+import { useEditableRow } from '../../hooks/use-editable-row';
 
 const RequiredProps = ['partnerName', 'emailAddress', 'partnerNo'] as const;
 
@@ -14,110 +15,95 @@ export function Partner({
   partner?: SelectPartner;
   displayInactive: boolean;
 }) {
-  const [isEditing, setIsEditing] = React.useState(!partner);
-  const [editedPartner, setEditedPartner] = React.useState<
-    Partial<SelectPartner> | undefined
-  >({ ...partner });
-
-  const editedPartnerIsSaveable = (
-    saveTarget: typeof editedPartner
-  ): saveTarget is SelectPartner => {
-    return (
-      saveTarget !== undefined &&
+  const {
+    isEditing,
+    editedData: editedPartner,
+    handleEditClick,
+    handleCancelClick,
+    handleSaveClick,
+    onInputChange,
+  } = useEditableRow<SelectPartner>(partner, (editedPartner) => {
+    if (
+      editedPartner &&
       RequiredProps.every(
-        (prop) => Object.hasOwn(saveTarget, prop) && saveTarget[prop] != null
+        (prop) =>
+          Object.hasOwn(editedPartner, prop) && editedPartner[prop] != null
       )
-    );
-  };
-
-  const handleSaveClick = () => {
-    if (editedPartnerIsSaveable(editedPartner)) {
+    ) {
       editedPartner.phoneNumber = editedPartner.phoneNumber ?? null;
       editedPartner.city = editedPartner.city ?? null;
       editedPartner.state = editedPartner.state ?? null;
       editedPartner.country = editedPartner.country ?? null;
       editedPartner.market = editedPartner.market ?? null;
       editedPartner.region = editedPartner.region ?? null;
-      savePartner(editedPartner);
+      savePartner(editedPartner as SelectPartner);
     }
-    setIsEditing(false);
-  };
-
-  const onInputChange =
-    (field: keyof SelectPartner) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setEditedPartner({ ...editedPartner, [field]: e.target.value });
-    };
+  });
 
   return (
     <TableRow
       className={!editedPartner?.isActive ? 'bg-zinc-300' : ''}
       hidden={!displayInactive && !editedPartner?.isActive}
     >
-      <PartnerCell
+      <EditableTableCell
         onChange={onInputChange('id')}
         isEditing={isEditing}
         value={editedPartner?.id}
       />
-      <PartnerCell
+      <EditableTableCell
         onChange={onInputChange('partnerName')}
         isEditing={isEditing}
         value={editedPartner?.partnerName}
       />
-      <PartnerCell
+      <EditableTableCell
         onChange={onInputChange('partnerNo')}
         isEditing={isEditing}
         value={editedPartner?.partnerNo}
       />
-      <PartnerCell
+      <EditableTableCell
         onChange={onInputChange('emailAddress')}
         isEditing={isEditing}
         value={editedPartner?.emailAddress}
       />
-      <PartnerCell
+      <EditableTableCell
         onChange={onInputChange('phoneNumber')}
         isEditing={isEditing}
         value={editedPartner?.phoneNumber}
       />
-      <PartnerCell
+      <EditableTableCell
         onChange={onInputChange('city')}
         isEditing={isEditing}
         value={editedPartner?.city}
       />
-      <PartnerCell
+      <EditableTableCell
         onChange={onInputChange('state')}
         isEditing={isEditing}
         value={editedPartner?.state}
       />
-      <PartnerCell
+      <EditableTableCell
         onChange={onInputChange('country')}
         isEditing={isEditing}
         value={editedPartner?.country}
       />
-      <PartnerCell
+      <EditableTableCell
         onChange={onInputChange('market')}
         isEditing={isEditing}
         value={editedPartner?.market}
       />
-      <PartnerCell
+      <EditableTableCell
         onChange={onInputChange('region')}
         isEditing={isEditing}
         value={editedPartner?.region}
       />
-      <PartnerEditMenu
+      <EditMenu
         isEditing={isEditing}
-        handleEditClick={() => setIsEditing(true)}
-        handleCancelClick={() => {
-          setEditedPartner(partner);
-          setIsEditing(false);
-        }}
+        handleEditClick={handleEditClick}
+        handleCancelClick={handleCancelClick}
         handleDeleteClick={() => {
           setPartnerInactive(editedPartner?.id);
         }}
-        handleSaveClick={() => {
-          handleSaveClick();
-        }}
-       />
+        handleSaveClick={handleSaveClick}
+      />
     </TableRow>
   );
 }

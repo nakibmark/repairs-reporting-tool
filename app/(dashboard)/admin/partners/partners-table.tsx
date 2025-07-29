@@ -2,14 +2,6 @@
 
 import { Label } from '@/components/ui/label';
 import {
-  TableHead,
-  TableRow,
-  TableHeader,
-  TableBody,
-  Table,
-  TableCell,
-} from '@/components/ui/table';
-import {
   Card,
   CardContent,
   CardDescription,
@@ -25,19 +17,9 @@ import { SelectPartner } from '@/lib/schema';
 import { Checkbox } from '@/components/ui/checkbox';
 import PartnerSearch from './partner-search';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import { TanstackPagination } from '@/components/ui/tanstack-pagination';
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getPaginationRowModel,
-  useReactTable,
-  ColumnFiltersState,
-  PaginationState,
-} from '@tanstack/react-table';
-import { defaultPartnerColumns } from './partners-columns';
+import { DataTable } from '../../data-table';
+import { partnerColumns } from './partners-columns';
+import { ColumnDef } from '@tanstack/react-table';
 
 export type DropdownOption = { id: number; name: string };
 
@@ -49,31 +31,9 @@ const PartnersTable = ({
   displayInactive: boolean;
 }) => {
   const [isCreatingNewItem, setIsCreatingNewPartner] = useState(false);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-
-  const table = useReactTable({
-    columns: defaultPartnerColumns,
-    data: partners,
-    filterFns: {},
-    state: {
-      columnFilters,
-      pagination,
-    },
-    onColumnFiltersChange: setColumnFilters,
-    onPaginationChange: setPagination,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getPaginationRowModel: getPaginationRowModel(),
-  });
 
   return (
     <Card>
@@ -114,53 +74,22 @@ const PartnersTable = ({
         </div>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id} className="hidden md:table-cell">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {isCreatingNewItem && (
-              <Partner key={0} displayInactive={displayInactive} />
-            )}
-            {table.getRowModel().rows?.length ? (
-              table
-                .getRowModel()
-                .rows.map((row) => (
-                  <Partner
-                    key={row.original.id}
-                    partner={row.original}
-                    displayInactive={displayInactive}
-                  />
-                ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={defaultPartnerColumns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+        <DataTable
+          columns={partnerColumns as ColumnDef<SelectPartner>[]}
+          data={partners}
+          renderRow={(partner) => (
+            <Partner
+              key={partner.id}
+              partner={partner}
+              displayInactive={displayInactive}
+            />
+          )}
+        />
+        {isCreatingNewItem && (
+          <Partner key={0} displayInactive={displayInactive} />
+        )}
       </CardContent>
-      <CardFooter>
-        <TanstackPagination table={table} />
-      </CardFooter>
+      <CardFooter />
     </Card>
   );
 };
