@@ -17,38 +17,41 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { SelectReport } from '@/lib/schema';
-import Pagination from '@/components/ui/pagination';
+import { TanstackPagination } from '@/components/ui/tanstack-pagination';
 import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   useReactTable,
   ColumnFiltersState,
+  PaginationState,
 } from '@tanstack/react-table';
 import { defaultReportColumns } from './reports-columns';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import ReportCreateButton from './report-create-button';
 
-export const ReportsTable = ({
-  reports,
-  totalPages,
-}: {
-  reports: SelectReport[];
-  totalPages: number;
-}) => {
+export const ReportsTable = ({ reports }: { reports: SelectReport[] }) => {
   const router = useRouter();
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const table = useReactTable({
     columns: defaultReportColumns,
     data: reports,
     filterFns: {},
     state: {
       columnFilters,
+      pagination,
     },
     onColumnFiltersChange: setColumnFilters,
+    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
@@ -110,7 +113,7 @@ export const ReportsTable = ({
         </Table>
       </CardContent>
       <CardFooter>
-        <Pagination totalPages={totalPages} />
+        <TanstackPagination table={table} />
       </CardFooter>
     </Card>
   );

@@ -8,25 +8,15 @@ export default async function PartnersPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  const {
-    query = '',
-    page = '1',
-    size = '10',
-    displayInactive = false,
-  } = await searchParams.then(flattenSearchParams);
+  const { query = '', displayInactive = false } =
+    await searchParams.then(flattenSearchParams);
 
-  const { partners, totalPages } = await findPartners({
-    currentPage: +page,
-    limit: +size,
+  const { partners } = await findPartners({
     displayInactive: !!displayInactive,
     query,
   });
 
   return (
-    <PartnersTable
-      partners={partners}
-      displayInactive={!!displayInactive}
-      totalPages={totalPages}
-    />
+    <PartnersTable partners={partners} displayInactive={!!displayInactive} />
   );
 }

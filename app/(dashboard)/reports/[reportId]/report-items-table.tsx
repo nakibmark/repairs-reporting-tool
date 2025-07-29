@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableBody,
   Table,
+  TableCell,
 } from '@/components/ui/table';
 import {
   Card,
@@ -20,6 +21,12 @@ import ReportItem from './report-item';
 import { ReportItemWithNames } from '@/lib/data/reportItems';
 import React, { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table';
+import { defaultReportItemColumns } from './report-items-columns';
 
 import { setReportStatus } from '../actions';
 
@@ -49,6 +56,12 @@ const ReportItemsTable = ({
   const [isCreatingNewItem, setIsCreatingNewItem] = useState(
     items.length === 0 && !readOnly
   );
+
+  const table = useReactTable({
+    columns: defaultReportItemColumns,
+    data: items,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
     <Card>
@@ -89,32 +102,20 @@ const ReportItemsTable = ({
       <CardContent>
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="hidden md:table-cell">
-                Date Intervention In
-              </TableHead>
-              <TableHead className="hidden md:table-cell">Maison</TableHead>
-              <TableHead className="hidden md:table-cell">
-                Repair Number
-              </TableHead>
-              <TableHead className="hidden md:table-cell">Article</TableHead>
-              <TableHead className="hidden md:table-cell">
-                Serial Number
-              </TableHead>
-              <TableHead className="hidden md:table-cell">
-                Warranty Type
-              </TableHead>
-              <TableHead className="hidden md:table-cell">
-                Service Type
-              </TableHead>
-              <TableHead className="hidden md:table-cell">
-                Date Intervention Out
-              </TableHead>
-              <TableHead className="hidden md:table-cell">Comments</TableHead>
-              <TableHead>
-                <span className="sr-only">Actions</span>
-              </TableHead>
-            </TableRow>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id} className="hidden md:table-cell">
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
           </TableHeader>
           <TableBody>
             {isCreatingNewItem && (
@@ -126,16 +127,29 @@ const ReportItemsTable = ({
                 readOnly={readOnly}
               />
             )}
-            {items.map((item) => (
-              <ReportItem
-                key={item.id}
-                item={item}
-                brands={brands}
-                serviceLevelTypes={serviceLevelTypes}
-                warrantyTypes={warrantyTypes}
-                readOnly={readOnly}
-              />
-            ))}
+            {table.getRowModel().rows?.length ? (
+              table
+                .getRowModel()
+                .rows.map((row) => (
+                  <ReportItem
+                    key={row.original.id}
+                    item={row.original}
+                    brands={brands}
+                    serviceLevelTypes={serviceLevelTypes}
+                    warrantyTypes={warrantyTypes}
+                    readOnly={readOnly}
+                  />
+                ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={defaultReportItemColumns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </CardContent>

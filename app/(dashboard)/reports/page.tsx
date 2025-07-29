@@ -2,24 +2,14 @@ import { ReportsTable } from './reports-table';
 import React from 'react';
 import { cookies } from 'next/headers';
 import { selectReports } from '@/lib/data/reports';
-import { flattenSearchParams } from 'app/utils/flattenSearchParams';
-import { SearchParams } from 'next/dist/server/request/search-params';
 
-export default async function ReportsPage({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
+export default async function ReportsPage() {
   const cookieStore = await cookies();
   const partnerId = cookieStore.get('partnerId')?.value;
-  const { page = '1', size = '10' } =
-    await searchParams.then(flattenSearchParams);
 
-  const { reports, totalPages } = await selectReports({
-    currentPage: +page,
-    limit: +size,
+  const { reports } = await selectReports({
     query: partnerId,
   });
 
-  return <ReportsTable reports={reports} totalPages={totalPages} />;
+  return <ReportsTable reports={reports} />;
 }
