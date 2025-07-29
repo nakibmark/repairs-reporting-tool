@@ -3,7 +3,7 @@
 import { SelectReport } from '@/lib/schema';
 import { createColumnHelper } from '@tanstack/react-table';
 import RowActions from './row-actions';
-import FilterHeader from '../filter-header';
+import FilterHeader from '@/components/filter-header';
 
 const columnHelper = createColumnHelper<SelectReport>();
 

@@ -14,7 +14,7 @@ import React, { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
 import { SelectReportItem } from '@/lib/schema';
 import { DropdownOption } from './report-item-dropdown';
-import { DataTable } from '../../data-table';
+import { DataTable } from '@/components/data-table';
 import { reportItemColumns } from './report-item-columns';
 import { ReportItemWithNames } from '@/lib/data/reportItems';
 import { ColumnDef } from '@tanstack/react-table';

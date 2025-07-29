@@ -1,10 +1,10 @@
 import { TableRow } from '@/components/ui/table';
 import { SelectPartner } from '@/lib/schema';
-import EditMenu from '../../../../components/ui/edit-menu';
+import EditMenu from '@/components/ui/edit-menu';
 import React from 'react';
-import EditableTableCell from '../../../../components/ui/editable-table-cell';
+import EditableTableCell from '@/components/ui/editable-table-cell';
 import { setPartnerInactive, savePartner } from './actions';
-import { useEditableRow } from '../../hooks/use-editable-row';
+import { useEditableRow } from '@/components/hooks/use-editable-row';
 
 const RequiredProps = ['partnerName', 'emailAddress', 'partnerNo'] as const;
 

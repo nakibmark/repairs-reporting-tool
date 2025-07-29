@@ -2,13 +2,13 @@
 
 import { TableRow } from '@/components/ui/table';
 import { SelectReportItem } from '@/lib/schema';
-import EditMenu from '../../../../components/ui/edit-menu';
+import EditMenu from '@/components/ui/edit-menu';
 import React from 'react';
-import EditableTableCell from '../../../../components/ui/editable-table-cell';
+import EditableTableCell from '@/components/ui/editable-table-cell';
 import { deleteReportItem, saveReportItem } from './actions';
 import ReportItemDropdown, { DropdownOption } from './report-item-dropdown';
 import { ReportItemDatePicker } from './report-item-date-picker';
-import { useEditableRow } from '../../hooks/use-editable-row';
+import { useEditableRow } from '@/components/hooks/use-editable-row';
 
 const RequiredProps = [
   'repairNo',

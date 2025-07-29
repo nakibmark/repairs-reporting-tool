@@ -2,7 +2,7 @@
 
 import { SelectPartner } from '@/lib/schema';
 import { createColumnHelper, Row } from '@tanstack/react-table';
-import FilterHeader from '../../filter-header';
+import FilterHeader from '@/components/filter-header';
 
 const columnHelper = createColumnHelper<SelectPartner>();
 

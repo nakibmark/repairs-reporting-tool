@@ -17,7 +17,7 @@ import { SelectPartner } from '@/lib/schema';
 import { Checkbox } from '@/components/ui/checkbox';
 import PartnerSearch from './partner-search';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import { DataTable } from '../../data-table';
+import { DataTable } from '@/components/data-table';
 import { partnerColumns } from './partners-columns';
 import { ColumnDef } from '@tanstack/react-table';
 
