@@ -2,13 +2,6 @@
 
 import { Label } from '@/components/ui/label';
 import {
-  TableHead,
-  TableRow,
-  TableHeader,
-  TableBody,
-  Table,
-} from '@/components/ui/table';
-import {
   Card,
   CardContent,
   CardDescription,
@@ -24,23 +17,24 @@ import { SelectPartner } from '@/lib/schema';
 import { Checkbox } from '@/components/ui/checkbox';
 import PartnerSearch from './partner-search';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import Pagination from '@/components/ui/pagination';
+import DataTable from '@/components/data-table';
+import { partnerColumns } from './partners-columns';
+import { ColumnDef } from '@tanstack/react-table';
 
 export type DropdownOption = { id: number; name: string };
 
 const PartnersTable = ({
   partners,
   displayInactive,
-  totalPages,
 }: {
   partners: SelectPartner[];
   displayInactive: boolean;
-  totalPages: number;
 }) => {
   const [isCreatingNewItem, setIsCreatingNewPartner] = useState(false);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+
   return (
     <Card>
       <CardHeader>
@@ -51,7 +45,7 @@ const PartnersTable = ({
           </div>
           <div className="ml-auto flex items-center gap-2 space-x-2">
             <PartnerSearch />
-            <div className="flex items-center ">
+            <div className="flex items-center gap-1">
               <Checkbox
                 checked={displayInactive}
                 id="displayInactive"
@@ -80,45 +74,22 @@ const PartnersTable = ({
         </div>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="hidden md:table-cell">ID</TableHead>
-              <TableHead className="hidden md:table-cell">Name</TableHead>
-              <TableHead className="hidden md:table-cell">Number</TableHead>
-              <TableHead className="hidden md:table-cell">
-                Email Address
-              </TableHead>
-              <TableHead className="hidden md:table-cell">
-                Phone Number
-              </TableHead>
-              <TableHead className="hidden md:table-cell">City</TableHead>
-              <TableHead className="hidden md:table-cell">State</TableHead>
-              <TableHead className="hidden md:table-cell">Country</TableHead>
-              <TableHead className="hidden md:table-cell">Market</TableHead>
-              <TableHead className="hidden md:table-cell">Region</TableHead>
-              <TableHead>
-                <span className="sr-only">Actions</span>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isCreatingNewItem && (
-              <Partner key={0} displayInactive={displayInactive} />
-            )}
-            {partners.map((partner) => (
-              <Partner
-                key={partner.id}
-                partner={partner}
-                displayInactive={displayInactive}
-              />
-            ))}
-          </TableBody>
-        </Table>
+        <DataTable
+          columns={partnerColumns as ColumnDef<SelectPartner>[]}
+          data={partners}
+          renderRow={(partner) => (
+            <Partner
+              key={partner.id}
+              partner={partner}
+              displayInactive={displayInactive}
+            />
+          )}
+        />
+        {isCreatingNewItem && (
+          <Partner key={0} displayInactive={displayInactive} />
+        )}
       </CardContent>
-      <CardFooter>
-        <Pagination totalPages={totalPages} />
-      </CardFooter>
+      <CardFooter />
     </Card>
   );
 };

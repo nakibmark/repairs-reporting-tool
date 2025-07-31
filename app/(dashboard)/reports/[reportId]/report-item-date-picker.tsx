@@ -11,7 +11,7 @@ import {
 import { TZDate } from 'react-day-picker';
 import { format } from 'date-fns';
 
-const ReportItemDatePicker = ({
+export function ReportItemDatePicker({
   isEditing,
   onChange,
   value,
@@ -19,7 +19,7 @@ const ReportItemDatePicker = ({
   isEditing: boolean;
   onChange: (date: string) => void;
   value: string | null | undefined;
-}) => {
+}) {
   const [open, setOpen] = React.useState(false);
 
   const dateValue = value ? new TZDate(value, 'UTC') : undefined;
@@ -54,6 +54,6 @@ const ReportItemDatePicker = ({
   ) : (
     <TableCell className="hidden md:table-cell">{value || '-'}</TableCell>
   );
-};
+}
 
 export default ReportItemDatePicker;

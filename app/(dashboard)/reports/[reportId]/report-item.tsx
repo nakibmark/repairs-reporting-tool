@@ -1,143 +1,152 @@
 'use client';
 
 import { TableRow } from '@/components/ui/table';
-import { ReportItemWithNames } from '@/lib/data/reportItems';
-import ReportItemCell from './report-item-cell';
-import ReportItemEditMenu from './report-item-edit-menu';
+import { InsertReportItem, SelectReportItem } from '@/lib/schema';
+import EditMenu from '@/components/ui/edit-menu';
 import React from 'react';
+import EditableTableCell from '@/components/ui/editable-table-cell';
 import { deleteReportItem, saveReportItem } from './actions';
 import ReportItemDropdown from './report-item-dropdown';
-import ReportItemDatePicker from './report-item-date-picker';
-import { DropdownOption } from './report-items-table';
-import { useParams } from 'next/navigation';
+import { ReportItemDatePicker } from './report-item-date-picker';
+import { useEditableRow } from '@/components/hooks/use-editable-row';
+import useSWR from 'swr';
+
+const API_BASE_URL = '/api';
 
 const RequiredProps = [
-  'dateIn',
   'repairNo',
-  'brand',
-  'reportId',
-  'serviceLevelType',
-  'warrantyType',
+  'article',
+  'serialNo',
+  'brandId',
+  'warrantyTypeId',
+  'serviceLevelTypeId',
 ] as const;
 
-const ReportItem = (props: {
-  item?: ReportItemWithNames;
-  brands: DropdownOption[];
-  serviceLevelTypes: DropdownOption[];
-  warrantyTypes: DropdownOption[];
-  readOnly: boolean;
+const areRequiredPropsPresent = (
+  item: Partial<InsertReportItem> | undefined
+): item is InsertReportItem =>
+  !!item &&
+  RequiredProps.every(
+    (prop) =>
+      Object.hasOwn(item, prop) && item[prop] != null && item[prop] !== 0
+  );
+
+const ReportItem = ({
+  reportItem,
+  onCancel,
+}: {
+  reportItem?: SelectReportItem;
+  onCancel?: () => void;
 }) => {
-  const { item, brands, serviceLevelTypes, warrantyTypes, readOnly } = props;
-
-  const { reportId: reportIdParam } = useParams();
-  const [isEditing, setIsEditing] = React.useState(!item);
-  const [editedItem, setEditedItem] = React.useState<
-    Partial<ReportItemWithNames> | undefined
-  >({ reportId: Number(reportIdParam), ...item });
-
-  const editedItemIsSaveable = (
-    saveTarget: typeof editedItem
-  ): saveTarget is ReportItemWithNames =>
-    saveTarget !== undefined &&
-    RequiredProps.every(
-      (prop) => Object.hasOwn(saveTarget, prop) && saveTarget[prop] != null
+  const useOptions = (key: string) =>
+    useSWR(`${API_BASE_URL}/${key}`, (url) =>
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => data[key])
     );
 
-  const handleSaveClick = () => {
-    if (editedItemIsSaveable(editedItem)) {
-      saveReportItem(editedItem);
+  const { data: brands } = useOptions('brands');
+  const { data: serviceLevelTypes } = useOptions('serviceLevelTypes');
+  const { data: warrantyTypes } = useOptions('warrantyTypes');
+
+  const saveEditedReportItem = (
+    editedReportItem: Partial<InsertReportItem> | undefined
+  ): void => {
+    if (areRequiredPropsPresent(editedReportItem)) {
+      saveReportItem(editedReportItem);
+      onCancel?.();
     }
-    setIsEditing(false);
   };
 
-  const findNameById = (id: number, items: DropdownOption[]) =>
-    items.find((item) => item.id === id)?.name || '';
+  const {
+    isEditing,
+    editedData: editedReportItem,
+    handleEditClick,
+    handleCancelClick,
+    handleSaveClick,
+    onInputChange,
+    onDropdownChange,
+    onDateChange,
+  } = useEditableRow<SelectReportItem>(reportItem, saveEditedReportItem);
 
-  const onInputChange =
-    (field: keyof ReportItemWithNames) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setEditedItem({ ...editedItem, [field]: e.target.value });
-    };
-
-  const onDropdownChange =
-    (field: 'brand' | 'serviceLevelType' | 'warrantyType') =>
-    (selectedId: string) =>
-      setEditedItem({
-        ...editedItem,
-        [field]: {
-          id: Number(selectedId),
-          name: findNameById(Number(selectedId), props[`${field}s`]),
-        },
-      });
-
-  const onDateChange =
-    (field: 'dateOut' | 'dateIn') => (selectedDate: string) => {
-      setEditedItem({ ...editedItem, [field]: selectedDate });
+  // Custom handler for date changes that converts string to Date
+  const handleDateChange =
+    (field: keyof SelectReportItem) => (dateString: string) => {
+      const date = dateString ? new Date(dateString) : undefined;
+      onDateChange(field)(date);
     };
 
   return (
     <TableRow>
       <ReportItemDatePicker
-        onChange={onDateChange('dateIn')}
         isEditing={isEditing}
-        value={editedItem?.dateIn}
+        value={editedReportItem?.dateIn}
+        onChange={handleDateChange('dateIn')}
       />
       <ReportItemDropdown
         isEditing={isEditing}
-        currentValue={editedItem?.brand?.name}
         options={brands}
-        onChange={onDropdownChange('brand')}
+        currentValue={editedReportItem?.brandId}
+        onChange={(selectedId) => {
+          onDropdownChange('brandId')(selectedId);
+        }}
       />
-      <ReportItemCell
+      <EditableTableCell
         onChange={onInputChange('repairNo')}
         isEditing={isEditing}
-        value={editedItem?.repairNo}
+        value={editedReportItem?.repairNo}
       />
-      <ReportItemCell
+      <EditableTableCell
         onChange={onInputChange('article')}
         isEditing={isEditing}
-        value={editedItem?.article}
+        value={editedReportItem?.article}
       />
-      <ReportItemCell
+      <EditableTableCell
         onChange={onInputChange('serialNo')}
         isEditing={isEditing}
-        value={editedItem?.serialNo}
+        value={editedReportItem?.serialNo}
       />
       <ReportItemDropdown
         isEditing={isEditing}
-        currentValue={editedItem?.warrantyType?.name}
         options={warrantyTypes}
-        onChange={onDropdownChange('warrantyType')}
+        currentValue={editedReportItem?.warrantyTypeId}
+        onChange={(selectedId) => {
+          onDropdownChange('warrantyTypeId')(selectedId);
+        }}
       />
       <ReportItemDropdown
         isEditing={isEditing}
-        currentValue={editedItem?.serviceLevelType?.name}
         options={serviceLevelTypes}
-        onChange={onDropdownChange('serviceLevelType')}
+        currentValue={editedReportItem?.serviceLevelTypeId}
+        onChange={(selectedId) => {
+          onDropdownChange('serviceLevelTypeId')(selectedId);
+        }}
       />
       <ReportItemDatePicker
-        onChange={onDateChange('dateOut')}
         isEditing={isEditing}
-        value={editedItem?.dateOut}
+        value={editedReportItem?.dateOut}
+        onChange={handleDateChange('dateOut')}
       />
-      <ReportItemCell
+      <EditableTableCell
         onChange={onInputChange('comments')}
         isEditing={isEditing}
-        value={editedItem?.comments}
+        value={editedReportItem?.comments}
       />
-      <ReportItemEditMenu
+      <EditMenu
         isEditing={isEditing}
-        handleEditClick={() => setIsEditing(true)}
+        handleEditClick={handleEditClick}
         handleCancelClick={() => {
-          setEditedItem(item);
-          setIsEditing(false);
+          handleCancelClick();
+          onCancel?.();
         }}
-        handleDeleteClick={() => deleteReportItem(item?.id)}
+        handleDeleteClick={() => {
+          if (editedReportItem?.id) {
+            deleteReportItem(editedReportItem.id);
+          }
+        }}
         handleSaveClick={handleSaveClick}
-        disabled={readOnly}
       />
     </TableRow>
   );
 };
-
 export default ReportItem;

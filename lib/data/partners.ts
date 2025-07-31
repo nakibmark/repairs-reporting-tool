@@ -15,17 +15,12 @@ export const getPartnerOptions = async () =>
   await preparedGetPartnerOptions.execute();
 
 export const findPartners = async ({
-  currentPage,
-  limit,
   displayInactive,
   query,
 }: {
-  currentPage: number;
-  limit: number;
   displayInactive?: boolean;
   query?: string;
 }) => {
-  const offset = (currentPage - 1) * limit;
   const where = and(
     !displayInactive ? eq(partners.isActive, true) : undefined,
     query
@@ -39,15 +34,10 @@ export const findPartners = async ({
   const partnerResults = await db.query.partners.findMany({
     where,
     orderBy: [asc(partners.id)],
-    offset,
-    limit,
   });
-
-  const count = await db.$count(partners, where);
 
   return {
     partners: partnerResults,
-    totalPages: Math.ceil(count / limit),
   };
 };
 

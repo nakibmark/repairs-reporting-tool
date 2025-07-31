@@ -12,30 +12,23 @@ import {
 import { Button } from '@/components/ui/button';
 import React, { MouseEventHandler } from 'react';
 
-const ReportItemEditMenu = ({
+const EditMenu = ({
   isEditing,
   handleSaveClick,
   handleCancelClick,
   handleEditClick,
   handleDeleteClick,
-  disabled,
 }: {
-  disabled: boolean;
+  isEditing: boolean;
   handleEditClick: MouseEventHandler;
   handleSaveClick: MouseEventHandler;
   handleCancelClick: MouseEventHandler;
   handleDeleteClick: MouseEventHandler;
-  isEditing: boolean;
 }) => (
   <TableCell>
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          aria-haspopup="true"
-          disabled={disabled}
-          size="icon"
-          variant="ghost"
-        >
+        <Button aria-haspopup="true" size="icon" variant="ghost">
           <MoreHorizontal className="h-4 w-4" />
           <span className="sr-only">Toggle menu</span>
         </Button>
@@ -62,4 +55,4 @@ const ReportItemEditMenu = ({
   </TableCell>
 );
 
-export default ReportItemEditMenu;
+export default EditMenu;

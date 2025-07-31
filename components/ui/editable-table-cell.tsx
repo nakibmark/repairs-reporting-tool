@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { TableCell } from '@/components/ui/table';
 import React, { ChangeEventHandler } from 'react';
 
-const PartnerCell = ({
+const EditableTableCell = ({
   isEditing,
   onChange,
   value,
@@ -21,4 +21,4 @@ const PartnerCell = ({
     <TableCell className="hidden md:table-cell">{value || '-'}</TableCell>
   );
 
-export default PartnerCell;
+export default EditableTableCell;
