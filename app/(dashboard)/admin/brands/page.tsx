@@ -19,7 +19,7 @@ export default async function BrandsPage() {
           <div>
             <CardTitle>Edit Brands</CardTitle>
             <CardDescription>
-              Manage the items associated with this report.
+              Manage the information associated with each brand.
             </CardDescription>
           </div>
         </div>
