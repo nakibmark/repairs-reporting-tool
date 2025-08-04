@@ -1,6 +1,5 @@
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -8,8 +7,8 @@ import {
 } from '@/components/ui/card';
 import { getBrands } from '@/lib/data/brands';
 import { getWarrantyTypes } from '@/lib/data/warrantyTypes';
-import DisplayFlexBox from './display-flex-box';
 import { getServiceLevelTypes } from '@/lib/data/serviceLevelTypes';
+import BrandsContent from './brands-content';
 
 export default async function BrandsPage() {
   const brands = await getBrands();
@@ -27,16 +26,11 @@ export default async function BrandsPage() {
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="flex flex-col space-y-8">
-          <DisplayFlexBox items={brands} label={'Brands'} />
-          <DisplayFlexBox items={warrantyTypes} label={'Warranty Types'} />
-          <DisplayFlexBox
-            items={serviceLevelTypes}
-            label={'Service Level Types'}
-          />
-        </div>
-      </CardContent>
+      <BrandsContent
+        brands={brands}
+        serviceLevelTypes={serviceLevelTypes}
+        warrantyTypes={warrantyTypes}
+      />
       <CardFooter />
     </Card>
   );
