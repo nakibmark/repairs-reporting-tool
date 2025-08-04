@@ -7,11 +7,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-import BrandsTable from './brands-table';
-import { getBrands } from '@/lib/data/brands';
-
 export default async function BrandsPage() {
-  const brands = await getBrands();
   return (
     <Card>
       <CardHeader>
@@ -24,9 +20,7 @@ export default async function BrandsPage() {
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <BrandsTable brands={brands} />
-      </CardContent>
+      <CardContent />
       <CardFooter />
     </Card>
   );
