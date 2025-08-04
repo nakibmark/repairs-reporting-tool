@@ -1,16 +1,28 @@
 'use server';
-import { updatePartnerStatusById, upsertPartner } from '@/lib/data/partners';
-import { InsertPartner } from '@/lib/schema';
+import {
+  insertPartner,
+  updatePartnerStatusById,
+  updatePartner,
+} from '@/lib/data/partners';
+import { InsertPartner, SelectPartner } from '@/lib/schema';
 import { revalidatePath } from 'next/cache';
 
-export async function setPartnerInactive(partnerId: number | undefined) {
+export async function updatePartnerStatusAction(
+  partnerId: number | undefined,
+  isActive: boolean
+) {
   if (partnerId) {
-    await updatePartnerStatusById(partnerId, false);
+    await updatePartnerStatusById(partnerId, isActive);
     revalidatePath('/admin/partners/page', 'page');
   }
 }
 
-export async function savePartner(partner: InsertPartner) {
-  await upsertPartner(partner);
+export async function updatePartnerAction(partner: SelectPartner) {
+  await updatePartner(partner);
+  revalidatePath('/admin/partners/page', 'page');
+}
+
+export async function createPartnerAction(partner: InsertPartner) {
+  await insertPartner(partner);
   revalidatePath('/admin/partners/page', 'page');
 }
