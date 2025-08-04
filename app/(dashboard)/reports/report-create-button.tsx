@@ -1,7 +1,7 @@
 'use client';
 import { PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { createReport } from './actions';
+import { createReportAction } from './actions';
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Spinner } from '@/components/icons';
@@ -12,7 +12,7 @@ export const ReportCreateButton = () => {
 
   const handleCreateClick = () => {
     startTransition(async () => {
-      const createdId = await createReport();
+      const createdId = await createReportAction();
       router.push(`/reports/${createdId}`);
     });
   };

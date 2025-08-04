@@ -1,11 +1,11 @@
 'use client';
 
 import { TableRow } from '@/components/ui/table';
-import { InsertReportItem, SelectReportItem } from '@/lib/schema';
+import { SelectReportItem } from '@/lib/schema';
 import EditMenu from '@/components/ui/edit-menu';
 import React from 'react';
 import EditableTableCell from '@/components/ui/editable-table-cell';
-import { deleteReportItem, saveReportItem } from './actions';
+import { deleteReportItemAction, updateReportItemAction } from './actions';
 import ReportItemDropdown from './report-item-dropdown';
 import { ReportItemDatePicker } from './report-item-date-picker';
 import { useEditableRow } from '@/components/hooks/use-editable-row';
@@ -23,8 +23,8 @@ const RequiredProps = [
 ] as const;
 
 const areRequiredPropsPresent = (
-  item: Partial<InsertReportItem> | undefined
-): item is InsertReportItem =>
+  item: Partial<SelectReportItem> | undefined
+): item is SelectReportItem =>
   !!item &&
   RequiredProps.every(
     (prop) =>
@@ -50,10 +50,10 @@ const ReportItem = ({
   const { data: warrantyTypes } = useOptions('warrantyTypes');
 
   const saveEditedReportItem = (
-    editedReportItem: Partial<InsertReportItem> | undefined
+    editedReportItem: Partial<SelectReportItem> | undefined
   ): void => {
     if (areRequiredPropsPresent(editedReportItem)) {
-      saveReportItem(editedReportItem);
+      updateReportItemAction(editedReportItem);
       onCancel?.();
     }
   };
@@ -141,7 +141,7 @@ const ReportItem = ({
         }}
         handleDeleteClick={() => {
           if (editedReportItem?.id) {
-            deleteReportItem(editedReportItem.id);
+            deleteReportItemAction(editedReportItem.id);
           }
         }}
         handleSaveClick={handleSaveClick}

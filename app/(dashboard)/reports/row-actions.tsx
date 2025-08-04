@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal } from 'lucide-react';
 import { MouseEventHandler, useCallback } from 'react';
-import { deleteReportById, setReportStatus } from './actions';
+import { deleteReportAction, updateReportStatusAction } from './actions';
 import { SelectReport } from '@/lib/schema';
 
 const RowActions = ({ report }: { report: SelectReport }) => {
@@ -18,7 +18,7 @@ const RowActions = ({ report }: { report: SelectReport }) => {
       // Prevent the click event from propagating to the parent TableRow
       // which would trigger navigation to the report details page.
       e.stopPropagation();
-      setReportStatus(report.id, !report.isSubmitted);
+      updateReportStatusAction(report.id, !report.isSubmitted);
     },
     [report]
   );
@@ -26,7 +26,7 @@ const RowActions = ({ report }: { report: SelectReport }) => {
   const onDelete: MouseEventHandler = useCallback(
     (e) => {
       e.stopPropagation();
-      deleteReportById(report.id);
+      deleteReportAction(report.id);
     },
     [report]
   );

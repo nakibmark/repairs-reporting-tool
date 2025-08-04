@@ -19,7 +19,6 @@ import {
 } from '@/components/ui/select';
 import { ListFilterIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 const FilterHeader = <TData, TValue>({
   column,
   name,
@@ -39,12 +38,7 @@ const FilterHeader = <TData, TValue>({
           column.setFilterValue(value === '__clear' ? null : value)
         }
       >
-        <SelectTrigger asChild>
-          <Button variant="ghost">
-            {name}
-            <ListFilterIcon />
-          </Button>
-        </SelectTrigger>
+        <SelectTrigger>{name}</SelectTrigger>
         <SelectContent>
           <SelectGroup>
             <SelectItem value={'__clear'}>Clear filter</SelectItem>
@@ -91,16 +85,14 @@ const FilterHeader = <TData, TValue>({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="justify-between">
+        <Button variant="outline" className="justify-between">
           <div className="flex items-center gap-1">
             {name}
-            {selectedValues.length > 0 && (
-              <Badge variant="secondary" className="ml-1 h-4 text-xs">
-                {selectedValues.length}
-              </Badge>
-            )}
+            <ListFilterIcon
+              className={selectedValues.length ? 'opacity-75' : 'opacity-25'}
+            />
+            {selectedValues.length ? selectedValues.length : <></>}
           </div>
-          <ListFilterIcon />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="start">
