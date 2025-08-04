@@ -1,6 +1,6 @@
 import 'server-only';
 import { db } from '../db';
-import { InsertPartner, partners } from '../schema';
+import { InsertPartner, partners, SelectPartner } from '../schema';
 import { and, asc, eq, ilike, or } from 'drizzle-orm';
 
 const preparedGetPartnerOptions = db
@@ -41,12 +41,16 @@ export const findPartners = async ({
   };
 };
 
-export async function upsertPartner(partner: InsertPartner) {
+export async function insertPartner(partner: InsertPartner) {
   return await db
     .insert(partners)
     .values(partner)
-    .onConflictDoUpdate({ target: partners.id, set: partner })
-    .returning();
+    .onConflictDoNothing()
+    .returning({ insertedId: partners.id });
+}
+
+export async function updatePartner(partner: SelectPartner) {
+  await db.update(partners).set(partner).where(eq(partners.id, partner.id));
 }
 
 export async function updatePartnerStatusById(id: number, isActive: boolean) {

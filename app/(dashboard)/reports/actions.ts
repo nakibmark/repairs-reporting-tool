@@ -7,12 +7,12 @@ import {
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
-export async function deleteReportById(reportId: number) {
+export async function deleteReportAction(reportId: number) {
   await deleteReport(reportId);
   revalidatePath('/reports', 'page');
 }
 
-export async function createReport() {
+export async function createReportAction() {
   const cookieStore = await cookies();
   const partnerId = cookieStore.get('partnerId')?.value;
   if (!partnerId) {
@@ -27,11 +27,14 @@ export async function createReport() {
     reportMonth: new Date().getMonth(),
     submissionPeriodClosesAt: lastDayThisMonth,
   };
-  const [{ id }] = await insertReport(newReport);
-  return id;
+  const [{ insertedId }] = await insertReport(newReport);
+  return insertedId;
 }
 
-export async function setReportStatus(id: number, status: boolean) {
-  await updateReportStatusById(id, status);
+export async function updateReportStatusAction(
+  reportId: number,
+  status: boolean
+) {
+  await updateReportStatusById(reportId, status);
   revalidatePath('/reports', 'page');
 }
