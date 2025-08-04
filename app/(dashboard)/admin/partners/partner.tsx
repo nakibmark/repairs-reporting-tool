@@ -26,7 +26,9 @@ const Partner = ({
       ) {
         updatePartnerAction(editedPartner as SelectPartner);
       } else {
-        throw new Error('editedPartner does not conform to InsertPartner');
+        throw new Error(
+          `Object submitted does not conform to SelectPartner schema: ${JSON.stringify(editedPartner)}`
+        );
       }
     },
     []
