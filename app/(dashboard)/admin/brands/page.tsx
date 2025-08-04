@@ -2,13 +2,14 @@ import {
   Card,
   CardDescription,
   CardFooter,
+  CardContent,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
 import { getBrands } from '@/lib/data/brands';
 import { getWarrantyTypes } from '@/lib/data/warrantyTypes';
 import { getServiceLevelTypes } from '@/lib/data/serviceLevelTypes';
-import BrandsContent from './brands-content';
+import DisplayRow from './display-row';
 
 export default async function BrandsPage() {
   const brands = await getBrands();
@@ -26,11 +27,11 @@ export default async function BrandsPage() {
           </div>
         </div>
       </CardHeader>
-      <BrandsContent
-        brands={brands}
-        serviceLevelTypes={serviceLevelTypes}
-        warrantyTypes={warrantyTypes}
-      />
+      <CardContent>
+        <DisplayRow items={brands} label={'Brands'} />
+        <DisplayRow items={warrantyTypes} label={'Warranty Types'} />
+        <DisplayRow items={serviceLevelTypes} label={'Service Types'} />
+      </CardContent>
       <CardFooter />
     </Card>
   );
