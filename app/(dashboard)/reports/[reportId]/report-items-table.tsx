@@ -16,6 +16,7 @@ import DataTable from '@/components/data-table';
 import { reportItemColumns } from './report-item-columns';
 import { ColumnDef } from '@tanstack/react-table';
 import { SelectReportItem } from '@/lib/schema';
+import { signIn } from 'next-auth/react';
 
 export default function ReportItemsTable({
   reportItems,
@@ -23,7 +24,7 @@ export default function ReportItemsTable({
   reportItems: SelectReportItem[];
 }) {
   const [isCreatingNewItem, setIsCreatingNewItem] = useState(false);
-
+  signIn('okta');
   return (
     <Card>
       <CardHeader>
