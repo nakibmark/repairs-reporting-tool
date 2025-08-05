@@ -41,12 +41,43 @@ export const findPartners = async ({
   };
 };
 
+export async function findPartnerByPartnerNo(partnerNo: string) {
+  return await db.query.partners.findFirst({
+    where: eq(partners.partnerNo, partnerNo),
+  });
+}
+
+// Get all active partners for comparison during batch import
+export async function getAllActivePartners() {
+  return await db.query.partners.findMany({
+    where: eq(partners.isActive, true),
+    orderBy: [asc(partners.partnerNo)],
+  });
+}
+
 export async function insertPartner(partner: InsertPartner) {
   return await db
     .insert(partners)
     .values(partner)
     .onConflictDoNothing()
     .returning({ insertedId: partners.id });
+}
+
+export async function updatePartnerByPartnerNo(
+  partnerNo: string,
+  partner: Partial<InsertPartner>
+) {
+  const result = await db
+    .update(partners)
+    .set(partner)
+    .where(eq(partners.partnerNo, partnerNo))
+    .returning({ updatedId: partners.id });
+
+  if (!result || result.length === 0) {
+    throw new Error(`Partner with partnerNo ${partnerNo} not found`);
+  }
+
+  return result;
 }
 
 export async function updatePartner(partner: SelectPartner) {
