@@ -71,8 +71,14 @@ const CsvUpload: React.FC<CsvUploadProps> = ({
 
             const data = results.data as CsvRow[];
 
+            // Check for empty data
+            if (!data || data.length === 0) {
+              onError('CSV file is empty or contains no valid rows.');
+              return;
+            }
+
             // Validate required columns
-            const headers = Object.keys(data[0] || {});
+            const headers = Object.keys(data[0]);
             const missingColumns = acceptedColumns.filter(
               (col) => !headers.includes(col)
             );
