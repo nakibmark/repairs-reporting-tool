@@ -1,4 +1,3 @@
-import 'server-only';
 import { pgEnum, pgTable as table } from 'drizzle-orm/pg-core';
 import * as t from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';

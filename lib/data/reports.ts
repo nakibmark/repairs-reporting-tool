@@ -34,7 +34,10 @@ export async function deleteReport(id: number) {
 }
 
 export async function insertReport(report: InsertReport) {
-  return await db.insert(reports).values(report).returning();
+  return await db
+    .insert(reports)
+    .values(report)
+    .returning({ insertedId: reports.id });
 }
 
 export async function updateReportStatusById(id: number, isSubmitted: boolean) {

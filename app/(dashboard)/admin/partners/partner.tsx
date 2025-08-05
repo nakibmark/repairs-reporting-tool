@@ -1,9 +1,9 @@
 import { TableRow } from '@/components/ui/table';
-import { InsertPartner, SelectPartner } from '@/lib/schema';
+import { SelectPartner } from '@/lib/schema';
 import EditMenu from '@/components/ui/edit-menu';
 import React, { useCallback } from 'react';
 import EditableTableCell from '@/components/ui/editable-table-cell';
-import { setPartnerInactive, savePartner } from './actions';
+import { updatePartnerStatusAction, updatePartnerAction } from './actions';
 import { useEditableRow } from '@/components/hooks/use-editable-row';
 
 const RequiredProps = ['partnerName', 'emailAddress', 'partnerNo'] as const;
@@ -16,7 +16,7 @@ const Partner = ({
   displayInactive: boolean;
 }) => {
   const saveEditedPartner = useCallback(
-    (editedPartner: Partial<InsertPartner>) => {
+    (editedPartner: Partial<SelectPartner>) => {
       if (
         editedPartner &&
         RequiredProps.every(
@@ -24,9 +24,11 @@ const Partner = ({
             Object.hasOwn(editedPartner, prop) && editedPartner[prop] != null
         )
       ) {
-        savePartner(editedPartner as InsertPartner);
+        updatePartnerAction(editedPartner as SelectPartner);
       } else {
-        throw new Error('editedPartner does not conform to InsertPartner');
+        throw new Error(
+          `Object submitted does not conform to SelectPartner schema: ${JSON.stringify(editedPartner)}`
+        );
       }
     },
     []
@@ -101,7 +103,7 @@ const Partner = ({
         handleEditClick={handleEditClick}
         handleCancelClick={handleCancelClick}
         handleDeleteClick={() => {
-          setPartnerInactive(editedPartner?.id);
+          updatePartnerStatusAction(editedPartner?.id, false);
         }}
         handleSaveClick={handleSaveClick}
       />
