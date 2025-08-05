@@ -1,7 +1,7 @@
 import 'server-only';
 import NextAuth from 'next-auth';
-import GitHub from 'next-auth/providers/github';
+import Okta from 'next-auth/providers/okta';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [GitHub],
+  providers: [Okta],
 });
