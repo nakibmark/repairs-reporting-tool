@@ -67,16 +67,17 @@ export async function updatePartnerByPartnerNo(
   partnerNo: string,
   partner: Partial<InsertPartner>
 ) {
-  const existingPartner = await findPartnerByPartnerNo(partnerNo);
-  if (!existingPartner) {
+  const result = await db
+    .update(partners)
+    .set(partner)
+    .where(eq(partners.partnerNo, partnerNo))
+    .returning({ updatedId: partners.id });
+
+  if (!result || result.length === 0) {
     throw new Error(`Partner with partnerNo ${partnerNo} not found`);
   }
 
-  return await db
-    .update(partners)
-    .set(partner)
-    .where(eq(partners.id, existingPartner.id))
-    .returning({ updatedId: partners.id });
+  return result;
 }
 
 export async function updatePartner(partner: SelectPartner) {
